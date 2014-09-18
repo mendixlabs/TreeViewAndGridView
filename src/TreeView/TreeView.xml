@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="TreeView.widget.TreeView" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+  <name>Tree View</name>
+  <description>Advanced treegrid to browse and manipulate refences and referencesets</description>
+
+  <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAdVJREFUeNpi/P//PwMlgImBQsCS0vZGk5GRcTmQrQ/EF4EuigTi658v
+ZsMV8epPZQCqwaqO6fv378t1lZj0Yz24GUA0iP/1Tj+KLSA+NnU/fvxgYPn8+ZO+pjwfw8+fPxk0
+5ZkY9hz/pM/+5XYasgF/v9xm+IZFHTgMPn36cPHg6ecMINNANIj/k1Fq1p8/f2aBxEA0iI9NHRAz
+MBqH7tD89+8f3G9MTEyRQL9e533dAbIA5JJZn0UrGID+xaqOBSh4/e/fvwYoIfv5IMOXL1/gfEbW
+fQx/ee0x1DEzMzOwYIuaz482ovD/MX1n+Pv/N9AVfxGGMv4D4r+Y6eDL441A/31Cwf/4XaHRyHwB
+iP9DaEZNsGtBxMsby4F4GdgAVlZWBi4uLriBv3//Zvh6qZFByrhzub+rnL6nnQzD9kNP9DfufgQK
+DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
++hZ6LAwnLv0B8S9e3RPNwIykjxHqJTYgBvmBB4gFgC4QBmKxr28vXPjFHWhw8gqL2KNnv69e3Rtf
+/vHF8feMaAYwQjMYMxbMhIRB6n6DUjkjpdkZIMAAECYEN0fYAvMAAAAASUVORK5CYII=</icon>
+
+  <properties>
+		<property key="blaat4" type="object" isList="true" required="true">
+			<caption>1) Entities</caption>
+			<category>1) Tree configuration</category>
+			<description>Define all the types of objects that are displayed in the treeview here. The object type of the context is required here is as well!</description>
+			<properties>
+				<property key="xentity" type="entity" required="true">
+					<caption>Entity type</caption>
+					<category>1) Common</category>
+					<description></description>
+				</property>
+				<property key="sortattr" type="attribute" entityProperty="xentity" required="true">
+					<caption>Sort attribute</caption>
+					<category>1) Common</category>
+					<description>Attribute to sort this type of objects on. If DnD is used, this should be a float.</description>
+					<attributeTypes>
+						<attributeType name="AutoNumber"/>
+						<attributeType name="Boolean"/>
+						<attributeType name="Currency"/>
+						<attributeType name="DateTime"/>
+						<attributeType name="Enum"/>
+						<attributeType name="Float"/>
+						<attributeType name="Integer"/>
+						<attributeType name="Long"/>
+						<attributeType name="String"/>
+					</attributeTypes>
+				</property>
+				<property key="sortdir" type="enumeration" defaultValue="asc">
+					<caption>Sort direction</caption>
+					<category>1) Common</category>
+					<description/>
+					<enumerationValues>
+						<enumerationValue key="asc">Ascending</enumerationValue>
+						<enumerationValue key="desc">Descending</enumerationValue>
+					</enumerationValues>
+				</property>
+				<property key="xburstattr" type="attribute" entityProperty="xentity" required="false">
+					<caption>Cache burst attribute</caption>
+					<category>2) Advanced</category>
+					<description>Depending on the value of this property, the children of an item will be reloaded. If this property is omitted, the widget tries to automatically discover which items need to be refreshed, but new objects with a from child assocation cannot be detected automatically. 
+					
+					 !Important note!: If a cacheburst attribute is set, this attribute needs to be update to show new children on assiations which are owned by children and use an xpath constraint. This way it can be assured that items do not slip past constraints by changing them.  
+
+					 Furthermore, the cacheburst is used as hint when to expand items. If the cacheburst of an item changes after invoking a microflow, it is assumed that there are new children to display. The item is expanded and the newest child will be selected. 
+					</description>
+					<attributeTypes>
+			            <attributeType name="DateTime"/>
+						<attributeType name="Float"/>
+						<attributeType name="Integer"/>
+						<attributeType name="Long"/>
+						<attributeType name="String"/>
+					</attributeTypes>			
+				</property>
+				<property key="entityclazz" type="string" defaultValue="" required="false">
+					<caption>Class</caption>
+					<category>2) Advanced</category>
+					<description></description>
+				</property>
+				<property key="entitystyle" type="string" multiline="true" defaultValue="" required="false">
+					<caption>Style</caption>
+					<category>2) Advanced</category>
+					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
+				</property> 	
+				<property key="entitychannel" type="string" defaultValue="" required="false">
+					<caption>Formloader Channel</caption>
+					<category>2) Advanced</category>
+					<description>If provided, all formloaders listening to this channel will follow the current selection</description>
+				</property> 			
+<!--				<property key="xlisteningform" type="string" required="false">
+					<caption>Form loader channel</caption>
+					<category>2) Advanced settings</category>
+					<description>If something of the selected entity type is selected, the object will be shown in the formloader listening on this channel. See for more information the formloader widget in the Appstore</description>
+				</property>
+-->
+			</properties>
+		</property>
+
+  		<property key="blaat" type="object" isList="true" required="true">
+  			<caption>2) Relations</caption>
+  			<category>1) Tree configuration</category>
+  			<description>
+<![CDATA[You can define the relations that are shown in the tree here. Relations are defined per relation per direction. The root object of the tree is always the context object.  
+
+
+Example: Domain model: Orderline *---orderline_order-->1 Order 
+
+
+Configuration to show all orderlines within an order (which is the context object): 
+
+
+Association owner: 'Orderline' 
+Association (reference): 'orderline_order' 
+Association direction: 'The association owner is the child' 
+
+
+It is allowed to add an additional relation, with association direction 'The association owner is the parent', to be able to expand from the orderline back to the order (which might make sense if an orderline would be related to multiple orders).
+]]>
+  			</description>
+  			<properties>
+				<property key="assoccaption" type="string" defaultValue="" required="true">
+					<caption>Name / caption</caption>
+					<category>1) Define the relation</category>
+					<description>Describe this relation</description>
+				</property>
+				<property key="entity" type="entity" required="true">
+					<caption>Association owner</caption>
+					<category>1) Define the relation</category>
+					<description></description>
+				</property>
+				<property key="parentassocsingle" type="entity" entityProperty="entity" isPath="optional" pathType="reference" required="false">
+					<caption>Association (reference)</caption>
+					<category>1) Define the relation</category>
+					<description>The association from owner entity type to the other entity</description>			
+				</property>
+				<property key="parentassocmulti" type="entity" entityProperty="entity" isPath="optional" pathType="referenceSet" required="false">
+					<caption>Association (referenceSet)</caption>
+					<category>1) Define the relation</category>
+					<description>The association from owner entity type to the other entity</description>			
+				</property>	
+				<property key="assoctype" type="enumeration" defaultValue="fromchild">
+					<caption>Association direction</caption>
+					<category>1) Define the relation</category>
+					<description>
+						This property describes whether the selected defines whether this association is from 
+						parent &lt;-- child (default)
+						or
+						child --&gt; parent 
+					</description>
+					<enumerationValues>
+						<enumerationValue key="fromchild">The association owner is the child</enumerationValue>
+						<enumerationValue key="fromparent">The association owner is the parent</enumerationValue>
+					</enumerationValues>
+				</property>
+				<property key="constraint" type="entityConstraint" entityProperty="entity"  required="false">
+					<caption>Constraint</caption>
+					<category>1) Define the relation</category>
+					<description>Optional constraint on the relation. Note that using constraints might introduce the need to use the burst attribute, as the treeview cannot predict reliable anymore in which parents should be updated if the parent association changes.</description>
+				</property>
+				<property key="showassocname" type="boolean" defaultValue="true">
+					<caption>Show relation name</caption>
+					<category>2) Set additional options</category>
+					<description>Show the name of the relation as a separate node, and group children in it. The style properties will affect this node if true.</description>
+				</property>
+				<property key="assocclazz" type="string" defaultValue="" required="false">
+					<caption>Class</caption>
+					<category>2) Set additional options</category>
+					<description></description>
+				</property>
+				<property key="assocstyle" type="string" multiline="true" defaultValue="" required="false">
+					<caption>Style</caption>
+					<category>2) Set additional options</category>
+					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
+				</property> 				
+				<property key="allowdnd" type="boolean" defaultValue="false">
+					<caption>Allow drops</caption>
+					<category>3) Drag and drop options</category>
+					<description>Allow items to be dropped in this association</description>
+				</property>		
+				<property key="allowdndcopy" type="boolean" defaultValue="false">
+					<caption>Allow drop copies</caption>
+					<category>3) Drag and drop options</category>
+					<description>Allow items to be dropped as a copy in this association (not supported for single references where fromparent is false)</description>
+				</property>								
+				<property key="dropmf" type="microflow" required="false" entityProperty="entity">
+                    <caption>On drop microflow</caption>
+                    <category>3) Drag and drop options</category>
+                    <description>
+                    	This microflow is triggered if a drag and drop action of the user results in a change for this relation (for both add and remove (if referenceset)). The microflow is always invoked on the owner of the association. So if the association owner is the child (default) the microflow will be triggered for the item being dropped, but if the association owner is the parent, the microflow will be triggered on the item being dropped *ON* and the item being dropped *FROM* (if referenceset).
+                    </description>
+					<returnType type="Void"/>
+				</property>
+			</properties>
+		</property>
+		
+		<property key="blaat2" type="object" isList="true" required="true">
+			<caption>3) Rendering</caption>
+			<category>1) Tree configuration</category>
+			<description></description>
+			<properties>
+				<property key="columnname" type="string" defaultValue="" required="false">
+					<caption>Caption</caption>
+					<category>1) Basics</category>
+					<description></description>
+				</property>
+				<property key="columnentity" type="entity" required="false">
+					<caption>Applies to type</caption>
+					<category>1) Basics</category>
+					<description></description>
+				</property>
+
+				<property key="columnrendermode" type="enumeration" defaultValue="attribute">
+					<caption>Display mode</caption>
+					<category>1) Basics</category>
+					<description></description>
+					<enumerationValues>
+						<enumerationValue key="attribute">Display attribute value</enumerationValue>
+						<enumerationValue key="caption">Display caption</enumerationValue>
+						<enumerationValue key="attributehtml">Display attribute as HTML</enumerationValue>
+						<enumerationValue key="attributeimage">Display attribute as image</enumerationValue>
+						<enumerationValue key="thumbnail">Display current object or referenced FileID attribute as thumbnail</enumerationValue>
+						<enumerationValue key="systemimage">Display current object or referenced FileID attribute as image</enumerationValue>
+					</enumerationValues>
+				</property>
+
+				<property key="columnattr" type="attribute" entityProperty="columnentity" required="false" isPath="optional" pathType="reference">
+					<caption>Attribute</caption>
+					<category>1) Basics</category>
+					<description>Attribute to display
+					</description>
+					<attributeTypes>
+						<attributeType name="AutoNumber"/>
+						<attributeType name="Boolean"/>
+						<attributeType name="Currency"/>
+						<attributeType name="DateTime"/>
+						<attributeType name="Enum"/>
+						<attributeType name="Float"/>
+						<attributeType name="Integer"/>
+						<attributeType name="Long"/>
+						<attributeType name="String"/>
+					</attributeTypes>			
+				</property>
+				<property key="columnimage" type="image" required="false">
+                    <caption>(Default) Image</caption>
+                    <category>1) Basics</category>
+                    <description></description>
+                </property>
+                <property key="columnaction" type="string" defaultValue="" required="false">
+					<caption>On click action</caption>
+					<category>3) Interaction</category>
+					<description>The name of the action that should be invoked when this item is clicked. The name should refer to the name of an action as defined in step 4) Actions</description>
+				</property> 
+				
+				<property key="columnclazz" type="string" defaultValue="" required="false">
+					<caption>Class</caption>
+					<category>2) Advanced</category>
+					<description>The following classes are available by default: 'link', 'newline' (starts a newline before this value), 'right' (right align) 'separator', 'large' and 'small'</description>
+				</property>
+				<property key="columnstyle" type="string" multiline="true" defaultValue="" required="false">
+					<caption>Style</caption>
+					<category>2) Advanced</category>
+					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
+				</property> 
+				<property key="columndateformat" type="string" defaultValue="EEE dd MMM y" required="false">
+					<caption>Column date time format</caption>
+					<category>2) Advanced</category>
+					<description>The formatting of the date if a datetime attribute is displayed.</description>
+				</property>
+
+				<property key="columnprefix" type="string" required="false">
+					<caption>Prefix rendering</caption>
+					<category>2) Advanced</category>
+					<description></description>
+				</property>
+				<property key="columnpostfix" type="string" required="false">
+					<caption>Postfix rendering</caption>
+					<category>2) Advanced</category>
+					<description></description>
+				</property>
+
+				<property key="columntruecaption" type="translatableString" required="false">
+					<caption>'True' caption</caption>
+					<category>3) Boolean rendering</category>
+					<description></description>
+				</property>	
+				<property key="columnfalsecaption" type="translatableString" required="false">
+					<caption>'False' caption</caption>
+					<category>3) Boolean rendering</category>
+					<description></description>
+				</property>	
+				
+			</properties>
+		</property>
+
+		<property key="blaat3" type="object" isList="true" required="false">
+			<caption>4) Actions</caption>
+			<category>1) Tree configuration</category>
+			<description></description>
+			<properties>
+				<property key="actname" type="string" defaultValue="" required="true">
+					<caption>Action name</caption>
+					<category>1) Basics</category>
+					<description>The name of this action, as can be refered to in step 3).</description>
+				</property>
+				<property key="actentity" type="entity" required="false">
+					<caption>Applies to type (or all)</caption>
+					<category>1) Basics</category>
+					<description></description>
+				</property>
+				<property key="actshowbutton" type="boolean" defaultValue="false">
+					<caption>Show as button in header</caption>
+					<category>2) Button</category>
+					<description></description>
+				</property>
+				<property key="actbuttoncaption" type="translatableString" required="false">
+					<caption>Button caption</caption>
+					<category>2) Button</category>
+					<description></description>
+				</property>	
+				<property key="actbuttonimage" type="image" required="false">
+					<caption>Button image</caption>
+					<category>2) Button</category>
+					<description></description>
+				</property>	
+				<property key="actautohide" type="boolean" defaultValue="true">
+					<caption>Hide if disabled</caption>
+					<category>2) Button</category>
+					<description>Whether to hide, or only disable the button when it can't be pressed.</description>
+				</property>							
+				<property key="actmf" type="microflow" required="false" entityProperty="actentity">
+                    <caption>Microflow</caption>
+                    <category>1) Basics</category>
+                    <description></description>
+					<returnType type="Void"/>
+				</property>
+				<property key="actnoselectionmf" type="microflow" required="false">
+                    <caption>Microflow (no selection)</caption>
+                    <category>1) Basics</category>
+                    <description></description>
+					<returnType type="Void"/>
+				</property>                
+				<property key="actisdefault" type="boolean" defaultValue="false">
+					<caption>Is default action</caption>
+					<category>1) Basics</category>
+					<description>If true, this action will be used as default action and be invoked if the item is doubleclicked or the return key is pressed. 
+					</description>
+				</property>
+				<property key="actconfirmtext" type="translatableString" required="false">
+					<caption>Confirmation message</caption>
+					<category>1) Basics</category>
+					<description>If set, users have to confirm this message before continuing</description>
+				</property>	
+				<property key="actonselect" type="boolean" defaultValue="false">
+					<caption>Fire on selection change</caption>
+					<category>2) Settings</category>
+					<description>Invoke this action immediately when the current selection changes. For more information about retrieving the current selection, see the 'fine tuning > Selection reference' properties
+					</description>
+				</property>				
+<!--				<property key="actshortcut" type="integer" defaultValue="0" required="true">
+					<caption>Keyboard shortcut</caption>
+					<category>3) Triggers</category>
+					<description>Key which act as shortcut for this action, the value is the ASCII value of the key. See http://www.cambiaresearch.com/c4/702b8cd1-e5b0-42e6-83ac-25f0306e3e25/Javascript-Char-Codes-Key-Codes.aspx for a key - keycode conversion table.</description>
+				</property>
+-->            </properties>
+		</property>
+
+		<property key="blaat5" type="object" isList="true" required="false">
+			<caption>5) Selection References</caption>
+			<category>1) Tree configuration</category>
+			<description>Define all the necessary selection references here. </description>
+			<properties>
+				<property key="selectionref" type="entity" isPath="yes" pathType="reference" required="false">
+				<caption>Selection reference</caption>
+					<category>Basics</category>
+					<description>This reference is updated as soon as the selection changes. This is useful to determine the current selection if action that fires on selection changes is used (see actions). For that action, set a microflow for the context action. The value of the reference selected here will be updated before that action fires.</description>
+				</property>
+			</properties>
+		</property>
+
+
+		<property key="hiderootnode" type="boolean" defaultValue="false">
+			<caption>Hide root node</caption>
+			<category>2) Settings</category>
+			<description>If false, the root node is displayed. If true, the root node hidden and only its children are displayed </description>
+		</property>
+		<property key="expandmode" type="enumeration" defaultValue="arrow">
+			<caption>Expand mode</caption>
+			<category>2) Settings</category>
+			<description>
+				How should the tree expand?
+				Click Arrow : Expand items when an arrow is clicked
+				Click Row : Expand items if a row is clicked somewhere
+				Accordion: Expand items if a row is clicked somewhere, but collapse all other, not descendant items. 
+			</description>
+			<enumerationValues>
+				<enumerationValue key="arrow">When an arrow is clicked</enumerationValue>
+				<enumerationValue key="row">When a row is clicked</enumerationValue>
+				<enumerationValue key="accordion">Use accordion mode</enumerationValue>
+			</enumerationValues>
+		</property>
+		<property key="expandall" type="integer" defaultValue="1">
+			<caption>Auto expand depth</caption>
+			<category>2) Settings</category>
+			<description>If true all items up to the selected depth will be expanded automatically. A higher number will increase the initial load time.</description>
+		</property>
+		<property key="prefetch" type="boolean" defaultValue="true">
+			<caption>Prefetch data</caption>
+			<category>2) Settings</category>
+			<description>If true, items at deeper levels of the tree will be prefetched. This improves the user experience, but requires more resources. Should be turned of for very large datasets. </description>
+		</property>
+<!--		<property key="selectionref" type="entity" isPath="yes" pathType="reference" required="false">
+		<caption>Selection reference</caption>
+			<category>2) Settings</category>
+			<description>This reference is updated as soon as the selection changes. This is useful to determine the current selection if action that fires on selection changes is used (see actions). For that action, set a microflow for the context action. The value of the reference selected here will be updated before that action fires.</description>
+		</property>
+		<property key="allowmultiselect" type="boolean" defaultValue="false">
+			<caption>Multi selection enabled</caption>
+			<category>2) Settings</category>
+			<description>If true, multi selection actions can be used, an a checkbox is displayed in front of each row.</description>
+		</property>	
+		<property key="selectionrefset" type="entity" isPath="yes" pathType="referenceSet" required="false">
+			<caption>Multi selection reference set</caption>
+			<category>2) Settings</category>
+			<description>See 'selection reference'. This reference set will be filled with the values of the multi selection.</description>
+		</property>	
+-->		
+  </properties>
+</widget>

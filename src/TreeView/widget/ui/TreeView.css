@@ -1,0 +1,229 @@
+﻿.gg_header {
+	padding: 4px 0px;
+	border-bottom: 1px solid #CCC;
+	margin-bottom: 4px;
+}
+
+
+.gg_hiddenroot > .gg_node > .gg_row {
+	display : none;
+}
+
+.gg_hiddenroot > .gg_node > .gg_children {
+	padding-left: 0px;
+}
+
+.gg_tree {
+	cursor : default;
+}
+
+.gg_tree .gg_root_wrapper {
+	padding-left: 0px;
+}
+
+.gg_data {
+	display : block;
+	overflow : hidden;
+}
+
+.gg_column_wrapper {
+    display: inline-block; 
+    float : left;
+}
+
+.gg_row span, .gg_assoc_title {
+	vertical-align: top;
+}
+
+.gg_assoc_wrapper > .gg_row {
+}
+
+.gg_nochildren {
+	
+}
+
+.gg_row {
+	margin: 0px; /* no margin! margin mess up mouse events as they will bubble up to the parent */
+	padding: 3px 2px 3px 4px;
+	clear: left;
+	line-height: 16px;
+	/*forgetting this one gives strange rendering in Chrome & IE */
+}
+
+.gg_row, /* row which can have children: padding for arrow; */
+.gg_assoc_wrapper > .gg_row {  /* visible assoc wrapper: padding for arrow; */
+	padding-left: 20px;
+}
+
+.gg_children, /* children are always padded */
+.gg_node > .gg_assoc_children { /* children within a visible assoc wrapper are padded another time */
+	padding-left: 20px;
+}
+
+.gg_img, .gg_column, .gg_column img {
+	margin-right: 4px;
+	display: inline;
+}
+.gg_fold {
+	width: 10px;
+	height: 10px;
+	display: block;
+	margin-top: 5px;
+	margin-left: -12px;
+	float: left;
+}
+
+.gg_nofold { }
+
+.gg_unfolded {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat -20px 0;
+}
+
+.gg_fold_hover > .gg_unfolded {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat -30px 0;
+}
+
+.gg_folded {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat 0 0;
+}
+
+.gg_fold_hover > .gg_folded {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat -10px 0;
+}
+
+.gg_loading {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat -40px 0;
+}
+
+.gg_fold_hover > .gg_loading {
+	background : url(TreeView/widget/ui/treeview_arrow_sprite.png) no-repeat -40px 0;
+}
+
+.gg_row_hover .gg_col_hover .gg_clickable {
+	color : navy;
+	text-decoration: underline;
+}
+
+.gg_row_hover > .gg_row{
+	background-color : #e2e2e2;	
+}
+
+.gg_clickable {
+	cursor: pointer;
+}
+
+/* note the '>', we don't want to highlight all the descendants! */
+.gg_selected > .gg_row, 
+.gg_selected > .gg_row_hover {
+	background-color : #faffbd;
+	outline: 1px dotted #333;
+}
+
+/* Drag and drop styling */
+
+.gg_dragging > .gg_row {
+	background-color : #e2e2e2;	
+	opacity : 0.5;
+	color : #444;
+}
+
+.gg_dragging > .gg_children {
+	display : none !important; /*children should not be visible if an item is dragged*/
+}
+
+.gg_drag_over {
+	cursor : pointer;
+}
+
+.gg_drag_over > .gg_row {
+	outline-width : 3px;
+	outline-style : solid;
+}
+
+.gg_drag_accept > .gg_row  {
+	outline-color :  #BFDF8B;
+}
+
+.gg_drag_deny > .gg_row {
+	outline-color: #FC807E;
+}
+
+.gg_drag_accept {
+	border-top-color : #BFDF8B;	
+}
+
+.gg_drag_deny {
+	border-top-color : #FC807E;
+}
+
+.gg_anchor_inner {
+	border : 3px dashed #e2e2e2;
+	height : 12px;
+	margin : 4px;
+	border-radius: 4px;
+}
+
+.gg_drag_over > .gg_anchor_inner {
+	border-style : solid;
+}
+
+.gg_drag_accept > .gg_anchor_inner {
+	border-color : #BFDF8B;
+}
+
+.gg_drag_deny > .gg_anchor_inner {
+	border-color: #FC807E; 
+}
+
+.gg_drag_outside {
+	outline : 2px solid #FC807E !important;
+}
+
+.gg_drag_outside > .gg_row {
+	opacity: 1.0 !important;
+}
+
+.gg_avatar > .gg_row{
+	border: 3px solid #666;
+	box-shadow: 3px 3px 3px 0 #999;
+	padding : 8px;
+	background-color: rgba(255,255,255,0.7);
+}
+
+.gg_avatar .gg_fold {
+	display : none;
+}
+
+.gg_drag_copy > .gg_row  {
+	/*TODO: image or something;*/
+	border-color: #92D9F4 !important;
+}
+
+.gg_tree .newline {
+    clear: left;
+    float: left;
+}
+
+.gg_tree .right {
+	float: right;
+}
+
+.gg_tree .large {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.gg_tree .small {
+    font-size : 0.8em;
+}
+
+.gg_tree .link {
+    text-decoration:  underline;
+    cursor: pointer;
+}
+
+.gg_tree .separator {
+    padding-left: 8px;
+    margin-left: 8px;
+    border-left: 1px solid #ccc;
+}

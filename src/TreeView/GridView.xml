@@ -1,0 +1,610 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="TreeView.widget.GridView" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+  <name>Grid View</name>
+  <description>Advanced gridview to browse and manipulate records and their attributes</description>
+
+  <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAaBJREFUeNqkksFLwmAYxt9vc8MMm0l6qPAYelrgRfDYJehuCB2EwD+k
+PyDoqJcugdAxAkuCoEN01YunImKiSWVsk1w61/uKrk0nQX7w4/2ejef53u/dmGVZsMjiYMHlc4pM
+JuN6KcaPgef5BFJCKSNV0zSzSP3saPPvDnpPJ6AoL6WtjW85t7cCVEk3mw3vDnAeeadmxjMo7w05
+mYiDYRiQTATh9Lwhz53BcDgsDgaDYq/XA6q6uV5kbLlavlOAnlEljXh30O/3Qdd1W2uRQwj5hexD
+zVd6qKl4slgNhWI4g753QKvVcs2ACRfARfbrgrC0/XvIF8wN0DTNFSBxlxDi74HjOOc1McDE3fVs
+gKqqroBYLEaDDaNpF+Ua8ob6CuuHc/I2kiRNyAcCAYhGo5BOpw8qlcoNnmpRJY3YHlcH3W530m6T
+Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
+/SryifOoIY/oex15PALoDvwYnwNuDBl09OkzAf9ZPwIMALAJ41pzCcUFAAAAAElFTkSuQmCC</icon>
+
+  <properties>
+		<property key="entity" type="entity" required="false" allowNonPersistableEntities="true">
+			<caption>1) Entity type</caption>
+			<category>1) Grid config</category>
+			<description></description>
+		</property>
+
+		<property key="constraint" type="entityConstraint" entityProperty="entity" required="false">
+			<caption>Entity constraint</caption>
+			<category>1a) Database source</category>
+			<description></description>
+		</property>
+
+		<property key="datasourcemf" type="microflow" required="false">
+			<caption>Data source microflow</caption>
+			<category>1b) Microflow source</category>
+			<description>Microflow that should return the dataset, given the retrieval parameters.</description>
+			<returnType type="Void"/>
+		</property>
+
+		<property key="datasourceoffsetattr" type="attribute" required="false">
+			<caption>Offset attribute</caption>
+			<category>1b) Microflow source</category>
+			<description>Retrieval parameter, that will be set by the widget to identify which objects should be retreived. Should be interpreted by the data source microflow.</description>
+			<attributeTypes>
+				<attributeType name="Integer"/>
+				<attributeType name="Long"/>
+			</attributeTypes>
+		</property>
+
+		<property key="datasourcelimitattr" type="attribute" required="false">
+			<caption>Limit attribute</caption>
+			<category>1b) Microflow source</category>
+			<description>Retrieval parameter, that will be set by the widget to identify how many objects should be retreived (equals the page size). Should be interpreted by the data source microflow.</description>
+			<attributeTypes>
+				<attributeType name="Integer"/>
+				<attributeType name="Long"/>
+			</attributeTypes>
+		</property>
+
+		<property key="datasourcesearchattr" type="attribute" required="false">
+			<caption>Search attribute</caption>
+			<category>1b) Microflow source</category>
+			<description>Retrieval parameter, that will be set by the widget to identify which objects should be retreived. Should be interpreted by the data source microflow. The search attribute is empty or empty string if no search filter is set by the user</description>
+			<attributeTypes>
+				<attributeType name="String"/>
+			</attributeTypes>
+		</property>
+
+		<property key="datasourcecountattr" type="attribute" required="false">
+			<caption>Count attribute</caption>
+			<category>1b) Microflow source</category>
+			<description>The count attribute *must* be *set and refreshed* by the datasource microflow, so that the widget knows how many items there in total. The count value should ignore limit and offset values, but apply the search value. </description>
+			<attributeTypes>
+				<attributeType name="Integer"/>
+				<attributeType name="Long"/>
+			</attributeTypes>
+		</property>
+
+		<property key="blaat0" type="object" isList="true" required="true">
+			<caption>2) Columns</caption>
+			<category>1) Grid config</category>
+			<description></description>
+			<properties>
+				<property key="colheadname" type="string" required="false">
+					<caption>Name</caption>
+					<category>1) Grid config</category>
+					<description></description>
+				</property>
+				<property key="colheadcaption" type="translatableString" required="false">
+					<caption>Caption</caption>
+					<category>1) Grid config</category>
+					<description></description>
+				</property>
+				<property key="colheadwidth" type="string" required="false">
+					<caption>Width</caption>
+					<category>1) Grid config</category>
+					<description>Width of this column. Please specify an unit, for example '60px' or '50%'. The field can be left empty.  </description>
+				</property>
+				<property key="colheadsortattr" type="attribute" entityProperty="../entity" isPath="optional" pathType="reference" required="false">
+						<caption>Sort attribute</caption>
+						<category>1) Grid config</category>
+						<description>If set, the grid can be sorted using this column. </description>
+						<attributeTypes>
+								<attributeType name="AutoNumber"/>
+								<attributeType name="Boolean"/>
+								<attributeType name="Currency"/>
+								<attributeType name="DateTime"/>
+								<attributeType name="Enum"/>
+								<attributeType name="Float"/>
+								<attributeType name="Integer"/>
+								<attributeType name="Long"/>
+								<attributeType name="String"/>
+						</attributeTypes>
+				</property>
+				<property key="colheadsortdir" type="enumeration" defaultValue="asc" >
+						<caption>Default sort direction</caption>
+						<category>1) Grid config</category>
+						<description>The default sort direction if the grid is sorted using this column.</description>
+						<enumerationValues>
+								<enumerationValue key="asc">Ascending</enumerationValue>
+								<enumerationValue key="desc">Descending</enumerationValue>
+						</enumerationValues>
+				</property>
+			</properties>
+		</property>
+
+		<property key="blaat2" type="object" isList="true" required="true">
+			<caption>3) Rendering</caption>
+			<category>1) Grid config</category>
+			<description></description>
+			<properties>
+				<property key="columnindex" type="integer" defaultValue="0">
+					<caption>Render in column</caption>
+					<category>1) Basics</category>
+					<description>Zero based index column, to place this rendering in</description>
+				</property>
+
+				<property key="columnrendermode" type="enumeration" defaultValue="attribute">
+					<caption>Display mode</caption>
+					<category>1) Basics</category>
+					<description></description>
+					<enumerationValues>
+						<enumerationValue key="attribute">Display attribute value</enumerationValue>
+						<enumerationValue key="caption">Display a caption</enumerationValue>
+						<enumerationValue key="attributehtml">Interpret attribute as HTML</enumerationValue>
+						<enumerationValue key="thumbnail">Display (referenced) object as image (thumbnail)</enumerationValue>
+						<enumerationValue key="systemimage">Display (referenced) object as image (full size)</enumerationValue>
+						<enumerationValue key="image">Display a static image</enumerationValue>
+						<enumerationValue key="attributeimage">Intepret attribute as image URL</enumerationValue>
+						<enumerationValue key="dataset">Display a referenceset (using a dataset)</enumerationValue>
+					</enumerationValues>
+				</property>
+
+				<property key="columnname" type="translatableString" defaultValue="" required="false">
+					<caption>Caption</caption>
+					<category>1) Basics</category>
+					<description>If mode is 'display a caption', provide the caption here. HTML is allowed here. </description>
+				</property>
+
+
+				<property key="columnattr" type="attribute" entityProperty="../entity" required="false" isPath="optional" pathType="reference">
+					<caption>Attribute</caption>
+					<category>1) Basics</category>
+					<description>Attribute to display</description>
+					<attributeTypes>
+						<attributeType name="AutoNumber"/>
+						<attributeType name="Boolean"/>
+						<attributeType name="Currency"/>
+						<attributeType name="DateTime"/>
+						<attributeType name="Enum"/>
+						<attributeType name="Float"/>
+						<attributeType name="Integer"/>
+						<attributeType name="Long"/>
+						<attributeType name="String"/>
+					</attributeTypes>
+				</property>
+
+				<property key="columnimage" type="image" required="false">
+					<caption>(Default) Image</caption>
+					<category>1) Basics</category>
+					<description>Image to be rendered in front of the value. If mode is 'display a static image', this image is shown. </description>
+				</property>
+				<property key="columneditdataset" type="string" defaultValue="" required="false">
+					<caption>Dataset (if referenceset or editable reference)</caption>
+					<category>1) Basics</category>
+					<description>Provide the dataset if rendering an (editable) referenceset, or editable reference. See the widgets advanced > datasets section.</description>
+				</property>
+
+
+				<property key="columnaction" type="string" defaultValue="" required="false">
+					<caption>On click action</caption>
+					<category>3) Interaction</category>
+					<description>The name of the action that should be invoked when this item is clicked. The name should refer to the name of an action as defined in step 5) Actions</description>
+				</property>
+
+
+				<property key="columnclazz" type="string" defaultValue="" required="false">
+					<caption>Class</caption>
+					<category>2) Advanced</category>
+					<description>The following classes are available by default: 'link', 'newline' (starts a newline before this value), 'right' (right align) 'separator', 'large' and 'small'</description>
+				</property>
+				<property key="columnstyle" type="string" multiline="true" defaultValue="" required="false">
+					<caption>Style</caption>
+					<category>2) Advanced</category>
+					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
+				</property>
+				<property key="columndateformat" type="string" defaultValue="EEE, dd MMM y" required="false">
+					<caption>Column date time format</caption>
+					<category>2) Advanced</category>
+					<description>The formatting of the date if a datetime attribute is displayed.</description>
+				</property>
+				<property key="columnissearchattr" type="boolean" defaultValue="false">
+					<caption>Search column</caption>
+					<category>2) Advanced</category>
+					<description>If true, search queries will include the value of this rendering in search queries.</description>
+				</property>
+				<property key="columncondition" type="string" required="false">
+					<caption>Conditional visiblity</caption>
+					<category>2) Advanced</category>
+					<description>Name of the condition (as defined in advanced > conditional visibility) which should be true if this property is to be displayed</description>
+				</property>
+
+				<property key="columnprefix" type="string" required="false">
+					<caption>Prefix rendering</caption>
+					<category>2) Advanced</category>
+					<description>This (HTML) value will be rendered in front of each value. </description>
+				</property>
+				<property key="columnpostfix" type="string" required="false">
+					<caption>Postfix rendering</caption>
+					<category>2) Advanced</category>
+					<description>This (HTML) value will be rendered after each value. </description>
+				</property>
+
+				<property key="columntruecaption" type="translatableString" required="false">
+					<caption>'True' caption</caption>
+					<category>3) Boolean rendering</category>
+					<description>If the value being displayed equals 'true', this caption will be displayed.</description>
+				</property>
+				<property key="columnfalsecaption" type="translatableString" required="false">
+					<caption>'False' caption</caption>
+					<category>3) Boolean rendering</category>
+					<description>If the value being displayed equals 'false', this caption will be displayed.</description>
+				</property>
+
+				<property key="columneditable" type="boolean" defaultValue="false">
+					<caption>Editable column</caption>
+					<category>4) Inline editing</category>
+					<description>Whether the value can be edited. Note that this is only supported for certain value types. (Currently: enumerations, booleans, references and referencesets)</description>
+				</property>
+
+				<property key="columneditautocommit" type="boolean" defaultValue="true">
+					<caption>Always commit on change</caption>
+					<category>4) Inline editing</category>
+					<description>Immediately commit when the value is changed? This property is ignored and defaults to false if a on change microflow is set.</description>
+				</property>
+				<property key="columnonchangemf" type="microflow" required="false" entityProperty="../entity">
+					<caption>On change microflow</caption>
+					<category>4) Inline editing</category>
+					<description>On change microflow that is triggered when the value is changed by the user.</description>
+					<returnType type="Void"/>
+				</property>
+			</properties>
+		</property>
+
+		<property key="blaat3" type="object" isList="true" required="false">
+			<caption>4) Actions</caption>
+			<category>1) Grid config</category>
+			<description></description>
+			<properties>
+				<property key="actname" type="string" defaultValue="" required="true">
+					<caption>Action name</caption>
+					<category>1) Basics</category>
+					<description>The name of this action, as can be refered to in Rendering > Interaction.</description>
+				</property>
+				<property key="actshowbutton" type="boolean" defaultValue="false">
+					<caption>Show as button in header</caption>
+					<category>2) Button</category>
+					<description>Create a toolbar button for this action?</description>
+				</property>
+				<property key="actbuttoncaption" type="translatableString" required="false">
+					<caption>Button caption</caption>
+					<category>2) Button</category>
+					<description>Caption of the toolbar button.</description>
+				</property>
+				<property key="actclassname" type="string" required="false">
+					<caption>Button class</caption>
+					<category>2) Button</category>
+					<description>CSS class of the toolbar button.</description>
+				</property>
+				<property key="actbuttonimage" type="image" required="false">
+					<caption>Button image</caption>
+					<category>2) Button</category>
+					<description>Image of the toolbar button.</description>
+				</property>
+				<property key="actautohide" type="boolean" defaultValue="false">
+					<caption>Hide if disabled</caption>
+					<category>2) Button</category>
+					<description>Whether to hide, or only disable the button when it can't be used.</description>
+				</property>
+				<property key="actdataset" type="string" required="false">
+					<caption>Assign association dataset</caption>
+					<category>2) Button</category>
+					<description>Create a dropdown menu for this button, based on the selected dataset (see advanced > datasets)</description>
+				</property>
+
+				<property key="actmf" type="microflow" required="false" entityProperty="../entity">
+					<caption>Microflow (single selection)</caption>
+					<category>1) Basics</category>
+					<description>Microflow that will be invoked on the current selection. If multiselection is enabled, the microflow will be invoked for each item in the selection, unless a multi selection microflow is set.</description>
+					<returnType type="Void"/>
+				</property>
+				<property key="actmultimf" type="microflow" required="false" entityProperty="../entity" parameterIsList="true">
+					<caption>Microflow (multi selection)</caption>
+					<category>1) Basics</category>
+					<description>Optional microflow which can be set when multiselection is enabled. If this property is set, it will always be used, except when only zero or one objects are selected.
+						If not set, the single selection microflow will be invoked for each individual item in the selection (Which might be expensive on large selectiosn).
+					</description>
+					<returnType type="Void"/>
+				</property>
+				<property key="actappliestomultiselection" type="boolean" defaultValue="false">
+					<caption>Allowed on multiselection</caption>
+					<category>1) Basics</category>
+					<description>Can this action be invoked when multiple items are selected?</description>
+				</property>
+				<property key="actnoselectionmf" type="microflow" required="false">
+					<caption>Microflow (for context object)</caption>
+					<category>1) Basics</category>
+					<description>If the action does not require a selection; use this microflow.</description>
+					<returnType type="Void"/>
+				</property>
+				<property key="actisdefault" type="boolean" defaultValue="false">
+					<caption>Is default action</caption>
+					<category>1) Basics</category>
+					<description>If true, this action will be used as default action and be invoked if an item is doubleclicked or the return key is pressed. Note that this option should be true for one action only.
+					</description>
+				</property>
+				<property key="actonselect" type="boolean" defaultValue="false">
+					<caption>Fire on selection change</caption>
+					<category>1) Basics</category>
+					<description>Invoke this action immediately when the current selection changes. For more information about retrieving the current selection, see the 'fine tuning > Selection reference' properties
+					</description>
+				</property>
+				<property key="actconfirmtext" type="translatableString" required="false">
+					<caption>Confirmation message</caption>
+					<category>1) Basics</category>
+					<description>If set, users have to confirm this message before continuing</description>
+				</property>
+<!--
+				<property key="actshortcut" type="integer" defaultValue="0" required="true">
+					<caption>Keyboard shortcut</caption>
+					<category>3) Triggers</category>
+					<description>Key which act as shortcut for this action, the value is the ASCII value of the key. See http://www.cambiaresearch.com/c4/702b8cd1-e5b0-42e6-83ac-25f0306e3e25/Javascript-Char-Codes-Key-Codes.aspx for a key - keycode conversion table.</description>
+				</property>
+-->            </properties>
+		</property>
+
+ 		<property key="blaat4" type="object" isList="true" required="false">
+			<caption>Search filters</caption>
+			<category>3) Search</category>
+			<description>This properties creates quick-filter dropdown buttons for the grid. A filter can be based on a boolean or enumeration value.</description>
+			<properties>
+				<property key="filterattr" type="attribute" entityProperty="../entity" required="true"  isPath="optional" pathType="reference">
+						<caption>Filter attribute</caption>
+						<category>1) Filter config</category>
+						<description></description>
+						<attributeTypes>
+								<attributeType name="Boolean"/>
+								<attributeType name="Enum"/>
+						</attributeTypes>
+				</property>
+
+				<property key="filtertruecaption" type="translatableString" required="false">
+					<caption>'True' caption</caption>
+					<category>2) Boolean filter</category>
+					<description></description>
+				</property>
+				<property key="filterfalsecaption" type="translatableString" required="false">
+					<caption>'False' caption</caption>
+					<category>2) Boolean filter</category>
+					<description></description>
+				</property>
+				<property key="filterbooleandefault" type="enumeration" defaultValue="all">
+					<caption>Filter default </caption>
+					<category>2) Boolean filter</category>
+					<description>With which filter should the filter start?</description>
+					<enumerationValues>
+						<enumerationValue key="all">Enable all</enumerationValue>
+						<enumerationValue key="true">True only</enumerationValue>
+						<enumerationValue key="false">False only</enumerationValue>
+					</enumerationValues>
+				</property>
+            </properties>
+		</property>
+
+		<property key="pagesize" type="integer" defaultValue="20">
+			<caption>Page size</caption>
+			<category>2) Appearance</category>
+			<description>Number of items to display on a page.</description>
+		</property>
+<!-- No longer needed in Mx4:		-->
+		<property key="enableschema" type="boolean" defaultValue="true">
+			<caption>DEPRECATED. Use database optimization (does not work with virtual attributes)</caption>
+			<category>5) Fine tuning</category>
+			<description>DEPRECATED. Should only used in Mendix 2.x or Mendix 3.x. Leave to true otherwise.
+
+				If true, the widget will optimize database retrievals for better performance. However, the widget will no longer support virtual attributes. If you need to use virtual attributes prior to Mendix 4, set this property to false! In general, we strongly recommend to not use virtual attributes in the gridview widget. Note that disabling this property might lead to strange behavior when updating refered attributes. </description>
+		</property>
+		<property key="emptymessage" type="translatableString" required="false">
+			<caption>Empty message</caption>
+			<category>3) Search</category>
+			<description>Message to be displayed when the grid does not hold any records</description>
+		</property>
+
+		<property key="defaultsortcolumn" type="integer" defaultValue="0">
+			<caption>Default column to sort on</caption>
+			<category>2) Appearance</category>
+			<!--<description>When using drag and drop, this column should be a float column.</description>-->
+			<description>Index of the column to sort on by default. Note that the first column is '0'. This value should always refer to a column that has a sort attribute.</description>
+		</property>
+		<property key="refreshoncontext" type="boolean" defaultValue="false">
+			<caption>Refresh on context change</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, the grid will reload when the context object is altered.</description>
+		</property>
+		<property key="refreshonclass" type="boolean" defaultValue="false">
+			<caption>Refresh on class change</caption>
+			<category>5) Fine tuning</category>
+			<description>Refresh when a class change is fired (create or delete of an object of the same type as viewed in the grid)</description>
+		</property>
+
+		<property key="allowmultiselect" type="boolean" defaultValue="false">
+			<caption>Multi selection enabled</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, multi selection actions can be used, an a checkbox is displayed in front of each row.</description>
+		</property>
+		<property key="selectionref" type="entity" isPath="yes" pathType="reference" required="false" allowNonPersistableEntities="true">
+		<caption>Selection reference</caption>
+			<category>5) Fine tuning</category>
+			<description>This reference is updated as soon as the selection changes. This is useful to determine the current selection if action that fires on selection changes is used (see actions). For that action, set a microflow for the context action. The value of the reference selected here will be updated before that action fires.</description>
+		</property>
+		<property key="selectionrefset" type="entity" isPath="yes" pathType="referenceSet" required="false" allowNonPersistableEntities="true">
+			<caption>Multi selection reference set</caption>
+			<category>5) Fine tuning</category>
+			<description>See 'selection reference'. This reference set will be filled with the values of the multi selection.</description>
+		</property>
+
+		<property key="colheaderenabled" type="boolean" defaultValue="true">
+			<caption>Show column headers</caption>
+			<category>2) Appearance</category>
+			<description></description>
+		</property>
+		<property key="searchenabled" type="boolean" defaultValue="false">
+			<caption>Search enabled</caption>
+			<category>3) Search</category>
+			<description></description>
+		</property>
+		<property key="realtimesearch" type="boolean" defaultValue="false">
+			<caption>Real time search</caption>
+			<category>3) Search</category>
+			<description>Apply search while typing</description>
+		</property>
+		<property key="searchplaceholder" type="translatableString" required="false">
+			<caption>Search placeholder text</caption>
+			<category>3) Search</category>
+			<description>Default message to be displayed in the search box</description>
+		</property>
+		<property key="searchlabeldataset" type="string" defaultValue="" required="false">
+			<caption>Search label dataset</caption>
+			<category>3) Search</category>
+			<description>If a dataset is provided, the values of this dataset will appear as dropdown list in the search box when searching</description>
+		</property>
+		<property key="showtotals" type="boolean" defaultValue="true">
+			<caption>Show item count in the paging section</caption>
+			<category>2) Appearance</category>
+			<description>If true, an info box with the amount of items and current selection is displayed in the paging section.</description>
+		</property>
+		<property key="itemcountmessage" type="translatableString" required="false">
+			<caption>Item count message</caption>
+			<category>2) Appearance</category>
+			<description>Information message about the amount of items and selection size. Use '{0}' to substitute the amount of items. Use '{1}' to substitute the selection size.</description>
+		</property>
+		<property key="showasdiv" type="boolean" defaultValue="false">
+			<caption>Use floating layout</caption>
+			<category>5) Fine tuning</category>
+			<description>Use a floating layout with tiles, instead of a table layout with rows. All top level html items (table, thead, tr and td) will be replaced by divs. Use this option if you want to gain full control over styling via CSS. Caution: The column headers will be virtually useless when setting this option. You can use this property to achieve a floating layount instead of a table layout. Note that the widget of the first column determines the width of the tiles</description>
+		</property>
+		<property key="listenchannel" type="string" required="false">
+			<caption>Formloader channel</caption>
+			<category>5) Fine tuning</category>
+			<description>If provided, all formloaders listening to this channel will follow the current selection</description>
+		</property>
+<!--
+		<property key="dnd" type="boolean" defaultValue="false">
+			<caption>Drag and drop rows</caption>
+			<category>6) Drag and Drop</category>
+			<description>Drag and drop rows and retain their order</description>
+		</property>
+		<property key="dndondropmf" type="microflow" required="false" entityProperty="entity">
+			<caption>On drop microflow</caption>
+			<category>6) Drag and Drop</category>
+			<description>MF called when you drop an item somewhere. Save your sorted object in this MF and do sort id conflict resolution. If this property is not set, dropped items cannot be saved.</description>
+			<returnType type="Void"/>
+		</property>
+		<property key="dndsortidmin" type="integer" defaultValue="0">
+			<caption>Minimum sort id</caption>
+			<category>6) Drag and Drop</category>
+			<description>Minimum sort id. Use the same min and max values in the MF's where you create the sorted entity.</description>
+		</property>
+		<property key="dndsortidmax" type="integer" defaultValue="2000000000">
+			<caption>Maximum sort id</caption>
+			<category>6) Drag and Drop</category>
+			<description>Maximum sort id. Use the same min and max values in the MF's where you create the sorted entity.</description>
+		</property>
+-->
+		<property key="blaat7" required="false" type="object" isList="true">
+			<caption>Datasets</caption>
+			<category>4) Advanced</category>
+			<description>Datasets are used for search filters, dropdown actions and editable reference(sets). Datasets define how a list of items related to the current grid are retrieved and rendered.</description>
+			<properties>
+
+				<!-- Label system -->
+				<property key="relname" type="string" required="true">
+					<caption>Dataset name</caption>
+					<category>Data source</category>
+					<description>Name of this dataset, referred to by other several other settings</description>
+				</property>
+				<property key="rellabel" type="translatableString" required="false">
+					<caption>Caption</caption>
+					<category>Data source</category>
+					<description>Caption of the dataset, if shown in a dropdown button</description>
+				</property>
+				<property key="relentity" type="entity" required="true">
+					<caption>Entity</caption>
+					<category>Data source</category>
+					<description>If set, all other label properties are required as well.</description>
+				</property>
+				<property key="relcontextassoc" type="entity" entityProperty="relentity" isPath="yes" pathType="reference" required="false">
+					<caption>Context association</caption>
+					<category>Data source</category>
+					<description>How does this dataset relate to the current context?</description>
+				</property>
+				<property key="relitemassocref" type="entity" entityProperty="../entity" isPath="yes" pathType="reference" required="false">
+					<caption>Item association (reference)</caption>
+					<category>Data source</category>
+					<description>How does this dataset relate to the current item?</description>
+				</property>
+				<property key="relitemassocrefset" type="entity" entityProperty="../entity" isPath="yes" pathType="referenceSet" required="false">
+					<caption>Item association (referenceSet)</caption>
+					<category>Data source</category>
+					<description>How does this dataset relate to the current item?</description>
+				</property>
+				<property key="relnameattr" type="attribute" entityProperty="relentity" isPath="no"  required="true">
+					<caption>Label name attribute</caption>
+					<category>Data source</category>
+					<description>Caption attribute of the related object</description>
+					<attributeTypes>
+						<attributeType name="String"/>
+					</attributeTypes>
+				</property>
+				<property key="relconstraint" type="entityConstraint" entityProperty="relentity" required="false">
+					<caption>Constraint</caption>
+					<category>Data source</category>
+					<description>Place a constraint on the items that should show up in this dataset</description>
+				</property>
+				<property key="relnewitemcaption" type="translatableString" required="false">
+					<caption>New item caption</caption>
+					<category>Data source</category>
+					<description>If set, new items can be added on the fly to the dataset</description>
+				</property>
+			</properties>
+		</property>
+
+		<property key="blaat8" required="false" type="object" isList="true">
+			<caption>Conditional visibility</caption>
+			<category>4) Advanced</category>
+			<description>Define conditions for conditional visibility here. These sets can be used in the rendering property.</description>
+			<properties>
+				<property key="condname" type="string" required="true">
+					<caption>Name</caption>
+					<category>1) Basics</category>
+					<description>Name of this condition as referred to by the rendering</description>
+				</property>
+				<property key="condattr" type="attribute" entityProperty="../entity" required="true" isPath="optional" pathType="reference">
+					<caption>Attribute</caption>
+					<category>1) Basics</category>
+					<description>Attribute to base the conditional visibility on
+					</description>
+					<attributeTypes>
+						<attributeType name="AutoNumber"/>
+						<attributeType name="Boolean"/>
+						<attributeType name="Currency"/>
+						<attributeType name="DateTime"/>
+						<attributeType name="Enum"/>
+						<attributeType name="Float"/>
+						<attributeType name="Integer"/>
+						<attributeType name="Long"/>
+						<attributeType name="String"/>
+					</attributeTypes>
+				</property>
+				<property key="condvalues" type="string" multiline="true" required="true">
+					<caption>Match values</caption>
+					<category>1) Basics</category>
+					<description>Newline separated list of values, in which case this condition evaluates to 'true' (or: 'visible').</description>
+				</property>
+				<property key="condclass" type="string" required="false">
+					<caption>CSS Class</caption>
+					<category>2) Advanced</category>
+					<description>This class is applied to every item to which this condition applies</description>
+				</property>
+			</properties>
+		</property>
+
+ </properties>
+</widget>

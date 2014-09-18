@@ -1,0 +1,266 @@
+﻿.gv_grid {
+    cursor : default;
+    outline-style: none;
+}
+
+.gv_table {
+    width: 100%;
+    outline-style: none;
+}
+
+.gv_header {
+    padding: 4px 0px;
+    margin-bottom: 4px;
+}
+
+.gv_footer {
+    padding: 4px 0px;
+    border-top: 1px solid #CCC;
+    margin-top: 4px;
+}
+
+.gv_th {
+    padding: 8px;
+    border-bottom: 2px solid #ccc;
+}
+
+.gv_sortcolumn {
+    font-weight: bold;
+}
+
+.gv_sort_arrow {
+    height: 0; 
+    width: 0; 
+    position: relative;
+    left: 5px;
+    cursor: pointer;
+}
+
+.gv_sort_up .gv_sort_arrow {
+    border-left: 5px solid transparent; 
+    border-right: 5px solid transparent; 
+    border-bottom: 8px solid black; 
+    top: -11px;
+
+}
+
+.gv_sort_down .gv_sort_arrow {
+    border-left: 5px solid transparent; 
+    border-right: 5px solid transparent; 
+    border-top: 8px solid black; 
+    top: 13px;
+
+}
+
+.gv_sort_hover {
+    font-weight : bold;
+}
+
+.gg_data {
+    display : block;
+    overflow : hidden;
+}
+
+.gg_column_wrapper {
+    display: inline-block; 
+    float : left;
+}
+
+.gv_nocolumnheaders th span {
+    display : none;
+}
+
+.gv_nocolumnheaders div .gv_headrow {
+    display: none; /* only matches if floating layout */
+}
+
+.gv_row {
+
+}
+
+.gv_cell {
+    padding: 8px;
+    vertical-align: top;
+}
+
+.gg_img, .gg_column img {
+    margin-right: 4px;
+    display: inline;
+}
+
+.gv_row_hover {
+    background-color: #eee;
+}
+
+.gv_selected {
+    background-color : #e2e2e2; 
+}
+
+.gv_paging {
+    text-align: center;
+}
+
+.gv_paging .gv_btn_page {
+    margin: 4px;
+    cursor: pointer;
+}
+
+.gv_btn_page_active {
+    font-weight: bold;
+    color: #000;
+}
+
+.gv_btn_prev {
+    border-top: 5px solid transparent; 
+    border-bottom: 5px solid transparent; 
+    border-right: 8px solid black; 
+    height: 0; 
+    width: 0;   
+    display: inline-block;
+    text-indent: -9999px;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.gv_btn_next {
+    border-top: 5px solid transparent; 
+    border-bottom: 5px solid transparent; 
+    border-left: 8px solid black; 
+    height: 0; 
+    width: 0;   
+    display: inline-block;
+    text-indent: -9999px;
+    cursor: pointer;
+    line-height: 0;
+}
+
+.gv_searchBar {
+    display: inline-block;
+    margin: 8px 0;
+}
+
+.gv_searchnode .dijitDropDownButton {
+    display: inline-block;;
+    float: right;
+}
+
+.tg_search_placeholder {
+    color: #CCC;
+    font-style: italic;
+}
+
+.gv_searchBar .dijitTextBox {
+    background: none;
+    border-radius: 20px;
+    padding: 4px 8px;
+    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #9FA4AD #CACDD2 #DADCDE #CACDD2;
+
+    background: #fff;
+    outline: none;
+}
+
+.gv_searchLabelContainer {
+    display: inline-block;
+}
+
+.gv_label {
+    padding: 0 0 0 4px;
+    margin: 5px 5px 0 0;
+    border: 1px solid #ABABAB;
+    font-weight: normal;
+    font-size: 10px;
+    color: #3F3F3F;
+    border-radius: 3px;
+    vertical-align: middle;
+    background: #eee;
+}
+
+.gv_label_close {
+    color: black;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 13px;
+    margin-left: 4px;
+    padding: 0 4px;
+    border-left: 1px solid #ABABAB;
+}
+
+.gv_paging_totals {
+    display: block;
+    clear: left;
+}
+
+.gv_button_disabled {
+    /* This works in IE 8 & 9 too */ 
+    /* ... but also 5, 6, 7 */ 
+    filter: alpha(opacity=50); 
+     
+    /* Older than Firefox 0.9 */ 
+    -moz-opacity:0.5; 
+     
+    /* Safari 1.x (pre WebKit!) */ 
+    -khtml-opacity: 0.5; 
+     
+    /* Modern! 
+    /* Firefox 0.9+, Safari 2?, Chrome any? 
+    /* Opera 9+, IE 9+ */ 
+    opacity: 0.5; 
+}
+
+
+.gv_floating_grid .gv_row {
+    border : 1px solid #e2e2e2;
+    margin: 8px;
+    padding: 8px;
+    float: left;
+}
+
+.gv_floating_grid .gv_cell_multiselect {
+    padding: 0px;
+}
+
+.gv_floating_grid .gv_column_wrapper {
+    float: left;
+    margin-left: 4px;
+}
+
+.gv_grid .newline {
+    clear: left;
+    float: left;
+}
+
+.gv_grid .right {
+    float: right;
+}
+
+.gv_grid .large {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.gv_grid .small {
+    font-size : 0.8em;
+}
+
+.gv_grid .link {
+    text-decoration:  underline;
+    cursor: pointer;
+}
+
+.gv_grid .separator {
+    padding-left: 8px;
+    margin-left: 8px;
+    border-left: 1px solid #ccc;
+}
+
+.gv_multiselect_disabled .gv_headrow .gv_columnheaders  {
+    width: 0px;
+}
+
+.gv_headrow .gv_multiselect_column_head {
+    width: 20px;
+}
