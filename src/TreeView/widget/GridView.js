@@ -258,8 +258,11 @@ mxui.widget.declare("TreeView.widget.GridView", {
 
 	addToSelection : function(item, noevents) {
 		item.checkbox.checked = true;
-		dojo.addClass(item.domNode, 'gv_selected');
-		dojo.window.scrollIntoView(item.domNode);
+		
+		if (this.allowsingleselect) {
+			dojo.addClass(item.domNode, 'gv_selected');
+			dojo.window.scrollIntoView(item.domNode);
+		}
 
 		var idx = dojo.indexOf(this._multiSelection, item);
 		if (idx === -1)
@@ -751,18 +754,22 @@ mxui.widget.declare("TreeView.widget.GridView", {
 			"gv_column_wrapper" : this.columnClick,
 			"gv_cell" : function(node, e) {
 				this.grabFocus();
-				this.setSelection (this.getRowForNode(node));
+				this.setSelection(this.getRowForNode(node));
+				if (this.singleclickdefaultaction)
+					this.invokeDefaultAction(node, e);
 			},
 			"gv_th" : function(node, e) {
 				this.setCurrentSortColumn(this._getIndex(node) - 1);
 			}
 		});
 
-		lc(this, this.gridNode, "ondblclick", {
-			"gv_cell" : function(target, e) {
-				this.invokeDefaultAction(target, e);
-			}
-		});
+		if (!this.singleclickdefaultaction) {
+			lc(this, this.gridNode, "ondblclick", {
+				"gv_cell" : function(target, e) {
+					this.invokeDefaultAction(target, e);
+				}
+			});
+		}
 
 		var currentcolhover = 0;
 		lc(this, this.gridNode, "onmouseover", {
@@ -997,6 +1004,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		actnoselectionmf : '',
 		actdataset : '',
 		actappliestomultiselection : '',
+		actprogressmsg : '',
 //		actshortcut : '',
 
 		//filters
@@ -1007,6 +1015,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 
 		//advanced settings
 		allowmultiselect  : false,
+		allowsingleselect : true,
 		defaultsortcolumn : 0,
 		pagesize : 20,
 		refreshoncontext  : false,
@@ -1024,6 +1033,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		itemcountmessage  : '',
 		showasdiv         : false,
 		listenchannel     : '',
+		singleclickdefaultaction : false,
 
 		//related datasets
 		relname             : '',
@@ -1209,7 +1219,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 
 	setupActions : function() {
 		var data = [];
-		this.splitPropsTo('actname,actshowbutton,actclassname,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actmultimf,actappliestomultiselection,actisdefault,actonselect,actnoselectionmf,actdataset', data);
+		this.splitPropsTo('actname,actprogressmsg,actshowbutton,actclassname,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actmultimf,actappliestomultiselection,actisdefault,actonselect,actnoselectionmf,actdataset', data);
 		for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
 
 			if (d.actmultimf && !!!d.actmf)

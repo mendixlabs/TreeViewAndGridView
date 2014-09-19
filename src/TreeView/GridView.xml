@@ -341,6 +341,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 					<category>1) Basics</category>
 					<description>If set, users have to confirm this message before continuing</description>
 				</property>
+				<property key="actprogressmsg" type="translatableString" required="false">
+					<caption>Progress message</caption>
+					<category>1) Basics</category>
+					<description>If set, a progress bar will be shown when running this action</description>
+				</property>	
 <!--
 				<property key="actshortcut" type="integer" defaultValue="0" required="true">
 					<caption>Keyboard shortcut</caption>
@@ -424,6 +429,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<description>Refresh when a class change is fired (create or delete of an object of the same type as viewed in the grid)</description>
 		</property>
 
+		<property key="allowsingleselect" type="boolean" defaultValue="true">
+			<caption>Selection enabled</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, selected items will be hightlighted</description>
+		</property>
 		<property key="allowmultiselect" type="boolean" defaultValue="false">
 			<caption>Multi selection enabled</caption>
 			<category>5) Fine tuning</category>
@@ -438,6 +448,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<caption>Multi selection reference set</caption>
 			<category>5) Fine tuning</category>
 			<description>See 'selection reference'. This reference set will be filled with the values of the multi selection.</description>
+		</property>
+		<property key="singleclickdefaultaction" type="boolean" defaultValue="false">
+			<caption>Trigger default actions on single click</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, clicking an item will trigger its default action. If false, a double click is required</description>
 		</property>
 
 		<property key="colheaderenabled" type="boolean" defaultValue="true">

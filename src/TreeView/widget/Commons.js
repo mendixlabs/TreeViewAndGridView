@@ -53,7 +53,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			{ 'class' : 'gv_label' },
 			mxui.dom.span(
 				{ 'class' : 'gv_label_name' },
-				mxui.dom.escapeHTML(name ? name : "")
+				name ? name : ""
 			)
 		);
 
@@ -297,74 +297,15 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			return;
 		}
 
-		var widgets = [];
-
-		var close = function() {
-			widgets[0].hide();
-			dojo.forEach(widgets, function(item) {
-				try {
-					item.uninitialize();
-					//item.destroy();
-				}
-				catch(e) {
-					//stupid destructors of dialog always throw...
-				}
-			});
-		}
-
-		var dialog;
-		var dialogContentDiv = mxui.dom.div({ 'class' : 'gv-confirm-content'});
-		dialogContentDiv.appendChild( mxui.dom.div({ 'class' : 'gv-confirm-message'}, message));
-
-		var btn1 = new mxui.widget._Button({
-				caption     : yescaption || 'Yes'
-		});
-
-		var btn2 = new mxui.widget._Button({
-				caption     : nocaption || 'Cancel'
-		});
-
-		dialogContentDiv.appendChild(btn1.domNode);
-		dialogContentDiv.appendChild(btn2.domNode);
-
-		dialog = new dijit.Dialog({
-			'autofocus': false,
-			'refocus': false,
-			'class': 'modal-dialog mx-dialog mx-dialog-info',
-			'title': 'Please confirm',
-			'content': dialogContentDiv
-		});
-
-		mxui.dom.addClass(dialog.titleBar, 'mendixWindow_title mendixWindow_header confirmMicroflowTitleBar');
-		mxui.dom.removeClass(dialog.titleBar, 'dijitDialogTitleBar');
-		mxui.dom.addClass(dialog.closeButtonNode, 'mendixWindow_buttonClose');
-		mxui.dom.addClass(dialog.containerNode, 'confirmMicroflowContent');
-		if (dojo.isIE < 9) {
-			var surrDiv = mxui.dom.div({ 'class':'mendixWindow_header'});
-			dojo.place(surrDiv, dialog.titleBar, "before");
-			dojo.place(dialog.titleBar, surrDiv, "first");
-			mxui.dom.removeClass(dialog.titleBar, 'mendixWindow_header');
-			dojo.style(surrDiv, "height", "auto");
-		}
-		dojo.style(dialog.titleBar, "height", "auto");
-
-		widgets.push(dialog, btn1, btn2); //to clean up!
-
-		dialog.show();
-		
-		//close popup and run callback on btn1 click #101262
-		dojo.on(btn1, "click", function(e){
-			console.log(dialog);
-			dialog.destroy();
-			callback && callback();
-		});
-
-		dojo.on(btn2, "click", function(e){
-			dialog.destroy();
+		mx.ui.confirmation({
+		    content: message,
+		    proceed: yescaption || "Yes",
+		    cancel: nocaption || "Cancel",
+		    handler : callback
 		});
 	}
 
-	function mf (mfname, data, callback, context, mfNeedsList) {
+	function mf (mfname, data, callback, context, mfNeedsList, progressMessage) {
 		//firing on multiple items? wait for all items to finish
 		if (dojo.isArray(data) && !mfNeedsList) {
 			var left = data.length;
@@ -374,7 +315,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 					callback.call(context || window);
 			}
 			dojo.forEach(data, function(dataitem) {
-				mf(mfname, dataitem, cb);
+				mf(mfname, dataitem, cb, context, false, progressMessage);
 			});
 
 		}
@@ -385,16 +326,25 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			if (guids.length > 1 && !mfNeedsList)
 				throw "Multiple selection found, but microflow supports only one argument!";
 
-			mx.processor.action({
-					caller		: context,
-					error       : error,
+			mx.ui.action(mfname, {
+					store        : {
+						caller	: context
+					},
+					params : {
+						applyto     : 'selection',
+						guids       : guids
+					},
+					progressMsg : progressMessage,
+					progress    : progressMessage ? "modal" : undefined,
+					error       : function() {
+						if (error)
+							error();
+					},
 					callback    : function(_, data) {
 							if (callback)
 									callback.call(context || window);
 					},
-					actionname  : mfname,
-					applyto     : 'selection',
-					guids       : guids
+					async : !!progressMessage
 			});
 		}
 	}
@@ -565,7 +515,7 @@ dojo.declare("TreeView.widget.DropDown", null, {
 			this.dropdown.set('label', item.label);
 
 		return new dijit.MenuItem({
-			label : item.label,
+			label : mxui.dom.escapeHTML(item.label),
 			value : item.value,
 			onClick : item.onClick
 				? dojo.hitch(item, item.onClick, dojo.hitch(this, this.itemClick)) //pass itemClick as callback to the onClick, so it can be invoked
@@ -847,11 +797,11 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 			dojo.addClass(domNode, 'gg_clickable');
 
 		if (this.condition && !this.condition.appliesTo(record)) {
-			dojo.style(domNode, 'display', 'none');
+			dojo.style(domNode.parentNode, 'display', 'none');
 			return; //hide
 		}
 
-		dojo.style(domNode, 'display', '');
+		dojo.style(domNode.parentNode, 'display', '');
 
 		switch (this.columnrendermode) {
 			case 'attribute':
@@ -1013,6 +963,7 @@ dojo.declare("TreeView.widget.Action", null, {
 	actconfirmtext : '',
 	actdataset : '',
 	actappliestomultiselection : true,
+	actprogressmsg : '',
 	//*Not functional
 
 	tree : null,
@@ -1137,7 +1088,7 @@ dojo.declare("TreeView.widget.Action", null, {
 			//invoke on the root object
 			else if (this.actnoselectionmf) {
 				TreeView.widget.Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
-					TreeView.widget.Commons.mf(this.actnoselectionmf, this.tree.getContextObject(), null, this.tree);
+					TreeView.widget.Commons.mf(this.actnoselectionmf, this.tree.getContextObject(), null, this.tree, false, this.actprogressmsg);
 				}));
 			}
 		}
@@ -1155,7 +1106,7 @@ dojo.declare("TreeView.widget.Action", null, {
 
 				//See ticket 9116, we need to invoke the single argument microflow version for a single argument. Multi argument mf will break
 				if (dojo.isArray(selection) && selection.length > 1 && this.actmultimf)
-					TreeView.widget.Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data() }), null, this.tree, true);
+					TreeView.widget.Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data() }), null, this.tree, true, this.actprogressmsg);
 				else {
 					var sel = selection == null || selection == []
 						? []
@@ -1163,7 +1114,7 @@ dojo.declare("TreeView.widget.Action", null, {
 							? dojo.map(selection, function(item) { return item.data() })
 							: selection.data();
 
-					TreeView.widget.Commons.mf(this.actmf, sel, null, this.tree);
+					TreeView.widget.Commons.mf(this.actmf, sel, null, this.tree, false, this.actprogressmsg);
 				}
 			}));
 		}

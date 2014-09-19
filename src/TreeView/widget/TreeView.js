@@ -1820,6 +1820,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		actonselect : '',
 		actnoselectionmf : '',
 		actshortcut : '',
+		actprogressmsg : '',
 
 		//Selection references
 		selectionref: '',
@@ -1922,7 +1923,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	setupActions : function() {
 		var data = [];
-		this.splitPropsTo('actname,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf,actshortcut', data);
+		this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf,actshortcut', data);
 		for(var i = 0, d = null; d = data[i]; i++) {
 			var action = new TreeView.widget.Action(d, this);
 			this.actions.push(action);

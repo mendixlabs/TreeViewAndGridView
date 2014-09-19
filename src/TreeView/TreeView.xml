@@ -345,6 +345,12 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<category>1) Basics</category>
 					<description>If set, users have to confirm this message before continuing</description>
 				</property>	
+				<property key="actprogressmsg" type="translatableString" required="false">
+					<caption>Progress message</caption>
+					<category>1) Basics</category>
+					<description>If set, a progress bar will be shown when running this action</description>
+				</property>	
+				
 				<property key="actonselect" type="boolean" defaultValue="false">
 					<caption>Fire on selection change</caption>
 					<category>2) Settings</category>
