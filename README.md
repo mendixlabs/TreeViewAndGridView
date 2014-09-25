@@ -50,7 +50,6 @@ An important but complex property is the association direction. This property de
 Domain model | Navigation direction
 --- | --- 
  Order  * --- referenceset ---> * Orderline	| From order to orderline: The association owner (that is; the order) is the parent. From orderline to order: The association owner (that is; the order) is the child (this is a bit artificial case)
-
  Order  1 <---- reference ---- * Orderline | From order to orderline: The association owner (that is; the orderline) is the child. From orderline to order: The association owner (that is; the orderline) is the parent
  
 The *show relation name* property indicates if the items inside this relation should be wrapped inside a helper node. If so, the class and styling attributes are applied to this node.
