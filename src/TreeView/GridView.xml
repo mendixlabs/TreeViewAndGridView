@@ -434,6 +434,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<category>5) Fine tuning</category>
 			<description>If true, selected items will be hightlighted</description>
 		</property>
+		<property key="selectfirstrow" type="boolean" defaultValue="false">
+			<caption>Select the first row on startup</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, the first row of the grid will be selected on startup of the grid.</description>
+		</property>
 		<property key="allowmultiselect" type="boolean" defaultValue="false">
 			<caption>Multi selection enabled</caption>
 			<category>5) Fine tuning</category>

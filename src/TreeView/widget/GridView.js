@@ -1016,6 +1016,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		//advanced settings
 		allowmultiselect  : false,
 		allowsingleselect : true,
+		selectfirstrow    : false,
 		defaultsortcolumn : 0,
 		pagesize : 20,
 		refreshoncontext  : false,
@@ -1122,6 +1123,9 @@ mxui.widget.declare("TreeView.widget.GridView", {
 			});
 
 		this.setCurrentSortColumn(this.defaultsortcolumn);
+		if (this.selectfirstrow)
+			this.selectFirstItem();
+	
 		this.actLoaded();
 
 		//this.grabStartupFocus();
