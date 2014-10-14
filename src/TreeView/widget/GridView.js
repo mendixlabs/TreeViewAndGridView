@@ -215,6 +215,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 	sortInverted : false,
 	count : 0,
 	curpage : 0,
+        firstUpdate: true,
 
 	saveAndFireSelection : function(item) {
 
@@ -376,6 +377,12 @@ mxui.widget.declare("TreeView.widget.GridView", {
 			if (record)
 				this.addToSelection(record, true);
 		}
+                
+                //select first selection on first update
+                if (this.firstUpdate) {
+                    this.setDefaultSelection();
+                    this.firstUpdate = false;
+                }
 	},
 
 	/** tries to reapply the current selection, otherwise, selects the first record */
@@ -723,6 +730,12 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		else
 			this.setSelection(null);
 	},
+
+        setDefaultSelection: function(){
+            if (this.selectfirstrow) {
+                this.selectFirstItem();
+            }
+        },
 
 	/*
 
@@ -1123,13 +1136,10 @@ mxui.widget.declare("TreeView.widget.GridView", {
 			});
 
 		this.setCurrentSortColumn(this.defaultsortcolumn);
-		if (this.selectfirstrow)
-			this.selectFirstItem();
 	
 		this.actLoaded();
 
 		//this.grabStartupFocus();
-
 		setTimeout(dojo.hitch(this, this.grabStartupFocus), 200); //grab focus, but with a small timeout, because wm content manager will grab focus at end of startup chain
 	},
 
