@@ -38,6 +38,10 @@
 .gg_assoc_wrapper > .gg_row {
 }
 
+.gg_assoc_wrapper li{
+	list-style-type: none;
+}
+
 .gg_nochildren {
 	
 }
