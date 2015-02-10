@@ -354,13 +354,11 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			if (console)
 				console.error(msg);
 			widget.domNode.innerHTML = msg;
-			mx.ui.error(msg)
 			throw msg;
 	}
 
 	function error(e) {
 			console.error(e);
-			mx.ui.error(e);
 			throw e;
 	}
 
