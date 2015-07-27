@@ -480,6 +480,16 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<category>3) Search</category>
 			<description>Default message to be displayed in the search box</description>
 		</property>
+		<property key="searchmaxquerysizeenabled" type="boolean" required="true" defaultValue="false">
+			<caption>Cap query size?</caption>
+			<category>3) Search</category>
+			<description></description>
+		</property>
+		<property key="searchmaxquerysize" type="integer" defaultValue="10">
+			<caption>Max query size</caption>
+			<category>3) Search</category>
+			<description>Number of terms to take into account. Any search terms beyond this will be ignored.</description>
+		</property>
 		<property key="searchlabeldataset" type="string" defaultValue="" required="false">
 			<caption>Search label dataset</caption>
 			<category>3) Search</category>

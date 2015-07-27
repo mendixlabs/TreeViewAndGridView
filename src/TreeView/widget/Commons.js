@@ -1470,7 +1470,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 
 	},
 
-	getSearchConstraints : function(searchAttrs) {
+	getSearchConstraints : function(searchAttrs, limit) {
 		//search for term xpath
 		var xpath = "";
 
@@ -1480,6 +1480,10 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 		if (this.searchfilter) {
 			var filtervalues = dojo.map(this.searchfilter.split(/\s+/), mxui.html.escapeQuotes);
 
+			if (typeof limit !== 'undefined' && filtervalues.length > limit) {
+				filtervalues.splice(limit, filtervalues.length - limit);
+			}
+			
 			//we want every search value to occur at least once! In one of the attributes
 			xpath += "[(" + dojo.map(filtervalues, function(fv) {
 					return dojo.map(searchAttrs, function(attr) {
