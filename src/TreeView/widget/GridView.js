@@ -595,8 +595,12 @@ mxui.widget.declare("TreeView.widget.GridView", {
 				}), function(column) {
 					return column.columnattr;
 				});
-
-			xpath += this.searchControl.getSearchConstraints(this.searchAttrs);
+			
+			if (this.searchmaxquerysizeenabled) {
+				xpath += this.searchControl.getSearchConstraints(this.searchAttrs, this.searchmaxquerysize);
+			} else {
+				xpath += this.searchControl.getSearchConstraints(this.searchAttrs);
+			}
 		}
 
 		xpath += this.filterManager.getSearchConstraints();
@@ -1038,6 +1042,8 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		searchplaceholder : '',
 		searchlabeldataset: '',
 		realtimesearch    : false,
+		searchmaxquerysizeenabled	: false,
+		searchmaxquerysize : 10,
 		emptymessage      : '',
 		selectionref      : '',
 		selectionrefset   : '',
