@@ -227,8 +227,6 @@ mxui.widget.declare("TreeView.widget.GridView", {
 				callback : dojo.hitch(this, this.onSelect, item),
 				error : this.showError
 			}, this);
-
-			mx.processor.objectUpdateNotification(this.contextObject);
 		}
 
 		this.onSelect(item);
