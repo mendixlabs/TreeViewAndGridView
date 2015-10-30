@@ -228,8 +228,6 @@ mxui.widget.declare("TreeView.widget.GridView", {
 				error : this.showError
 			}, this);
 		}
-
-		this.onSelect(item);
 	},
 
 	hasSelection : function() {
@@ -448,18 +446,16 @@ mxui.widget.declare("TreeView.widget.GridView", {
 	/**
 		called by mxclient whenever context is replaced
 	*/
-	update : function(data, cb) {
-		TreeView.widget.Commons.normalizeContext(data, dojo.hitch(this, function(object, guid) {
-			//use the new context
-			this.contextObject = object;
-			this.contextGUID = guid;
-			this.listenToContext();
+	update : function(obj, cb) {
+		//use the new context
+		this.contextObject = obj;
+		this.contextGUID = obj.getGuid();
+		this.listenToContext();
 
-			//reload
-			this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
-		}));
+		//reload
+		this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
 
-		cb && cb();
+		cb();
 	},
 
 	suspended : function() {
