@@ -627,8 +627,9 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		else {
 			cb && cb.call(this); //MWE: cb can influence selection, call callback before reapply?
 		}
-
-		this.reapplySelection();
+		
+		if (this.rememberSelection)
+			this.reapplySelection();
 	},
 
 	updatePaging : function() {

@@ -434,6 +434,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<category>5) Fine tuning</category>
 			<description>If true, selected items will be hightlighted</description>
 		</property>
+		<property key="rememberSelection" type="boolean" defaultValue="true">
+			<caption>Remember selection</caption>
+			<category>5) Fine tuning</category>
+			<description>If true, the widget will keep its own selection management. If false, the reference(set) is used.</description>
+		</property>
 		<property key="selectfirstrow" type="boolean" defaultValue="false">
 			<caption>Select the first row on startup</caption>
 			<category>5) Fine tuning</category>
