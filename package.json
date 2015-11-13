@@ -1,6 +1,6 @@
 {
   "name": "TreeView",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "The treeview and gridview widgets provide the highly customizable grid widgets as seen in home.mendix.com.",
   "private": true,
   "dependencies": {},

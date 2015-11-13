@@ -328,7 +328,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 
 			mx.ui.action(mfname, {
 					store        : {
-						caller	: context
+						caller	: context.mxform
 					},
 					params : {
 						applyto     : 'selection',
