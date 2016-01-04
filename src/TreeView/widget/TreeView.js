@@ -83,9 +83,9 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	_subscription : null,
 
 	constructor : function(tree, data, asRoot) {
-		this.guid = data.getGUID();
+		this.guid = data.getGuid();
 		tree.dict[this.guid] = this;
-		this.type = data.getClass();
+		this.type = data.getEntity();
 		this._data = data;
 
 		this.tree = tree;
@@ -108,13 +108,13 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 		this.update(data);
 
-		this._subscription = mx.processor.subscribe({
+		this._subscription = mx.data.subscribe({
 			guid : this.guid,
 			callback : dojo.hitch(this, function(thing) {
 				if (dojo.isObject(thing))
 					this.updateWithRefs(thing);
 				else
-					mx.processor.get({
+					mx.data.get({
 						guid : thing,
 						error: this.tree.showError,
 						callback : dojo.hitch(this, this.updateWithRefs)
@@ -294,7 +294,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 				this.tree.processData(data); //data should always be one (or zero if not in constraint)
 
 				for(var i = 0; i < data.length; i++) { //create the assocations
-					var e = this.tree.findOrCreateEdge(type, this, this.tree.dict[data[i].getGUID()], this);
+					var e = this.tree.findOrCreateEdge(type, this, this.tree.dict[data[i].getGuid()], this);
 					e._valid = true;
 				}
 			}),
@@ -314,7 +314,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			args.guids = guids;
 		}
 
-		mx.processor.get(args);
+		mx.data.get(args);
 	},
 
 	ensureChildren : function(type, callback) {
@@ -371,7 +371,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 				//3. create the edge if from parent, update index, update valid state
 				for(var i = 0; i < data.length; i++) {
-					var guid = data[i].getGUID();
+					var guid = data[i].getGuid();
 					var child = this.tree.dict[guid];
 
 					var edge =
@@ -406,7 +406,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			kwargs.filter.sort = [[ xsettings.sortattr, xsettings.sortdir ]];
 
 		//perform the get
-		mx.processor.get(kwargs);
+		mx.data.get(kwargs);
 	},
 
 
@@ -419,7 +419,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			this._destroyed = true;
 
 			if (this._subscription)
-				mx.processor.unsubscribe(this._subscription);
+				mx.data.unsubscribe(this._subscription);
 
 			delete this.tree.dict[this.guid];
 
@@ -476,7 +476,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 			dojo.addClass(childNode, 'gg_assoc_wrapped');
 			dojo.addClass(wrapperNode, 'gg_node'); //only identify as node if a wrappernode is available
 
-			mendix.dom.data(wrapperNode, 'ggdata', this);
+			mxui.dom.data(wrapperNode, 'ggdata', this);
 		}
 
 		this.setCollapsed(true);
@@ -635,11 +635,11 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 
 		this.canHazChildren = this.graphNode.getChildTypes().length > 0;
 
-		this.foldNode = mendix.dom.span({'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
-		this.dataNode = mendix.dom.span({'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
-		this.childNode = mendix.dom.ul({'class': 'gg_children'});
-		this.rowNode = mendix.dom.div({'class' : 'gg_row' }, this.foldNode, this.dataNode);
-		this.domNode = mendix.dom.li({'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
+		this.foldNode = mxui.dom.span({'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
+		this.dataNode = mxui.dom.span({'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
+		this.childNode = mxui.dom.ul({'class': 'gg_children'});
+		this.rowNode = mxui.dom.div({'class' : 'gg_row' }, this.foldNode, this.dataNode);
+		this.domNode = mxui.dom.li({'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
 
 		mxui.dom.data(this.domNode, "ggdata", this);
 
@@ -852,7 +852,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	_parent			: null,
 
 	getContextGUID : function() {
-		return this.root._data.getGUID();
+		return this.root._data.getGuid();
 	},
 
 	getContextObject : function() {
@@ -909,13 +909,13 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	saveAndFireSelection : function(item) {
-		mx.processor.save({
+		mx.data.save({
 			mxobj : this.getContextObject(),
 			callback : dojo.hitch(this, this.onSelect, item),
 			error : this.showError
 		}, this);
 
-		mx.processor.objectUpdateNotification(this.getContextObject());
+		mx.data.objectUpdateNotification(this.getContextObject());
 
 		this.onSelect(item);
 	},
@@ -994,7 +994,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	getXsettings : function (entity) {
-		var meta = mx.metadata.getMetaEntity(entity);
+		var meta = mx.meta.getEntity(entity);
 		for(var i = 0, x = null; x = this.xsettings[i]; i++) {
 			if (meta.isA(x.xentity))
 				return x;
@@ -1019,12 +1019,12 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	/* context applied */
 	update : function(data, cb) {
-		var guid = data.getGUID();
+		var guid = data.getGuid();
 		if (this.root != null && this.root.guid == guid) //already the root, just refresh
 			this.processData([data]);
 		else {
-			if (!this.getXsettings(data.getClass()))
-				this.configError("The context of this widget is a '" + data.getClass() + ", but this type is not further defined in the entities property of the treeview");
+			if (!this.getXsettings(data.getEntity()))
+				this.configError("The context of this widget is a '" + data.getEntity() + ", but this type is not further defined in the entities property of the treeview");
 
 			if (this.root)
 				this.root.free();
@@ -1065,7 +1065,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	processData : function(data) {
 		for(var i = 0; i < data.length; i++) {
 			var mxobj = data[i];
-			var guid = mxobj.getGUID();
+			var guid = mxobj.getGuid();
 			if (this.dict[guid])
 				this.dict[guid].update(mxobj);
 			else {
@@ -1569,7 +1569,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			this.dnd.allowDropBefore = {};
 		if (!(e in this.dnd.allowDropBefore)) {
 			var x = item.graphNode.xsettings;
-			this.dnd.allowDropBefore[e] = x && mx.metadata.getMetaEntity(e).getAttributeType(x.sortattr) == "Float";
+			this.dnd.allowDropBefore[e] = x && mx.meta.getEntity(e).getAttributeType(x.sortattr) == "Float";
 		}
 		return this.dnd.allowDropBefore[e];
 	},
@@ -1630,7 +1630,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			var assoc1 = item.type;
 			if (assoc1.assoctype == "fromparent") {
 				if (assoc1.isRefset)
-					o.removeReferences(assoc1.assoc, [i.getGUID()]);
+					o.removeReferences(assoc1.assoc, [i.getGuid()]);
 				else
 					o.set(assoc1.assoc, '');
 
@@ -1638,7 +1638,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			}
 			else { //from child
 				if (assoc1.isRefset)
-					i.removeReferences(assoc1.assoc, [o.getGUID()]);
+					i.removeReferences(assoc1.assoc, [o.getGuid()]);
 				else
 					i.set(assoc1.assoc, '');
 
@@ -1654,12 +1654,12 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 				//reference set (was already removed from orig parent in step 0)
 				if (assoc.isRefset) {
-					t.addReferences(assoc.assoc, [i.getGUID()]);
+					t.addReferences(assoc.assoc, [i.getGuid()]);
 				}
 
 				//normal reference
 				else
-					t.set(assoc.assoc, i.getGUID());
+					t.set(assoc.assoc, i.getGuid());
 			}
 
 			//assoc stored in child
@@ -1667,16 +1667,16 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 				actions.push([assoc.dropmf, i]);
 
 				if (assoc.isRefset) {
-					i.addReferences(assoc.assoc, [t.getGUID()]);
+					i.addReferences(assoc.assoc, [t.getGuid()]);
 				}
 				else
-					i.set(assoc.assoc, t.getGUID()); //copy is not supported, dont bother
+					i.set(assoc.assoc, t.getGuid()); //copy is not supported, dont bother
 			}
 		}
 
 		//2) update position. Note that this position applies to all assocs! which is a bit weird...
 		var x = item.graphNode.xsettings;
-		if (x && mx.metadata.getMetaEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
+		if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
 			if (pos == 'before' || pos == 'after') {
 				//find the other related element for drop in between
 				var othernode = pos == 'before' ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
@@ -1905,9 +1905,9 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	setupLayout : function() {
 		dojo.addClass(this.domNode, 'gg_tree');
-		this.headerNode = mendix.dom.div({'class' : 'gg_header'});
+		this.headerNode = mxui.dom.div({'class' : 'gg_header'});
 
-		this.treeNode = mendix.dom.ul({'class': 'gg_children gg_root_wrapper'});
+		this.treeNode = mxui.dom.ul({'class': 'gg_children gg_root_wrapper'});
 		if (this.hiderootnode)
 			dojo.addClass(this.treeNode, 'gg_hiddenroot');
 
@@ -1971,7 +1971,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 				type.parententity = e;
 			}
 
-			type.recursive = mx.metadata.getMetaEntity(type.entity).isA(type.parententity);
+			type.recursive = mx.meta.getEntity(type.entity).isA(type.parententity);
 
 			type.assocstyle = type.assocstyle.split(/\||\n/).join(";");
 

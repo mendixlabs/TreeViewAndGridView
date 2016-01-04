@@ -64,14 +64,14 @@ dojo.declare("TreeView.widget.Record", null, {
 	checkbox : null, //checkbox node
 
 	constructor : function(data, grid) {
-		this.guid = data.getGUID();
+		this.guid = data.getGuid();
 		this._data = data;
 		this._colNodes = [];
 		this._subs = [];
 
 		this.grid = grid;
 
-		this._subscription = mx.processor.subscribe({
+		this._subscription = mx.data.subscribe({
 			guid : this.guid,
 			callback : dojo.hitch(this, function(thing) {
 				//Do not update while suspended; all data will be fetch upon resume.
@@ -80,7 +80,7 @@ dojo.declare("TreeView.widget.Record", null, {
 
 				if (this.grid.datasourcemf) {
 					//microflow data? retrieve by id
-					mx.processor.get({
+					mx.data.get({
 						guid: this.guid,
 						callback : dojo.hitch(this, function(data) {
 							this.update(data);
@@ -90,7 +90,7 @@ dojo.declare("TreeView.widget.Record", null, {
 				}
 				else {
 					//xpath datasource? retrieve by xpath, the object might no longer be in the grid constraint
-					mx.processor.get({
+					mx.data.get({
 						xpath : grid.buildXpath() + "[id = '"+this.guid+"']",
 						filter   : grid.enableschema ? grid._schema : {},
 						callback : dojo.hitch(this, function (data) {
@@ -195,7 +195,7 @@ dojo.declare("TreeView.widget.Record", null, {
 			dojo.destroy(this.domNode);
 
 			if (this._subscription)
-					mx.processor.unsubscribe(this._subscription);
+					mx.data.unsubscribe(this._subscription);
 
 	}
 
@@ -222,13 +222,11 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		this.updatePaging(); //update selected items label
 
 		if (this.selectionref || this.selectionrefset) {
-			mx.processor.save({
+			mx.data.save({
 				mxobj : this.contextObject,
 				callback : dojo.hitch(this, this.onSelect, item),
 				error : this.showError
 			}, this);
-		} else {
-			this.onSelect(item);
 		}
 	},
 
@@ -477,10 +475,10 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		//if reload on context change is enabled, reload as soon as the context object is altered
 		if (this.refreshoncontext) {
 			if (this._contextSubscription)
-				mx.processor.unsubscribe(this._contextSubscription);
+				mx.data.unsubscribe(this._contextSubscription);
 
 			if (this.contextGUID) {
-				this._contextSubscription = mx.processor.subscribe({
+				this._contextSubscription = mx.data.subscribe({
 					guid: this.contextGUID,
 					callback : dojo.hitch(this, function() {
 						if (!this._iscallingdatasource)
@@ -522,7 +520,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 
 		var self = this;
 
-		mx.processor.save({
+		mx.data.save({
 			mxobj : contextObject,
 			callback : function(){
 				self._iscallingdatasource = true;
@@ -578,7 +576,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		args.filter.limit  = this.pagesize;
 
 		//perform the get
-		mx.processor.get(args);
+		mx.data.get(args);
 	},
 
 	buildXpath : function () {
@@ -629,9 +627,8 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		else {
 			cb && cb.call(this); //MWE: cb can influence selection, call callback before reapply?
 		}
-		
-		if (this.rememberSelection)
-			this.reapplySelection();
+
+		this.reapplySelection();
 	},
 
 	updatePaging : function() {

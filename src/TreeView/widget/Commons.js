@@ -33,7 +33,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 
 
 	function getEnumMap(classname, attrname) {
-		var meta = mx.metadata.getMetaEntity(classname);
+		var meta = mx.meta.getEntity(classname);
 
 		if (getAttributeType(classname, attrname) != 'Enum')
 			throw "Not an enumeration: " + args.join(".");
@@ -73,11 +73,11 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			return getAttributeType(parts[1], parts[2])
 
 		if (attr.indexOf("/") == -1) {
-			if (classnameOrObject.getClass)
-				classnameOrObject = classnameOrObject.getClass();
+			if (classnameOrObject.getEntity)
+				classnameOrObject = classnameOrObject.getEntity();
 
-			var meta = mx.metadata.getMetaEntity(classnameOrObject);
-			return meta.getAttributeClass(attr);
+			var meta = mx.meta.getEntity(classnameOrObject);
+			return meta.getAttributeType(attr);
 		}
 
 		return false;
@@ -91,7 +91,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 		if (attr.indexOf("/") == -1) {
 			if (renderValue)
 				return mx.parser && mx.parser.formatAttribute ? mx.parser.formatAttribute(object, attr) : mxui.html.renderValue(object, attr); //mxui.html.rendervalue moved in 5.~7.
-			return object.getAttribute(attr);
+			return object.get(attr);
 		}
 		var parts = attr.split("/");
 		if (parts.length == 3) {
@@ -110,7 +110,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			else {
 				//..but, there is a guid...
 				var tmp = null;
-				mx.processor.get({ guid : child, noCache : false, callback : function(obj) { //async = false option would be nice!
+				mx.data.get({ guid : child, noCache : false, callback : function(obj) { //async = false option would be nice!
 					tmp = obj;
 				}});
 				if (tmp != null) //callback was invoked in sync :)
@@ -125,7 +125,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 
 		//objects can be returned in X different ways, sometime just a guid, sometimes its an object...
 		if (parts.length == 2) {
-			var result = object.getAttribute(parts[0]); //incase of of a get object, return the GUIDs (but sometimes getAttribute gives the object...)
+			var result = object.get(parts[0]); //incase of of a get object, return the Guids (but sometimes getAttribute gives the object...)
 			if (!result)
 				return "";
 			if (result.guid)
@@ -143,8 +143,8 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			return null;
 		if (thing.guid)
 			return thing.guid;
-		if (thing.getGUID)
-			return thing.getGUID();
+		if (thing.getGuid)
+			return thing.getGuid();
 		if (/^\d+$/.test(thing))
 			return thing;
 		throw "Does not look like a MxObject: " + thing;
@@ -236,7 +236,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			if (res === false) //set returns undefined if ok, or false on failure
 				throw "Commons.store: Unable to update attribute: " + attr;
 
-			mx.processor[commit === true ? 'commit' : 'save']({
+			mx.data[commit === true ? 'commit' : 'save']({
 				mxobj: object,
 				error : error,
 				callback : function() {
@@ -328,7 +328,7 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 
 			mx.ui.action(mfname, {
 					store        : {
-						caller	: context.mxform
+						caller	: context
 					},
 					params : {
 						applyto     : 'selection',
@@ -402,20 +402,20 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 			cb(null, null);
 		//GUid only
 		else if (typeof(data) != "object" && /^\d+$/.test(data)) {
-			mx.processor.get({
+			mx.data.get({
 				guid: data,
 				callback : function(mxobj) {
 					if (mxobj == null)
 						cb(null, null)
 					else
-						cb(mxobj, mxobj.getGUID())
+						cb(mxobj, mxobj.getGuid())
 				},
 				error : this.showError
 			}, this);
 		}
 		//Context is mxobj object
 		else {
-			var guid = data.getGUID();
+			var guid = data.getGuid();
 			cb(data, guid);
 		}
 	}
@@ -513,7 +513,7 @@ dojo.declare("TreeView.widget.DropDown", null, {
 			this.dropdown.set('label', item.label);
 
 		return new dijit.MenuItem({
-			label : mxui.dom.escapeHTML(item.label),
+			label : mxui.dom.escapeString(item.label),
 			value : item.value,
 			onClick : item.onClick
 				? dojo.hitch(item, item.onClick, dojo.hitch(this, this.itemClick)) //pass itemClick as callback to the onClick, so it can be invoked
@@ -828,7 +828,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 						if (value === null || value === undefined)
 							value = "";
 						
-						dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeHTML(value).replace(/\n/g,"<br/>")  + this.columnpostfix);
+						dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g,"<br/>")  + this.columnpostfix);
 						dojo.attr(domNode, 'title', value);
 
 						this.createDefaultImage(domNode);
@@ -1137,7 +1137,7 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 	relnewitemcaption   : '',
 
 	widget : null,
-	contextGUID : null,
+	contextGuid : null,
 	hasData : false,
 
 	existingLabels    : null,
@@ -1159,7 +1159,7 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 		});
 
 		this.widget.connect(this.widget, "update", dojo.hitch(this, function(data, cb) {
-			this.contextGUID = data && data.getGUID ? data.getGUID() : data;
+			this.contextGuid = data && data.getGuid ? data.getGuid() : data;
 			this.fetchLabels();
 			cb && cb();
 		}));
@@ -1175,7 +1175,7 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 
 	getValue : function(item, _) {
 			if (typeof (item) == "object")
-				return item.getAttribute(this.relnameattr);
+				return item.get(this.relnameattr);
 			else if (/^\d+$/.test(item)){
 				var obj = this.existingLabelsById[item]; //assuming guid
 				return obj ? this.getValue(obj) : null; //TODO: warn?
@@ -1190,14 +1190,14 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 	},
 
 	fetchLabels : function() {
-		if (this.contextGUID  == null || this._fetchingLabels)
+		if (this.contextGuid  == null || this._fetchingLabels)
 			return;
 
 		this.hasData = false;
 		this._fetchingLabels = true;
 		var xpath = "//" + this.relentity + this.relconstraint + (this.relcontextassoc != '' ? "[" + this.relcontextassoc.split("/")[0] + " = '[%CurrentObject%]']" : '');
-		xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.contextGUID);
-		mx.processor.get({
+		xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.contextGuid);
+		mx.data.get({
 			xpath : xpath,
 			callback : dojo.hitch(this, this.retrieveLabels),
 			filter : {
@@ -1213,8 +1213,8 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 		this.existingLabelsById = {};
 
 		this.existingOptions = dojo.map(objects, function(obj) {
-			var value = obj.getGUID();
-			var label = obj.getAttribute(this.relnameattr);
+			var value = obj.getGuid();
+			var label = obj.get(this.relnameattr);
 
 			this.existingLabels[label.toLowerCase()] = obj;
 			this.existingLabelsById[value] = obj;
@@ -1251,19 +1251,19 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 	createNewItem : function(callback) {
 		var labelname = prompt("Please enter " + this.relnewitemcaption, "");
 		if (labelname) {
-			mx.processor.create({
+			mx.data.create({
 				entity : this.relentity,
 				error : this.widget.showError,
 				callback : dojo.hitch(this, function(label) {
 					var cb = callback
 						? dojo.hitch(this, callback, {
-							value : label.getGUID(),
+							value : label.getGuid(),
 							label: labelname
 						})
 						: null;
 
 					if (this.relcontextassoc)
-						TreeView.widget.Commons.store(label, this.relcontextassoc, this.contextGUID);
+						TreeView.widget.Commons.store(label, this.relcontextassoc, this.contextGuid);
 
 					TreeView.widget.Commons.store(label, this.relnameattr, dojo.trim(labelname), null, true, cb);
 				})
@@ -1275,7 +1275,7 @@ dojo.declare("TreeView.widget.RelatedDataset", null, {
 
 	/* Identity api */
 	getIdentity : function(item) {
-		return item.getGUID();
+		return item.getGuid();
 	},
 
 	getIdentityAttributes : function() {
@@ -1440,7 +1440,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 	updateSearchLabel : function(label) {
 		dojo.empty(this.labelContainer);
 		if (label != null) {
-			var labelname = label.getAttribute(this.dataset.relnameattr);
+			var labelname = label.get(this.dataset.relnameattr);
 			dojo.place(TreeView.widget.Commons.renderLabel(labelname, true), this.labelContainer);
 		}
 	},
@@ -1491,7 +1491,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 		}
 
 		if (this.searchlabel != null)
-			xpath += "["  + this.dataset.getAssoc() + " = '"  + this.searchlabel.getGUID() + "']";
+			xpath += "["  + this.dataset.getAssoc() + " = '"  + this.searchlabel.getGuid() + "']";
 
 		return xpath;
 	},
