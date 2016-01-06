@@ -463,14 +463,14 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 		this.tree = this.parent.tree;
 		this.children = [];
 
-		var childNode = this.childNode = mxui.dom.ul({'class' : 'gg_assoc_children gg_assoc_' + type.assoc.replace(".","_")});
-		var wrapperNode = this.domNode = mxui.dom.li({'class' : 'gg_assoc_wrapper ' + type.assocclazz});
+		var childNode = this.childNode = mxui.dom.create("ul", {'class' : 'gg_assoc_children gg_assoc_' + type.assoc.replace(".","_")});
+		var wrapperNode = this.domNode = mxui.dom.create("li", {'class' : 'gg_assoc_wrapper ' + type.assocclazz});
 
 		this.visible = type.showassocname;
 		if (this.visible) {
-			var fold = this.foldNode = mxui.dom.span({});
-			var caption = mxui.dom.span({'class' : 'gg_assoc_title gg_assoc_' + type.assoc.replace(".","_")}, type.assoccaption);
-			var div = new mxui.dom.div({'class' : 'gg_row', 'style' : type.assocstyle }, fold, caption);
+			var fold = this.foldNode = mxui.dom.create("span",{});
+			var caption = mxui.dom.create("span", {'class' : 'gg_assoc_title gg_assoc_' + type.assoc.replace(".","_")}, type.assoccaption);
+			var div = new mxui.dom.create("div", {'class' : 'gg_row', 'style' : type.assocstyle }, fold, caption);
 			dojo.place(div, wrapperNode);
 
 			dojo.addClass(childNode, 'gg_assoc_wrapped');
@@ -635,11 +635,11 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 
 		this.canHazChildren = this.graphNode.getChildTypes().length > 0;
 
-		this.foldNode = mxui.dom.span({'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
-		this.dataNode = mxui.dom.span({'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
-		this.childNode = mxui.dom.ul({'class': 'gg_children'});
-		this.rowNode = mxui.dom.div({'class' : 'gg_row' }, this.foldNode, this.dataNode);
-		this.domNode = mxui.dom.li({'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
+		this.foldNode = mxui.dom.create("span", {'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
+		this.dataNode = mxui.dom.create("span", {'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
+		this.childNode = mxui.dom.create("ul", {'class': 'gg_children'});
+		this.rowNode = mxui.dom.create("div", {'class' : 'gg_row' }, this.foldNode, this.dataNode);
+		this.domNode = mxui.dom.create("li", {'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
 
 		mxui.dom.data(this.domNode, "ggdata", this);
 
@@ -797,9 +797,9 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 
 		for(var i = 0, col= null; col = this.tree.columns[i]; i++) {
 			if (col.appliesTo(this)) {
-				var span = mxui.dom.span({'class' : 'gg_column gg_column_' + i});
+				var span = mxui.dom.create("span", {'class' : 'gg_column gg_column_' + i});
 				this._colNodes.push(span);
-				this.dataNode.appendChild(mxui.dom.span({ 'class' : 'gg_column_wrapper' }, span)); //wrapper column for hovers and such
+				this.dataNode.appendChild(mxui.dom.create("span", { 'class' : 'gg_column_wrapper' }, span)); //wrapper column for hovers and such
 
 				col.setupNode(span);
 			}
@@ -1332,7 +1332,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	startDrag : function(target, e) {
 		//tmp node for drag an drop operations
-		this.dnd.tmpnode = mxui.dom.li({'class' : 'gg_node gg_anchor'}, mxui.dom.div({'class' : 'gg_anchor_inner'}));
+		this.dnd.tmpnode = mxui.dom.create("li", {'class' : 'gg_node gg_anchor'}, mxui.dom.create("div", {'class' : 'gg_anchor_inner'}));
 
 		var current = this.dnd.current = this._getRenderNodeForNode(target);
 		this.setSelection(current);
@@ -1341,7 +1341,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		if (current.isEdge || current.isRoot || !current.type.allowdnd)
 			return false;
 
-		var avatar =  this.dnd.avatar  = mxui.dom.div({'class' : 'gg_avatar'}, dojo.clone(current.rowNode)); //TODO: make beter avatar
+		var avatar =  this.dnd.avatar  = mxui.dom.create("div", {'class' : 'gg_avatar'}, dojo.clone(current.rowNode)); //TODO: make beter avatar
 
 		//hooray, we can start thedrag
 //		console.log("start drag");
@@ -1905,9 +1905,9 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	setupLayout : function() {
 		dojo.addClass(this.domNode, 'gg_tree');
-		this.headerNode = mxui.dom.div({'class' : 'gg_header'});
+		this.headerNode = mxui.dom.create("div", {'class' : 'gg_header'});
 
-		this.treeNode = mxui.dom.ul({'class': 'gg_children gg_root_wrapper'});
+		this.treeNode = mxui.dom.create("ul", {'class': 'gg_children gg_root_wrapper'});
 		if (this.hiderootnode)
 			dojo.addClass(this.treeNode, 'gg_hiddenroot');
 

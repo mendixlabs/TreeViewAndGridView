@@ -26,11 +26,11 @@ dojo.declare("TreeView.widget.Colhead", null, {
 
 		//sort caption?
 		if (this.data.colheadcaption)
-			dojo.place(mendix.dom.span({'class' : 'gv_sort_caption'}, this.data.colheadcaption), this.domNode);
+			dojo.place(mxui.dom.create("span", {'class' : 'gv_sort_caption'}, this.data.colheadcaption), this.domNode);
 
 		//show sort arrow?
 		if (this.getSortAttr())
-			dojo.place(mendix.dom.span({'class' : 'gv_sort_arrow'}), this.domNode);
+			dojo.place(mxui.dom.create("span", {'class' : 'gv_sort_arrow'}), this.domNode);
 
 
 		dojo.place(this.domNode, this.grid.headerRow);
@@ -132,29 +132,29 @@ dojo.declare("TreeView.widget.Record", null, {
 	},
 
 	setup : function(tablenode) {
-		this.domNode = mendix.dom[this.grid.showasdiv ? "div" : "tr"]({ 'class' : 'gv_row gv_row_' + tablenode.childElementCount });
+		this.domNode = mxui.dom[this.grid.showasdiv ? "div" : "tr"]({ 'class' : 'gv_row gv_row_' + tablenode.childElementCount });
 
 		if (this.grid.showasdiv && this.grid.colheads.length > 0 && this.grid.colheads[0].getWidth())
 			dojo.style(this.domNode, 'width', this.grid.colheads[0].getWidth());
 
 		mxui.dom.data(this.domNode, "data", this);
 
-		this.checkbox = mendix.dom.input( {
+		this.checkbox = mxui.dom.create("input", {
 			'type' : 'checkbox',
 			'class' : 'gv_multiselect_checkbox',
 			'style' : this.grid.allowmultiselect === true ? '' : 'display:none'
 		});
 
-		dojo.place(mendix.dom[this.grid.showasdiv ? "div" : "td"]({
+		dojo.place(mxui.dom[this.grid.showasdiv ? "div" : "td"]({
 			'class' : 'gv_cell gv_cell_0 gv_cell_multiselect'
 		}, this.checkbox), this.domNode);
 
 		//create td's
 		for (var i = 0; i < this.grid.colheads.length; i++) {
-			var cell = mendix.dom[this.grid.showasdiv ? "div" : "td"]({
+			var cell = mxui.dom[this.grid.showasdiv ? "div" : "td"]({
 				'class' : 'gv_cell gv_cell_' + this.grid.colheads[i].data.colheadname + ' gv_cell_' + i
 			});
-			var colwrapper = mendix.dom.div({ 'class' : 'gv_cell_wrapper'});
+			var colwrapper = mxui.dom.create("div", { 'class' : 'gv_cell_wrapper'});
 
 			dojo.place(colwrapper, cell);
 			dojo.place(cell, this.domNode);
@@ -165,11 +165,11 @@ dojo.declare("TreeView.widget.Record", null, {
 			if (1 * col.columnindex >= this.grid.colheads.length)
 				this.configError("Column index out of bounds: " + col.columnindex);
 
-			var span = mxui.dom.span({'class' : 'gv_column gv_column_' + i});
+			var span = mxui.dom.create("span", {'class' : 'gv_column gv_column_' + i});
 			this._colNodes.push(span);
 
 			//wrapper node
-			var cw = mxui.dom.span({ 'class' : 'gv_column_wrapper' }, span);
+			var cw = mxui.dom.create("span", { 'class' : 'gv_column_wrapper' }, span);
 			dojo.place(cw, this.domNode.childNodes[1 + 1 * col.columnindex].children[0]);
 
 			col.setupNode(span);
@@ -646,36 +646,36 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		if (this.count > this.pagesize || this.curpage > 0) {
 			//show prev btn?
 			if (this.curpage > 0)
-				dojo.place(mendix.dom.a({ 'class' : 'gv_btn_prev'}, "<"), this.pagingNode);
+				dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_prev'}, "<"), this.pagingNode);
 
 			//page 1
-			dojo.place(mendix.dom.a({ 'class' : 'gv_btn_page ' + (0 === this.curpage ? 'gv_btn_page_active' : '')}, "1"), this.pagingNode);
+			dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (0 === this.curpage ? 'gv_btn_page_active' : '')}, "1"), this.pagingNode);
 
 			//paging skipper?
 			if (this.curpage > PAGERSIZE)
-				dojo.place(mendix.dom.a({ 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
+				dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
 
 			for(var i = Math.max(this.curpage - PAGERSIZE + 1, 1); i < Math.min(this.curpage + PAGERSIZE , lastpage); i++)
-				dojo.place(mendix.dom.a({ 'class' : 'gv_btn_page ' + (i === this.curpage ? 'gv_btn_page_active' : '')}, "" + (i + 1)), this.pagingNode);
+				dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (i === this.curpage ? 'gv_btn_page_active' : '')}, "" + (i + 1)), this.pagingNode);
 
 			//paging skipper?
 			if (this.curpage < lastpage - PAGERSIZE)
-					dojo.place(mendix.dom.a({ 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
+					dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
 
 			//last page
-			dojo.place(mendix.dom.a({ 'class' : 'gv_btn_page ' + (lastpage === this.curpage ? 'gv_btn_page_active' : '')}, "" + (lastpage + 1)), this.pagingNode);
+			dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (lastpage === this.curpage ? 'gv_btn_page_active' : '')}, "" + (lastpage + 1)), this.pagingNode);
 
 			//show next btn?
 			if (this.curpage < lastpage)
-				dojo.place(mendix.dom.a({ 'class' : 'gv_btn_next'}, ">"), this.pagingNode);
+				dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_next'}, ">"), this.pagingNode);
 
 		}
 
 		if (this.count === 0) {
-			dojo.place(mendix.dom.span({'class' : 'gv_empty_message'}, this.emptymessage), this.pagingNode);
+			dojo.place(mxui.dom.create("span", {'class' : 'gv_empty_message'}, this.emptymessage), this.pagingNode);
 		}
 		else if (this.showtotals)
-			dojo.place(mendix.dom.span({'class' : 'gv_paging_totals'},
+			dojo.place(mxui.dom.create("span", {'class' : 'gv_paging_totals'},
 				(this.itemcountmessage || (this._multiSelection.length > 1 ? "{1} of {0} item(s) selected." : "{0} item(s) in total")).replace("{0}", this.count).replace("{1}", this._multiSelection.length)
 			), this.pagingNode);
 	},
@@ -897,7 +897,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		node = node.parentNode;
 
 		//assuming dataset: { owner: record, guid : guid, dataset: this.columneditdataset, colindex: this.colindex }
-		var data = mendix.dom.data(node, "data");
+		var data = mxui.dom.data(node, "data");
 		var record = data.owner;
 		var guid   = data.guid;
 		var dataset = this.dataset[data.dataset];
@@ -1170,23 +1170,23 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		if (this.showasdiv)
 			dojo.addClass(this.domNode, 'gv_floating_grid');
 
-		this.headerNode = mendix.dom.div({'class' : 'gv_header'});
+		this.headerNode = mxui.dom.create("div", {'class' : 'gv_header'});
 
-		this.gridNode = mendix.dom[this.showasdiv ? "div" : "table"]({'class': 'gv_table'});
+		this.gridNode = mxui.dom[this.showasdiv ? "div" : "table"]({'class': 'gv_table'});
 
-		this.headerRow = mendix.dom[this.showasdiv ? "div" : "tr"]({'class':'gv_headrow'}, mendix.dom[this.showasdiv ? "div" : "th"]({ 'class' : 'gv_multiselect_column_head gv_th gv_th_0'}));
-		var header = mendix.dom[this.showasdiv ? "div" : "thead"]({'class':'gv_gridhead'}, this.headerRow);
+		this.headerRow = mxui.dom[this.showasdiv ? "div" : "tr"]({'class':'gv_headrow'}, mxui.dom[this.showasdiv ? "div" : "th"]({ 'class' : 'gv_multiselect_column_head gv_th gv_th_0'}));
+		var header = mxui.dom[this.showasdiv ? "div" : "thead"]({'class':'gv_gridhead'}, this.headerRow);
 
 		dojo.addClass(this.domNode, this.colheaderenabled ? 'gv_columnheaders' : 'gv_nocolumnheaders');
 		dojo.addClass(this.domNode, this.allowmultiselect ? 'gv_multiselect_enabled' : 'gv_multiselect_disabled');
 
 		dojo.place(header, this.gridNode, 'first');
 
-		this.footerNode = mendix.dom.div({'class' : 'gv_footer'});
-		this.pagingNode = mendix.dom.div({'class' : 'gv_paging'});
+		this.footerNode = mxui.dom.create("div", {'class' : 'gv_footer'});
+		this.pagingNode = mxui.dom.create("div", {'class' : 'gv_paging'});
 		dojo.place(this.pagingNode, this.footerNode);
 
-		this.searchbarNode = mendix.dom.div({'class' : 'gv_searchnode'});
+		this.searchbarNode = mxui.dom.create("div", {'class' : 'gv_searchnode'});
 		dojo.place(this.searchbarNode, this.headerNode);
 
 		dojo.place(this.headerNode, this.domNode);

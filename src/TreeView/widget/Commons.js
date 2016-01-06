@@ -49,16 +49,19 @@ dojo.setObject("TreeView.widget.Commons", (function() {
 	 * @return {[type]} node      [description]
 	 */
 	function renderLabel(name, close, data) {
-		var n = mxui.dom.span(
+		var n = mxui.dom.create(
+            "span",
 			{ 'class' : 'gv_label' },
-			mxui.dom.span(
+			mxui.dom.create(
+                "span",
 				{ 'class' : 'gv_label_name' },
 				name ? name : ""
 			)
 		);
 
 		if (close)
-			dojo.place(mxui.dom.span(
+			dojo.place(mxui.dom.create(
+                "span",
 				{ 'class' : 'gv_label_close' },
 				'x'
 			), n);
@@ -567,7 +570,7 @@ dojo.declare("TreeView.widget.Checkbox", null, {
 	constructor : function(args, domNode) {
 		dojo.mixin(this, args);
 
-		this.checkbox = mendix.dom.input({
+		this.checkbox = mxui.dom.create("input", {
 			type : "checkbox"
 		});
 
@@ -699,7 +702,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 
 	createDefaultImage : function(parentNode) {
 		if (this.columnimage) {
-			dojo.place(mxui.dom.img({
+			dojo.place(mxui.dom.create('img', {
 				//'class' : 'gg_img ' + this.columnclazz,
 				//'style' : this.columnstyle,
 				'src'   : this.columnimage
@@ -853,7 +856,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 				if (!url)
 					url = this.columnimage;
 
-				domNode.appendChild(mxui.dom.img({
+				domNode.appendChild(mxui.dom.create("img",{
 					//'class' : 'gg_img ' + this.columnclazz,
 					//'style' : this.columnstyle,
 					'src'   : url
@@ -868,7 +871,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 
 				var fileid = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
 				var cd     = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/,'') + 'changedDate');
-				domNode.appendChild(mxui.dom.img({
+				domNode.appendChild(mxui.dom.create("img",{
 					//'class' : 'gg_img ' + this.columnclazz,
 					//'style' : this.columnstyle,
 					'src'   : 'file?thumb=true&target=internal&fileID=' + fileid + '&changedDate='+cd
@@ -880,7 +883,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 				var fileid = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
 				var cd     = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/,'') + 'changedDate');
 
-				domNode.appendChild(mxui.dom.img({
+				domNode.appendChild(mxui.dom.create("img",{
 					//'class' : 'gg_img ' + this.columnclazz,
 					//'style' : this.columnstyle,
 					'src'   : 'file?thumb=false&target=internal&fileID=' + fileid + '&changedDate='+cd
@@ -1328,11 +1331,11 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 	},
 
 	setupLayout : function() {
-		this.domNode = mxui.dom.div({
+		this.domNode = mxui.dom.create("div",{
 			'class' : 'gv_searchBar'
 		});
 
-		this.labelContainer = mxui.dom.div({ 'class' : 'gv_searchLabelContainer'});
+		this.labelContainer = mxui.dom.create("div",{ 'class' : 'gv_searchLabelContainer'});
 		dojo.place(this.labelContainer, this.domNode);
 	},
 
