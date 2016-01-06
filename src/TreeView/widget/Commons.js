@@ -830,7 +830,7 @@ dojo.declare("TreeView.widget.Colrenderer", null, {
 						var value = this._renderAttr(record);
 						if (value === null || value === undefined)
 							value = "";
-						
+
 						dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g,"<br/>")  + this.columnpostfix);
 						dojo.attr(domNode, 'title', value);
 
@@ -1374,8 +1374,8 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 					if (this.searchInput.item!= null)
 						this.setSearchFilter("", this.searchInput.item);
 					else {
-						this.setSearchFilter(this.searchInput.getValue(), null);
-					}
+						this.setSearchFilter(this.searchInput.get("value"), null);
+					} 
 				}
 				else if (e.keyCode == dojo.keys.TAB) {
 					if (this.searchInput.item!= null) { //do not tab away if tab is used to select an item
@@ -1384,7 +1384,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 					}
 				}
 				else if (e.keyCode == dojo.keys.SPACE) {
-					var name = dojo.trim(this.searchInput.getValue().toLowerCase());
+					var name = dojo.trim(this.searchInput.get("value").toLowerCase());
 					for(key in this.existingLabels) //check whether first part is an label, recognize it.
 						if (name == key) {
 							this.setSearchFilter("", this.existingLabels[key]);
@@ -1393,7 +1393,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 				}
 				else if (this.realtime) {
 					if  (!this._isSearching)
-						this.setSearchFilter(this.searchInput.getValue(), null);
+						this.setSearchFilter(this.searchInput.get("value"), null);
 					else
 						this._searchPending = true;
 				}
@@ -1434,7 +1434,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 		// this.connect(this.searchReset, 'onclick', dojo.hitch(this, this.resetAndFetchAll));
 		this.widget.connect(this.labelContainer, 'onclick', dojo.hitch(this, function(evt) {
 			if (dojo.hasClass(evt.target, 'gv_label_close'))
-				this.setSearchFilter(this.searchInput.getValue(), null);//remove the label selection
+				this.setSearchFilter(this.searchInput.get("value"), null);//remove the label selection
 		}));
 
 
@@ -1464,7 +1464,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 				//There were one ore more searches triggered while we were searching..
 				if (this._searchPending) {
 					this._searchPending = false;
-					this.setSearchFilter(this.searchInput.getValue(), null);//TODO: how does this relate to this.searchInput.item?
+					this.setSearchFilter(this.searchInput.get("value"), null);//TODO: how does this relate to this.searchInput.item?
 				}
 			}));
 		}
@@ -1484,7 +1484,7 @@ dojo.declare("TreeView.widget.SearchControl", null,  {
 			if (typeof limit !== 'undefined' && filtervalues.length > limit) {
 				filtervalues.splice(limit, filtervalues.length - limit);
 			}
-			
+
 			//we want every search value to occur at least once! In one of the attributes
 			xpath += "[(" + dojo.map(filtervalues, function(fv) {
 					return dojo.map(searchAttrs, function(attr) {

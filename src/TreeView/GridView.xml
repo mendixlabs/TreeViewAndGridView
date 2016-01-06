@@ -99,13 +99,13 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 						<attributeTypes>
 								<attributeType name="AutoNumber"/>
 								<attributeType name="Boolean"/>
-								<attributeType name="Currency"/>
 								<attributeType name="DateTime"/>
 								<attributeType name="Enum"/>
 								<attributeType name="Float"/>
 								<attributeType name="Integer"/>
 								<attributeType name="Long"/>
 								<attributeType name="String"/>
+								<attributeType name="Decimal"/>
 						</attributeTypes>
 				</property>
 				<property key="colheadsortdir" type="enumeration" defaultValue="asc" >
@@ -161,13 +161,13 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 					<attributeTypes>
 						<attributeType name="AutoNumber"/>
 						<attributeType name="Boolean"/>
-						<attributeType name="Currency"/>
 						<attributeType name="DateTime"/>
 						<attributeType name="Enum"/>
 						<attributeType name="Float"/>
 						<attributeType name="Integer"/>
 						<attributeType name="Long"/>
 						<attributeType name="String"/>
+						<attributeType name="Decimal"/>
 					</attributeTypes>
 				</property>
 
@@ -345,7 +345,7 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 					<caption>Progress message</caption>
 					<category>1) Basics</category>
 					<description>If set, a progress bar will be shown when running this action</description>
-				</property>	
+				</property>
 <!--
 				<property key="actshortcut" type="integer" defaultValue="0" required="true">
 					<caption>Keyboard shortcut</caption>
@@ -619,13 +619,13 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 					<attributeTypes>
 						<attributeType name="AutoNumber"/>
 						<attributeType name="Boolean"/>
-						<attributeType name="Currency"/>
 						<attributeType name="DateTime"/>
 						<attributeType name="Enum"/>
 						<attributeType name="Float"/>
 						<attributeType name="Integer"/>
 						<attributeType name="Long"/>
 						<attributeType name="String"/>
+						<attributeType name="Decimal"/>
 					</attributeTypes>
 				</property>
 				<property key="condvalues" type="string" multiline="true" required="true">
