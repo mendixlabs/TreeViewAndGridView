@@ -3,6 +3,10 @@ dojo.require("TreeView.widget.Commons");
  * Edge stores a single assocation from the database, e.g. guid -> assocname -> guid.
  * Parent / child is stored according to the rendering, not according to the owner.
  */
+
+// Uncomment next line to start debugging
+//logger.level(logger.DEBUG);
+
 dojo.declare("TreeView.widget.Edge", null, {
 	parent : null, //Graphnode
 	name : '', //assocname
@@ -13,6 +17,7 @@ dojo.declare("TreeView.widget.Edge", null, {
 	index : -1,
 
 	constructor : function(type, parent, child, owner) {
+		logger.debug("TreeView.widget.Edge.constructor");
 		this.type  = type;
 		this.name  = type.assoc;
 		this.parent= parent;
@@ -30,6 +35,7 @@ dojo.declare("TreeView.widget.Edge", null, {
 	},
 
 	updateIndex : function(newindex) {
+		logger.debug("TreeView.widget.Edge.updateIndex");
 		if (this.index != newindex)	 {
 			var edge = this;
 
@@ -44,6 +50,7 @@ dojo.declare("TreeView.widget.Edge", null, {
 	},
 
 	free : function(){
+		logger.debug("TreeView.widget.Edge.free");
 		if (this._destroyed)
 			return;
 		this._destroyed = true;
@@ -83,9 +90,10 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	_subscription : null,
 
 	constructor : function(tree, data, asRoot) {
-		this.guid = data.getGUID();
+		logger.debug("TreeView.widget.GraphNode.constructor");
+		this.guid = data.getGuid();
 		tree.dict[this.guid] = this;
-		this.type = data.getClass();
+		this.type = data.getEntity();
 		this._data = data;
 
 		this.tree = tree;
@@ -108,13 +116,13 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 		this.update(data);
 
-		this._subscription = mx.processor.subscribe({
+		this._subscription = mx.data.subscribe({
 			guid : this.guid,
 			callback : dojo.hitch(this, function(thing) {
 				if (dojo.isObject(thing))
 					this.updateWithRefs(thing);
 				else
-					mx.processor.get({
+					mx.data.get({
 						guid : thing,
 						error: this.tree.showError,
 						callback : dojo.hitch(this, this.updateWithRefs)
@@ -132,21 +140,25 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 	/** convenient helper method */
 	isA : function(type) {
+		//logger.debug("TreeView.widget.GraphNode.isA");
 		return this._data.isA(type);
 	},
 
 	getSortIndex : function() {
+		logger.debug("TreeView.widget.GraphNode.getSortIndex");
 		if (this.xsettings)
 			return parseInt(this._data.get(this.xsettings.sortattr), 10);
 		return -1;
 	},
 
 	updateWithRefs : function(data) {
+		logger.debug("TreeView.widget.GraphNode.updateWithRefs");
 		this.update(data);
 		this.updateEdges();
 	},
 
 	update : function(data) {
+		logger.debug("TreeView.widget.GraphNode.update");
 		this._data = data;
 
 		this.checkBurst();
@@ -158,6 +170,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	},
 
 	updateEdges : function() {
+		logger.debug("TreeView.widget.GraphNode.updateEdges");
 		var data = this._data;
 		//1. mark edges stored in here invalid
 		var owningEdges = this.tree.getEdgesOwnedBy(this);
@@ -231,6 +244,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	* TODO: move childeges to children
 	*/
 	checkBurst : function() {
+		logger.debug("TreeView.widget.GraphNode.checkBurst");
 		var x = this.xsettings;
 		if (x != null && x.xburstattr) {
 			var newburst = this._data.get(x.xburstattr);
@@ -260,6 +274,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	},
 
 	forNodes : function(func) {
+		logger.debug("TreeView.widget.GraphNode.forNodes");
 		var l = this.nodes.length;
 		for (var i = 0; i < l; i++)
 			func.call(this, this.nodes[i]);
@@ -270,6 +285,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	 * @return {[type]}
 	 */
 	getChildTypes : function() {
+		logger.debug("TreeView.widget.GraphNode.getChildTypes");
 		var res = [];
 		for(var i = 0; i < this.tree.types.length; i++)	{
 			var type = this.tree.types[i];
@@ -282,6 +298,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 	//if a ref(set) was changed, and it refers to unknown ids, fetch them.
 	_fetchUnknownChildrenHelper : function(type, guids) {
+		logger.debug("TreeView.widget.GraphNode._fetchUnknownChildrenHelper");
 		if (guids.length == 0) //no guids
 			return;
 		if ( !this.children[type.index].knowsChildren) //never expanded, we need to fetch anyway on the next expand, and the edges will be created by the retrieve. Skip for now
@@ -294,7 +311,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 				this.tree.processData(data); //data should always be one (or zero if not in constraint)
 
 				for(var i = 0; i < data.length; i++) { //create the assocations
-					var e = this.tree.findOrCreateEdge(type, this, this.tree.dict[data[i].getGUID()], this);
+					var e = this.tree.findOrCreateEdge(type, this, this.tree.dict[data[i].getGuid()], this);
 					e._valid = true;
 				}
 			}),
@@ -314,10 +331,11 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			args.guids = guids;
 		}
 
-		mx.processor.get(args);
+		mx.data.get(args);
 	},
 
 	ensureChildren : function(type, callback) {
+		logger.debug("TreeView.widget.GraphNode.ensureChildren");
 		var c = this.children[type.index];
 		if (c.knowsChildren)
 			callback && callback();
@@ -341,6 +359,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 	},
 
 	_retrieveChildrenCore : function(c, callback) {
+		logger.debug("TreeView.widget.GraphNode._retrieveChildrenCore");
 		var type = c.type;
 
 		//self references leaving from the parent need a recursive constraint
@@ -371,7 +390,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 
 				//3. create the edge if from parent, update index, update valid state
 				for(var i = 0; i < data.length; i++) {
-					var guid = data[i].getGUID();
+					var guid = data[i].getGuid();
 					var child = this.tree.dict[guid];
 
 					var edge =
@@ -406,11 +425,12 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			kwargs.filter.sort = [[ xsettings.sortattr, xsettings.sortdir ]];
 
 		//perform the get
-		mx.processor.get(kwargs);
+		mx.data.get(kwargs);
 	},
 
 
 	free : function() {
+		logger.debug("TreeView.widget.GraphNode.free");
 		this._refs -= 1;
 
 		if (this._refs <= 0) {
@@ -419,7 +439,7 @@ dojo.declare("TreeView.widget.GraphNode", null, {
 			this._destroyed = true;
 
 			if (this._subscription)
-				mx.processor.unsubscribe(this._subscription);
+				mx.data.unsubscribe(this._subscription);
 
 			delete this.tree.dict[this.guid];
 
@@ -458,25 +478,26 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	visible : false,
 
 	constructor : function(parentRenderNode, type) {
+		logger.debug("TreeView.widget.RenderEdge.constructor");
 		this.parent = parentRenderNode;
 		this.type = type;
 		this.tree = this.parent.tree;
 		this.children = [];
 
-		var childNode = this.childNode = mxui.dom.ul({'class' : 'gg_assoc_children gg_assoc_' + type.assoc.replace(".","_")});
-		var wrapperNode = this.domNode = mxui.dom.li({'class' : 'gg_assoc_wrapper ' + type.assocclazz});
+		var childNode = this.childNode = mxui.dom.create("ul", {'class' : 'gg_assoc_children gg_assoc_' + type.assoc.replace(".","_")});
+		var wrapperNode = this.domNode = mxui.dom.create("li", {'class' : 'gg_assoc_wrapper ' + type.assocclazz});
 
 		this.visible = type.showassocname;
 		if (this.visible) {
-			var fold = this.foldNode = mxui.dom.span({});
-			var caption = mxui.dom.span({'class' : 'gg_assoc_title gg_assoc_' + type.assoc.replace(".","_")}, type.assoccaption);
-			var div = new mxui.dom.div({'class' : 'gg_row', 'style' : type.assocstyle }, fold, caption);
+			var fold = this.foldNode = mxui.dom.create("span",{});
+			var caption = mxui.dom.create("span", {'class' : 'gg_assoc_title gg_assoc_' + type.assoc.replace(".","_")}, type.assoccaption);
+			var div = new mxui.dom.create("div", {'class' : 'gg_row', 'style' : type.assocstyle }, fold, caption);
 			dojo.place(div, wrapperNode);
 
 			dojo.addClass(childNode, 'gg_assoc_wrapped');
 			dojo.addClass(wrapperNode, 'gg_node'); //only identify as node if a wrappernode is available
 
-			mendix.dom.data(wrapperNode, 'ggdata', this);
+			mxui.dom.data(wrapperNode, 'ggdata', this);
 		}
 
 		this.setCollapsed(true);
@@ -489,14 +510,17 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	isA : function(type) {
+		//logger.debug("TreeView.widget.RenderEdge.isA");
 		return false; //assoc node is never a type
 	},
 
 	getChildCount : function() {
+		logger.debug("TreeView.widget.RenderEdge.getChildCount");
 		return this.children.length;
 	},
 
 	add : function(renderNode) {
+		logger.debug("TreeView.widget.RenderEdge.add");
 		var guid = renderNode.graphNode.guid;
 		this.children.push(renderNode);
 		this.childNode.appendChild(renderNode.domNode);
@@ -505,6 +529,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	remove : function(renderNode) {
+		logger.debug("TreeView.widget.RenderEdge.remove");
 		var baseidx = dojo.indexOf(this.children, renderNode);
 		if (baseidx > -1) {
 			this.children.splice(baseidx, 1);
@@ -516,6 +541,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	move : function(renderNode, newindex) {
+		logger.debug("TreeView.widget.RenderEdge.move");
 		var baseidx = dojo.indexOf(this.children, renderNode);
 		if (baseidx != -1 && baseidx != newindex) {
 			this.children.splice(baseidx,  1);
@@ -525,6 +551,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	placeChildren : function() {
+		logger.debug("TreeView.widget.RenderEdge.placeChildren");
 		var edges = this.tree.getChildEdges(this.parent.graphNode)[this.type.index];
 		for(var childguid in edges) {
 			var found = false;
@@ -540,6 +567,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	setCollapsed : function(collapsed, cb) {
+		logger.debug("TreeView.widget.RenderEdge.setCollapsed");
 		if (this.collapsed !== collapsed) {
 			this.collapsed = collapsed;
 
@@ -580,6 +608,7 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	updateFoldVisibility : function() {
+		logger.debug("TreeView.widget.RenderEdge.updateFoldVisibility");
 		if (this.foldNode) {
 			if (this.children.length == 0)
 				dojo.style(this.foldNode, 'visibility', 'hidden');
@@ -590,10 +619,12 @@ dojo.declare("TreeView.widget.RenderEdge", null, {
 	},
 
 	getVisibleParent : function() {
+		logger.debug("TreeView.widget.RenderEdge.getVisibleParent");
 		return this.parent;
 	},
 
 	free : function() {
+		logger.debug("TreeView.widget.RenderEdge.free");
 		if (this._destroyed)
 			return;
 		this._destroyed = true;
@@ -626,20 +657,21 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	hasVisibleEdge : false, //true if there is an always visible association edge.
 
 	constructor : function(graphNode, parentRenderNode, type) {
+		logger.debug("TreeView.widget.RenderNode.constructor");
 		this.graphNode = graphNode;
 		this.parent = parentRenderNode;
-		this.isRoot = this.parent == null;
+		this.isRoot = this.parent === null;
 		this.children = [];
 		this.type = type;
 		this.tree = graphNode.tree;
 
 		this.canHazChildren = this.graphNode.getChildTypes().length > 0;
 
-		this.foldNode = mendix.dom.span({'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
-		this.dataNode = mendix.dom.span({'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
-		this.childNode = mendix.dom.ul({'class': 'gg_children'});
-		this.rowNode = mendix.dom.div({'class' : 'gg_row' }, this.foldNode, this.dataNode);
-		this.domNode = mendix.dom.li({'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
+		this.foldNode = mxui.dom.create("span", {'class': 'gg_nodefold gg_fold ' + (this.canHazChildren ? 'gg_folded' : 'gg_nofold')});
+		this.dataNode = mxui.dom.create("span", {'class': 'gg_data', 'style' : this.graphNode.xsettings.entitystyle });
+		this.childNode = mxui.dom.create("ul", {'class': 'gg_children'});
+		this.rowNode = mxui.dom.create("div", {'class' : 'gg_row' }, this.foldNode, this.dataNode);
+		this.domNode = mxui.dom.create("li", {'class':'gg_node ' + this.graphNode.xsettings.entityclazz }, this.rowNode, this.childNode);
 
 		mxui.dom.data(this.domNode, "ggdata", this);
 
@@ -686,10 +718,12 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	data : function() {
+		logger.debug("TreeView.widget.RenderNode.data");
 		return this.graphNode._data;
 	},
 
 	getVisibleParent : function() {
+		logger.debug("TreeView.widget.RenderNode.getVisibleParent");
 		if (this.parent == null)
 			return null;
 
@@ -700,15 +734,18 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	getEdge : function() {
+		logger.debug("TreeView.widget.RenderNode.getEdge");
 		return this.parent.children[this.type.index];
 	},
 
 	/** convenient helper method */
 	isA : function(type) {
+		//logger.debug("TreeView.widget.RenderNode.isA");
 		return this.graphNode.isA(type);
 	},
 
 	getChildCount : function() {
+		logger.debug("TreeView.widget.RenderNode.getChildCount");
 		var res = 0;
 		dojo.forEach(this.children, function(edge) {
 			if (edge)
@@ -718,6 +755,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	updateFoldVisibility : function() {
+		logger.debug("TreeView.widget.RenderNode.updateFoldVisibility");
 		if (this.foldNode) {
 			if (!this.hasVisibleEdge && this.getChildCount() == 0)
 				dojo.style(this.foldNode, 'visibility', 'hidden');
@@ -727,6 +765,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	findMaxIndex : function() {
+		logger.debug("TreeView.widget.RenderNode.findMaxIndex");
 		var max = -100000;
 		dojo.forEach(this.children, function(edge) {
 			if (edge)
@@ -737,6 +776,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	findMinIndex : function() {
+		logger.debug("TreeView.widget.RenderNode.findMinIndex");
 		var min = 100000;
 		dojo.forEach(this.children, function(edge) {
 			if (edge)
@@ -747,6 +787,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	setCollapsed : function(newvalue, cb) {
+		logger.debug("TreeView.widget.RenderNode.setCollapsed");
 		if (newvalue == this.collapsed) {
 			cb && cb();
 			return;
@@ -793,13 +834,14 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	setupColumns : function() {
+		logger.debug("TreeView.widget.RenderNode.setupColumns");
 		this._colNodes = [];
 
 		for(var i = 0, col= null; col = this.tree.columns[i]; i++) {
 			if (col.appliesTo(this)) {
-				var span = mxui.dom.span({'class' : 'gg_column gg_column_' + i});
+				var span = mxui.dom.create("span", {'class' : 'gg_column gg_column_' + i});
 				this._colNodes.push(span);
-				this.dataNode.appendChild(mxui.dom.span({ 'class' : 'gg_column_wrapper' }, span)); //wrapper column for hovers and such
+				this.dataNode.appendChild(mxui.dom.create("span", { 'class' : 'gg_column_wrapper' }, span)); //wrapper column for hovers and such
 
 				col.setupNode(span);
 			}
@@ -807,6 +849,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	draw : function(firstTime) {
+		logger.debug("TreeView.widget.RenderNode.draw");
 		var curCol = 0;
 		for(var i = 0, col = null; col = this.tree.columns[i]; i++)
 			if (col.appliesTo(this)) {
@@ -816,6 +859,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 	},
 
 	free : function() {
+		logger.debug("TreeView.widget.RenderNode.free");
 		if (this._destroyed)
 			return;
 		this._destroyed = true;
@@ -852,14 +896,17 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	_parent			: null,
 
 	getContextGUID : function() {
-		return this.root._data.getGUID();
+		logger.debug("TreeView.widget.TreeView.getContextGUID");
+		return this.root._data.getGuid();
 	},
 
 	getContextObject : function() {
+		logger.debug("TreeView.widget.TreeView.getContextObject");
 		return this.root._data;
 	},
 
 	setSelection : function(renderNode) {
+		logger.debug("TreeView.widget.TreeView.setSelection");
 		if (renderNode != this._selection) {
 			if (!this._parent && renderNode)
 				this._parent = renderNode.parent;
@@ -893,6 +940,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 
 	testreferences : function(node) {
+		logger.debug("TreeView.widget.TreeView.testreferences");
 		if (this.selectionrefs) {
 			for(i = 0; i < this.selectionrefs.length; i++) {
 				if(this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf('/') == -1) {
@@ -909,32 +957,37 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	saveAndFireSelection : function(item) {
-		mx.processor.save({
+		logger.debug("TreeView.widget.TreeView.saveAndFireSelection");
+		mx.data.save({
 			mxobj : this.getContextObject(),
 			callback : dojo.hitch(this, this.onSelect, item),
 			error : this.showError
 		}, this);
 
-		mx.processor.objectUpdateNotification(this.getContextObject());
+		mx.data.objectUpdateNotification(this.getContextObject());
 
 		this.onSelect(item);
 	},
 
 	getSelection : function(allowEdge) {
+		logger.debug("TreeView.widget.TreeView.getSelection");
 		if (this._selection && this._selection.isEdge && !allowEdge)
 			return this._selection.parent;
 		return this._selection;
 	},
 
 	hasSelection : function() {
+		logger.debug("TreeView.widget.TreeView.hasSelection");
 		return this.getSelection(false) != null;
 	},
 
 	hasMultiSelection : function() {
+		logger.debug("TreeView.widget.TreeView.hasMultiSelection");
 		return false;
 	},
 
 	withSelection : function(scope,cb) {
+		logger.debug("TreeView.widget.TreeView.withSelection");
 		if (this.hasSelection())
 			cb.call(scope, this.getSelection(false));
 	},
@@ -948,6 +1001,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	findOrCreateEdge : function(type, parent, child, owner, nocreate) {
+		logger.debug("TreeView.widget.TreeView.findOrCreateEdge");
 		if (!child)
 			throw this.id + "  assertion failed: no child to find or create edge provided. Has it been free-ed somehow?";
 
@@ -981,6 +1035,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	freeEdge : function(edge) {
+		logger.debug("TreeView.widget.TreeView.freeEdge");
 		//update edgesByParent
 		if (edge.parent.guid in this.edgesByParent) {
 			delete this.edgesByParent[edge.parent.guid][edge.type.index][edge.child.guid];
@@ -994,7 +1049,8 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	getXsettings : function (entity) {
-		var meta = mx.metadata.getMetaEntity(entity);
+		logger.debug("TreeView.widget.TreeView.getXsettings");
+		var meta = mx.meta.getEntity(entity);
 		for(var i = 0, x = null; x = this.xsettings[i]; i++) {
 			if (meta.isA(x.xentity))
 				return x;
@@ -1003,6 +1059,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	getEdgesOwnedBy : function(owner) {
+		logger.debug("TreeView.widget.TreeView.getEdgesOwnedBy");
 		if (!(owner.guid in this.edgesByOwner)) //might not be available yet
 			this.edgesByOwner[owner.guid] = [];
 
@@ -1010,6 +1067,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	getChildEdges : function(parent) {
+		logger.debug("TreeView.widget.TreeView.getChildEdges");
 		if (!(parent.guid in this.edgesByParent))
 			this.edgesByParent[parent.guid] = [];
 
@@ -1019,12 +1077,13 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	/* context applied */
 	update : function(data, cb) {
-		var guid = data.getGUID();
+		logger.debug("TreeView.widget.TreeView.update");
+		var guid = data.getGuid();
 		if (this.root != null && this.root.guid == guid) //already the root, just refresh
 			this.processData([data]);
 		else {
-			if (!this.getXsettings(data.getClass()))
-				this.configError("The context of this widget is a '" + data.getClass() + ", but this type is not further defined in the entities property of the treeview");
+			if (!this.getXsettings(data.getEntity()))
+				this.configError("The context of this widget is a '" + data.getEntity() + ", but this type is not further defined in the entities property of the treeview");
 
 			if (this.root)
 				this.root.free();
@@ -1044,6 +1103,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	selectFirstItem : function() {
+		logger.debug("TreeView.widget.TreeView.selectFirstItem");
 		if (!this.hiderootnode) {
 			if  (this.root && this.root.nodes.length > 0)
 				this.setSelection(this.root.nodes[0]);
@@ -1063,9 +1123,10 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	processData : function(data) {
+		logger.debug("TreeView.widget.TreeView.processData");
 		for(var i = 0; i < data.length; i++) {
 			var mxobj = data[i];
-			var guid = mxobj.getGUID();
+			var guid = mxobj.getGuid();
 			if (this.dict[guid])
 				this.dict[guid].update(mxobj);
 			else {
@@ -1082,6 +1143,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	processRecordSelectionSuggestion : function() {
+		logger.debug("TreeView.widget.TreeView.processRecordSelectionSuggestion");
 		var max = 0,
 			cur = null;
 		if (this._selectionSuggestions) {
@@ -1122,11 +1184,13 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	*/
 
 	grabFocus : function() {
+		logger.debug("TreeView.widget.TreeView.grabFocus");
 		if (mxui.wm.focus.get() != this.treeNode)
 			mxui.wm.focus.put(this.treeNode);
 	},
 
 	setupEvents : function() {
+		logger.debug("TreeView.widget.TreeView.setupEvents");
 		var lc = TreeView.widget.Commons.liveConnect;
 
 		lc(this, this.treeNode, "onclick", {
@@ -1194,6 +1258,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	_getRenderNodeForNode : function(node) {
+		logger.debug("TreeView.widget.TreeView._getRenderNodeForNode");
 		while(node != null) {
 			if (dojo.hasClass(node, 'gg_node')) {
 				if (node == this.dnd.tmpnode)
@@ -1207,6 +1272,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	keypress : function(e) {
+		logger.debug("TreeView.widget.TreeView.keypress");
 		var sel = this.getSelection(true);
 		if (sel) {
 			var handled = true;
@@ -1274,12 +1340,14 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	invokeDefaultAction : function() {
+		logger.debug("TreeView.widget.TreeView.invokeDefaultAction");
 		for(var i = 0, a = null; a = this.actions[i++];)
 			if (a.actisdefault && a.appliesToSelection())
 				a.invokeOnSelection();
 	},
 
 	onRowMouseOver : function(target, e) {
+		//logger.debug("TreeView.widget.TreeView.onRowMouseOver");
 //		console.log("over");
 		if (!this.dnd.isdragging && target != this._hoveredRow) {
 			this._hoveredRow && dojo.removeClass(this._hoveredRow, 'gg_row_hover');
@@ -1305,6 +1373,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	onRowMouseDown : function(target, e) {
+		//logger.debug("TreeView.widget.TreeView.onRowMouseDown");
 //		console.log("on down");
 		if (!this.dnd.isdragging) {
 			this.dnd.mousedown = true;
@@ -1317,6 +1386,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	onRowMouseUp : function(target, e) {
+		//logger.debug("TreeView.widget.TreeView.onRowMouseUp");
 //		console.log("on up");
 		this.dnd.mousedown = false;
 		if (this.dnd.isdragging) {
@@ -1326,13 +1396,15 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	resetDndClasses : function(node) {
+		logger.debug("TreeView.widget.TreeView.resetDndClasses");
 		if (node)
 			dojo.removeClass(node, 'gg_drag_over gg_drag_accept gg_drag_deny');
 	},
 
 	startDrag : function(target, e) {
+		logger.debug("TreeView.widget.TreeView.startDrag");
 		//tmp node for drag an drop operations
-		this.dnd.tmpnode = mxui.dom.li({'class' : 'gg_node gg_anchor'}, mxui.dom.div({'class' : 'gg_anchor_inner'}));
+		this.dnd.tmpnode = mxui.dom.create("li", {'class' : 'gg_node gg_anchor'}, mxui.dom.create("div", {'class' : 'gg_anchor_inner'}));
 
 		var current = this.dnd.current = this._getRenderNodeForNode(target);
 		this.setSelection(current);
@@ -1341,7 +1413,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		if (current.isEdge || current.isRoot || !current.type.allowdnd)
 			return false;
 
-		var avatar =  this.dnd.avatar  = mxui.dom.div({'class' : 'gg_avatar'}, dojo.clone(current.rowNode)); //TODO: make beter avatar
+		var avatar =  this.dnd.avatar  = mxui.dom.create("div", {'class' : 'gg_avatar'}, dojo.clone(current.rowNode)); //TODO: make beter avatar
 
 		//hooray, we can start thedrag
 //		console.log("start drag");
@@ -1384,6 +1456,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	onDrag : function(targetNode, e) {
+		logger.debug("TreeView.widget.TreeView.onDrag");
 		//Hide selection, especially needed in IE.
 		if(document.selection && document.selection.empty) {
 			document.selection.empty();
@@ -1489,6 +1562,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	onEndDrag : function(target, e) {
+		logger.debug("TreeView.widget.TreeView.onEndDrag");
 //		console.log("stop drag");
 
 		//MWE: e is null in the case of the body mouseup
@@ -1524,6 +1598,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	resetNodesAfterDnD : function() {
+		logger.debug("TreeView.widget.TreeView.resetNodesAfterDnD");
 		if (this.dnd.target)
 			this.resetDndClasses(this.dnd.target.domNode);
 		this.resetDndClasses(this.dnd.current.domNode);
@@ -1534,6 +1609,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	_findDropAssocs : function(item, target, pos, copy) {
+		logger.debug("TreeView.widget.TreeView._findDropAssocs");
 		var assocs = [];
 
 		if (pos == 'before' || pos == 'after' || target.isEdge) {
@@ -1560,6 +1636,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 	//indicate whether it is possible to drop before another item
 	canDropBefore : function(item, target) {
+		logger.debug("TreeView.widget.TreeView.canDropBefore");
 		if (!target || target.isEdge) //we cannot drop before assoc nodes
 			return false;
 
@@ -1569,7 +1646,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			this.dnd.allowDropBefore = {};
 		if (!(e in this.dnd.allowDropBefore)) {
 			var x = item.graphNode.xsettings;
-			this.dnd.allowDropBefore[e] = x && mx.metadata.getMetaEntity(e).getAttributeType(x.sortattr) == "Float";
+			this.dnd.allowDropBefore[e] = x && mx.meta.getEntity(e).getAttributeType(x.sortattr) == "Float";
 		}
 		return this.dnd.allowDropBefore[e];
 	},
@@ -1582,6 +1659,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	 * @return {[type]} Whether the item can be dropped here. Used for styling
 	 */
 	dragOver : function(item, target, pos, copy) {
+		logger.debug("TreeView.widget.TreeView.dragOver");
 		//Avoid drop in self
 		//
 		var validSelfdrop = (target == item && (pos == 'before' || pos == 'after'));
@@ -1607,6 +1685,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	 * @return {[type]}
 	 */
 	performDrop : function(item, target, pos, copy) {
+		logger.debug("TreeView.widget.TreeView.performDrop");
 		if (!target)
 			return false;
 
@@ -1630,7 +1709,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			var assoc1 = item.type;
 			if (assoc1.assoctype == "fromparent") {
 				if (assoc1.isRefset)
-					o.removeReferences(assoc1.assoc, [i.getGUID()]);
+					o.removeReferences(assoc1.assoc, [i.getGuid()]);
 				else
 					o.set(assoc1.assoc, '');
 
@@ -1638,7 +1717,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			}
 			else { //from child
 				if (assoc1.isRefset)
-					i.removeReferences(assoc1.assoc, [o.getGUID()]);
+					i.removeReferences(assoc1.assoc, [o.getGuid()]);
 				else
 					i.set(assoc1.assoc, '');
 
@@ -1654,12 +1733,12 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 
 				//reference set (was already removed from orig parent in step 0)
 				if (assoc.isRefset) {
-					t.addReferences(assoc.assoc, [i.getGUID()]);
+					t.addReferences(assoc.assoc, [i.getGuid()]);
 				}
 
 				//normal reference
 				else
-					t.set(assoc.assoc, i.getGUID());
+					t.set(assoc.assoc, i.getGuid());
 			}
 
 			//assoc stored in child
@@ -1667,16 +1746,16 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 				actions.push([assoc.dropmf, i]);
 
 				if (assoc.isRefset) {
-					i.addReferences(assoc.assoc, [t.getGUID()]);
+					i.addReferences(assoc.assoc, [t.getGuid()]);
 				}
 				else
-					i.set(assoc.assoc, t.getGUID()); //copy is not supported, dont bother
+					i.set(assoc.assoc, t.getGuid()); //copy is not supported, dont bother
 			}
 		}
 
 		//2) update position. Note that this position applies to all assocs! which is a bit weird...
 		var x = item.graphNode.xsettings;
-		if (x && mx.metadata.getMetaEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
+		if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
 			if (pos == 'before' || pos == 'after') {
 				//find the other related element for drop in between
 				var othernode = pos == 'before' ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
@@ -1731,11 +1810,13 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	foldNodeClick : function(node) {
+		logger.debug("TreeView.widget.TreeView.foldNodeClick");
 		var renderNode = this._getRenderNodeForNode(node);
 		renderNode.setCollapsed(!renderNode.collapsed);
 	},
 
 	updateAccordionForSelection : function(record) {
+		logger.debug("TreeView.widget.TreeView.updateAccordionForSelection");
 		if (!record)
 			return;
 		record.setCollapsed(false);
@@ -1755,11 +1836,13 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	assocFoldClick : function(node) {
+		logger.debug("TreeView.widget.TreeView.assocFoldClick");
 		var renderEdge = mxui.dom.data(node.parentNode.parentNode, "ggdata");
 		renderEdge.setCollapsed(!renderEdge.collapsed);
 	},
 
 	columnClick : function(node) {
+		logger.debug("TreeView.widget.TreeView.columnClick");
 		var col = mxui.dom.data(node, 'colindex');
 		var renderNode = this._getRenderNodeForNode(node);
 
@@ -1850,6 +1933,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	mixins : [ mxui.mixin._Scriptable ],
 
 	startup : function() {
+		logger.debug("TreeView.widget.TreeView.startup");
 		if (this._started) //MWE: RVH said this can happen
 			return;
 
@@ -1904,10 +1988,11 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	setupLayout : function() {
+		logger.debug("TreeView.widget.TreeView.setupLayout");
 		dojo.addClass(this.domNode, 'gg_tree');
-		this.headerNode = mendix.dom.div({'class' : 'gg_header'});
+		this.headerNode = mxui.dom.create("div", {'class' : 'gg_header'});
 
-		this.treeNode = mendix.dom.ul({'class': 'gg_children gg_root_wrapper'});
+		this.treeNode = mxui.dom.create("ul", {'class': 'gg_children gg_root_wrapper'});
 		if (this.hiderootnode)
 			dojo.addClass(this.treeNode, 'gg_hiddenroot');
 
@@ -1922,6 +2007,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	setupActions : function() {
+		logger.debug("TreeView.widget.TreeView.setupActions");
 		var data = [];
 		this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf,actshortcut', data);
 		for(var i = 0, d = null; d = data[i]; i++) {
@@ -1937,6 +2023,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	setupTypes : function() {
+		logger.debug("TreeView.widget.TreeView.setupTypes");
 		this.splitPropsTo('entity,parentassocsingle,parentassocmulti,constraint,sortattr,sortdir,assoctype,assoccaption,showassocname,allowdnd,allowdndcopy,dropmf,assocclazz,assocstyle', this.types);
 		var i = 0;
 		dojo.forEach(this.types, function(type) {
@@ -1971,7 +2058,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 				type.parententity = e;
 			}
 
-			type.recursive = mx.metadata.getMetaEntity(type.entity).isA(type.parententity);
+			type.recursive = mx.meta.getEntity(type.entity).isA(type.parententity);
 
 			type.assocstyle = type.assocstyle.split(/\||\n/).join(";");
 
@@ -1980,6 +2067,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	setupColumns : function() {
+		logger.debug("TreeView.widget.TreeView.setupColumns");
 		var data = [];
 		this.splitPropsTo('columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption', data);
 		for(var i = 0, d = null; d = data[i]; i++) {
@@ -2000,6 +2088,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	addToSchema : function(entity, attr) {
+		logger.debug("TreeView.widget.TreeView.addToSchema");
 		if (!attr)
 			return;
 
@@ -2025,6 +2114,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		converts Mx reference data to a map with guids. The data can either be an array of guids, empty string or an object
 	*/
 	toMap : function(thing) {
+		logger.debug("TreeView.widget.TreeView.toMap");
 		var res = {};
 		if (thing == "")
 			return res;
@@ -2051,6 +2141,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	 * @param  {[type]} targetIndex [description]
 	 */
 	moveNode : function(domNode, targetIndex) {
+		logger.debug("TreeView.widget.TreeView.moveNode");
 		var parent = domNode.parentNode;
 
 		if (parent == null)
@@ -2066,6 +2157,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	 * @return {[type]}
 	 */
 	findPreviousNode : function(node, clazz, limitNode) {
+		logger.debug("TreeView.widget.TreeView.findPreviousNode");
 		if (node.previousElementSibling == null) {
 			//find a matching parent
 			var cur = node.parentNode;
@@ -2100,6 +2192,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	findNextNode : function(node, clazz, limitNode) {
+		logger.debug("TreeView.widget.TreeView.findNextNode");
 		var findChild = function(cur) {
 			for(var i = 0; i < cur.children.length; i++) {
 				if (dojo.style(cur.children[i], 'display') != 'none') {
@@ -2135,6 +2228,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	resumed : function() {
+		logger.debug("TreeView.widget.TreeView.resumed");
 		//reapply selection to continue formloader
 		var sel = this._selection;
 		this._selection = null;
@@ -2142,14 +2236,17 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
     configError : function(msg) {
+		logger.debug("TreeView.widget.TreeView.configError");
         TreeView.widget.Commons.configError(this, msg);
     },
 
     showError : function(e) {
+		logger.debug("TreeView.widget.TreeView.showError");
         TreeView.widget.Commons.error(e, this);
     },
 
 	splitPropsTo : function(props, target) {
+		logger.debug("TreeView.widget.TreeView.splitPropsTo");
 		TreeView.widget.Commons.splitPropsTo(this, props, target);
 	},
 
@@ -2158,6 +2255,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 	},
 
 	uninitialize : function() {
+		logger.debug("TreeView.widget.TreeView.uninitialize");
 		this.root && this.root.free();
 
 		if (this.searchControl)
@@ -2172,4 +2270,3 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		});
 	}
 });
-

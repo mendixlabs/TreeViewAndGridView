@@ -32,7 +32,7 @@ DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
 					<attributeTypes>
 						<attributeType name="AutoNumber"/>
 						<attributeType name="Boolean"/>
-						<attributeType name="Currency"/>
+						<attributeType name="Decimal"/>
 						<attributeType name="DateTime"/>
 						<attributeType name="Enum"/>
 						<attributeType name="Float"/>
@@ -53,19 +53,20 @@ DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
 				<property key="xburstattr" type="attribute" entityProperty="xentity" required="false">
 					<caption>Cache burst attribute</caption>
 					<category>2) Advanced</category>
-					<description>Depending on the value of this property, the children of an item will be reloaded. If this property is omitted, the widget tries to automatically discover which items need to be refreshed, but new objects with a from child assocation cannot be detected automatically. 
-					
-					 !Important note!: If a cacheburst attribute is set, this attribute needs to be update to show new children on assiations which are owned by children and use an xpath constraint. This way it can be assured that items do not slip past constraints by changing them.  
+					<description>Depending on the value of this property, the children of an item will be reloaded. If this property is omitted, the widget tries to automatically discover which items need to be refreshed, but new objects with a from child assocation cannot be detected automatically.
 
-					 Furthermore, the cacheburst is used as hint when to expand items. If the cacheburst of an item changes after invoking a microflow, it is assumed that there are new children to display. The item is expanded and the newest child will be selected. 
+					 !Important note!: If a cacheburst attribute is set, this attribute needs to be update to show new children on assiations which are owned by children and use an xpath constraint. This way it can be assured that items do not slip past constraints by changing them.
+
+					 Furthermore, the cacheburst is used as hint when to expand items. If the cacheburst of an item changes after invoking a microflow, it is assumed that there are new children to display. The item is expanded and the newest child will be selected.
 					</description>
 					<attributeTypes>
 			            <attributeType name="DateTime"/>
 						<attributeType name="Float"/>
 						<attributeType name="Integer"/>
+						<attributeType name="Decimal"/>
 						<attributeType name="Long"/>
 						<attributeType name="String"/>
-					</attributeTypes>			
+					</attributeTypes>
 				</property>
 				<property key="entityclazz" type="string" defaultValue="" required="false">
 					<caption>Class</caption>
@@ -76,12 +77,12 @@ DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
 					<caption>Style</caption>
 					<category>2) Advanced</category>
 					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
-				</property> 	
+				</property>
 				<property key="entitychannel" type="string" defaultValue="" required="false">
 					<caption>Formloader Channel</caption>
 					<category>2) Advanced</category>
 					<description>If provided, all formloaders listening to this channel will follow the current selection</description>
-				</property> 			
+				</property>
 <!--				<property key="xlisteningform" type="string" required="false">
 					<caption>Form loader channel</caption>
 					<category>2) Advanced settings</category>
@@ -95,18 +96,18 @@ DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
   			<caption>2) Relations</caption>
   			<category>1) Tree configuration</category>
   			<description>
-<![CDATA[You can define the relations that are shown in the tree here. Relations are defined per relation per direction. The root object of the tree is always the context object.  
+<![CDATA[You can define the relations that are shown in the tree here. Relations are defined per relation per direction. The root object of the tree is always the context object.
 
 
-Example: Domain model: Orderline *---orderline_order-->1 Order 
+Example: Domain model: Orderline *---orderline_order-->1 Order
 
 
-Configuration to show all orderlines within an order (which is the context object): 
+Configuration to show all orderlines within an order (which is the context object):
 
 
-Association owner: 'Orderline' 
-Association (reference): 'orderline_order' 
-Association direction: 'The association owner is the child' 
+Association owner: 'Orderline'
+Association (reference): 'orderline_order'
+Association direction: 'The association owner is the child'
 
 
 It is allowed to add an additional relation, with association direction 'The association owner is the parent', to be able to expand from the orderline back to the order (which might make sense if an orderline would be related to multiple orders).
@@ -126,21 +127,21 @@ It is allowed to add an additional relation, with association direction 'The ass
 				<property key="parentassocsingle" type="entity" entityProperty="entity" isPath="optional" pathType="reference" required="false">
 					<caption>Association (reference)</caption>
 					<category>1) Define the relation</category>
-					<description>The association from owner entity type to the other entity</description>			
+					<description>The association from owner entity type to the other entity</description>
 				</property>
 				<property key="parentassocmulti" type="entity" entityProperty="entity" isPath="optional" pathType="referenceSet" required="false">
 					<caption>Association (referenceSet)</caption>
 					<category>1) Define the relation</category>
-					<description>The association from owner entity type to the other entity</description>			
-				</property>	
+					<description>The association from owner entity type to the other entity</description>
+				</property>
 				<property key="assoctype" type="enumeration" defaultValue="fromchild">
 					<caption>Association direction</caption>
 					<category>1) Define the relation</category>
 					<description>
-						This property describes whether the selected defines whether this association is from 
+						This property describes whether the selected defines whether this association is from
 						parent &lt;-- child (default)
 						or
-						child --&gt; parent 
+						child --&gt; parent
 					</description>
 					<enumerationValues>
 						<enumerationValue key="fromchild">The association owner is the child</enumerationValue>
@@ -166,17 +167,17 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<caption>Style</caption>
 					<category>2) Set additional options</category>
 					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
-				</property> 				
+				</property>
 				<property key="allowdnd" type="boolean" defaultValue="false">
 					<caption>Allow drops</caption>
 					<category>3) Drag and drop options</category>
 					<description>Allow items to be dropped in this association</description>
-				</property>		
+				</property>
 				<property key="allowdndcopy" type="boolean" defaultValue="false">
 					<caption>Allow drop copies</caption>
 					<category>3) Drag and drop options</category>
 					<description>Allow items to be dropped as a copy in this association (not supported for single references where fromparent is false)</description>
-				</property>								
+				</property>
 				<property key="dropmf" type="microflow" required="false" entityProperty="entity">
                     <caption>On drop microflow</caption>
                     <category>3) Drag and drop options</category>
@@ -187,7 +188,7 @@ It is allowed to add an additional relation, with association direction 'The ass
 				</property>
 			</properties>
 		</property>
-		
+
 		<property key="blaat2" type="object" isList="true" required="true">
 			<caption>3) Rendering</caption>
 			<category>1) Tree configuration</category>
@@ -226,14 +227,14 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<attributeTypes>
 						<attributeType name="AutoNumber"/>
 						<attributeType name="Boolean"/>
-						<attributeType name="Currency"/>
+						<attributeType name="Decimal"/>
 						<attributeType name="DateTime"/>
 						<attributeType name="Enum"/>
 						<attributeType name="Float"/>
 						<attributeType name="Integer"/>
 						<attributeType name="Long"/>
 						<attributeType name="String"/>
-					</attributeTypes>			
+					</attributeTypes>
 				</property>
 				<property key="columnimage" type="image" required="false">
                     <caption>(Default) Image</caption>
@@ -244,8 +245,8 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<caption>On click action</caption>
 					<category>3) Interaction</category>
 					<description>The name of the action that should be invoked when this item is clicked. The name should refer to the name of an action as defined in step 4) Actions</description>
-				</property> 
-				
+				</property>
+
 				<property key="columnclazz" type="string" defaultValue="" required="false">
 					<caption>Class</caption>
 					<category>2) Advanced</category>
@@ -255,7 +256,7 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<caption>Style</caption>
 					<category>2) Advanced</category>
 					<description>Define CSS properties here. Use newline or '|' to separate CSS properties (';') is not allowed!</description>
-				</property> 
+				</property>
 				<property key="columndateformat" type="string" defaultValue="EEE dd MMM y" required="false">
 					<caption>Column date time format</caption>
 					<category>2) Advanced</category>
@@ -277,13 +278,13 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<caption>'True' caption</caption>
 					<category>3) Boolean rendering</category>
 					<description></description>
-				</property>	
+				</property>
 				<property key="columnfalsecaption" type="translatableString" required="false">
 					<caption>'False' caption</caption>
 					<category>3) Boolean rendering</category>
 					<description></description>
-				</property>	
-				
+				</property>
+
 			</properties>
 		</property>
 
@@ -311,17 +312,17 @@ It is allowed to add an additional relation, with association direction 'The ass
 					<caption>Button caption</caption>
 					<category>2) Button</category>
 					<description></description>
-				</property>	
+				</property>
 				<property key="actbuttonimage" type="image" required="false">
 					<caption>Button image</caption>
 					<category>2) Button</category>
 					<description></description>
-				</property>	
+				</property>
 				<property key="actautohide" type="boolean" defaultValue="true">
 					<caption>Hide if disabled</caption>
 					<category>2) Button</category>
 					<description>Whether to hide, or only disable the button when it can't be pressed.</description>
-				</property>							
+				</property>
 				<property key="actmf" type="microflow" required="false" entityProperty="actentity">
                     <caption>Microflow</caption>
                     <category>1) Basics</category>
@@ -333,30 +334,30 @@ It is allowed to add an additional relation, with association direction 'The ass
                     <category>1) Basics</category>
                     <description></description>
 					<returnType type="Void"/>
-				</property>                
+				</property>
 				<property key="actisdefault" type="boolean" defaultValue="false">
 					<caption>Is default action</caption>
 					<category>1) Basics</category>
-					<description>If true, this action will be used as default action and be invoked if the item is doubleclicked or the return key is pressed. 
+					<description>If true, this action will be used as default action and be invoked if the item is doubleclicked or the return key is pressed.
 					</description>
 				</property>
 				<property key="actconfirmtext" type="translatableString" required="false">
 					<caption>Confirmation message</caption>
 					<category>1) Basics</category>
 					<description>If set, users have to confirm this message before continuing</description>
-				</property>	
+				</property>
 				<property key="actprogressmsg" type="translatableString" required="false">
 					<caption>Progress message</caption>
 					<category>1) Basics</category>
 					<description>If set, a progress bar will be shown when running this action</description>
-				</property>	
-				
+				</property>
+
 				<property key="actonselect" type="boolean" defaultValue="false">
 					<caption>Fire on selection change</caption>
 					<category>2) Settings</category>
 					<description>Invoke this action immediately when the current selection changes. For more information about retrieving the current selection, see the 'fine tuning > Selection reference' properties
 					</description>
-				</property>				
+				</property>
 <!--				<property key="actshortcut" type="integer" defaultValue="0" required="true">
 					<caption>Keyboard shortcut</caption>
 					<category>3) Triggers</category>
@@ -391,7 +392,7 @@ It is allowed to add an additional relation, with association direction 'The ass
 				How should the tree expand?
 				Click Arrow : Expand items when an arrow is clicked
 				Click Row : Expand items if a row is clicked somewhere
-				Accordion: Expand items if a row is clicked somewhere, but collapse all other, not descendant items. 
+				Accordion: Expand items if a row is clicked somewhere, but collapse all other, not descendant items.
 			</description>
 			<enumerationValues>
 				<enumerationValue key="arrow">When an arrow is clicked</enumerationValue>
@@ -418,12 +419,12 @@ It is allowed to add an additional relation, with association direction 'The ass
 			<caption>Multi selection enabled</caption>
 			<category>2) Settings</category>
 			<description>If true, multi selection actions can be used, an a checkbox is displayed in front of each row.</description>
-		</property>	
+		</property>
 		<property key="selectionrefset" type="entity" isPath="yes" pathType="referenceSet" required="false">
 			<caption>Multi selection reference set</caption>
 			<category>2) Settings</category>
 			<description>See 'selection reference'. This reference set will be filled with the values of the multi selection.</description>
-		</property>	
--->		
+		</property>
+-->
   </properties>
 </widget>
