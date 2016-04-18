@@ -1,12 +1,11 @@
 {
   "name": "TreeView",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "",
   "license": "",
   "author": "",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "0.4.5",
     "grunt-contrib-clean": "^0.6.0",
