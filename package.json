@@ -2,8 +2,11 @@
   "name": "TreeView",
   "version": "4.1.0",
   "description": "",
+  "license": "",
+  "author": "",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "grunt": "0.4.5",
     "grunt-contrib-clean": "^0.6.0",
@@ -19,6 +22,11 @@
   },
   "engines": {
     "node": ">=0.12.0"
+  },
+  "generatorVersion": "1.3.3",
+  "paths": {
+    "testProjectFolder": "./test/",
+    "testProjectFileName": "Test.mpr"
   },
   "scripts": {
     "test": "grunt test"
