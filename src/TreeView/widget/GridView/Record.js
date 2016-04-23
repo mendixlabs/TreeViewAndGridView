@@ -15,7 +15,7 @@ define([
         checkbox: null, //checkbox node
 
         constructor: function (data, grid) {
-            logger.debug("TreeView.widget.Record.constructor");
+            logger.debug("TreeView.widget.GridView.Record.constructor");
             this.guid = data.getGuid();
             this._data = data;
             this._colNodes = [];
@@ -62,7 +62,7 @@ define([
         },
 
         update: function (data, firstTime) {
-            logger.debug("TreeView.widget.Record.update");
+            logger.debug("TreeView.widget.GridView.Record.update");
             this._data = data;
 
             var curCol = 0;
@@ -133,12 +133,12 @@ define([
         },
 
         addSubscription: function (subscription) {
-            logger.debug("TreeView.widget.Record.addSubscription");
+            logger.debug("TreeView.widget.GridView.Record.addSubscription");
             this._subs.push(subscription);
         },
 
         free: function () {
-            logger.debug("TreeView.widget.Record.free");
+            logger.debug("TreeView.widget.GridView.Record.free");
             if (this._destroyed)
                 return;
             this._destroyed = true;

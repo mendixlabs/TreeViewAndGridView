@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/Commons"
+], function(declare, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.RelatedDataset", null, {
@@ -141,9 +142,9 @@ define([
                             : null;
 
                         if (this.relcontextassoc)
-                            TreeView.widget.Commons.store(label, this.relcontextassoc, this.contextGuid);
+                            Commons.store(label, this.relcontextassoc, this.contextGuid);
 
-                        TreeView.widget.Commons.store(label, this.relnameattr, dojo.trim(labelname), null, true, cb);
+                        Commons.store(label, this.relnameattr, dojo.trim(labelname), null, true, cb);
                     })
                 }, this)
             }

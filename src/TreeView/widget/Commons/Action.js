@@ -1,5 +1,6 @@
 define([
     "dojo/_base/declare",
+    "TreeView/widget/Commons"
 ], function(declare) {
     "use strict"
 
@@ -37,7 +38,7 @@ define([
             if (!this.actmf)
                 this.configError("No selection microflow defined for association assignment button");
 
-            TreeView.widget.Commons.store(
+            Commons.store(
                 //records to objects
                 dojo.map(this.tree.getSelection(), function(item) { return item.data() }),
 
@@ -145,8 +146,8 @@ define([
 
                 //invoke on the root object
                 else if (this.actnoselectionmf) {
-                    TreeView.widget.Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
-                        TreeView.widget.Commons.mf(this.actnoselectionmf, this.tree.getContextObject(), null, this.tree, false, this.actprogressmsg);
+                    Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
+                        Commons.mf(this.actnoselectionmf, this.tree.getContextObject(), null, this.tree, false, this.actprogressmsg);
                     }));
                 }
             }
@@ -157,14 +158,14 @@ define([
 
 
 
-                TreeView.widget.Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
+                Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
                     //if a new item is added, suggest it as new selection
                     delete this._recordSelectionSuggestion;
                     this.tree._recordSelectionSuggestion = true;
 
                     //See ticket 9116, we need to invoke the single argument microflow version for a single argument. Multi argument mf will break
                     if (dojo.isArray(selection) && selection.length > 1 && this.actmultimf)
-                        TreeView.widget.Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data() }), null, this.tree, true, this.actprogressmsg);
+                        Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data() }), null, this.tree, true, this.actprogressmsg);
                     else {
                         var sel = selection == null || selection == []
                             ? []
@@ -172,7 +173,7 @@ define([
                             ? dojo.map(selection, function(item) { return item.data() })
                             : selection.data();
 
-                        TreeView.widget.Commons.mf(this.actmf, sel, null, this.tree, false, this.actprogressmsg);
+                        Commons.mf(this.actmf, sel, null, this.tree, false, this.actprogressmsg);
                     }
                 }));
             }

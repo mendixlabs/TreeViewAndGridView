@@ -1,6 +1,8 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/Commons",
+    "TreeView/widget/Checkbox"
+], function(declare, Commons, Checkbox) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Colrenderer", null, {
@@ -77,7 +79,7 @@ define([
         },
 
         applyChange: function (record, newvalue, remove) {
-            TreeView.widget.Commons.store(
+            Commons.store(
                 record.data(),
                 this.dataset ? this.dataset.getAssoc() : this.columnattr,
                 newvalue,
@@ -89,7 +91,7 @@ define([
 
         _fireOnChange: function (record) {
             if (this.columnonchangemf)
-                TreeView.widget.Commons.mf(this.columnonchangemf, record.data(), function () {
+                Commons.mf(this.columnonchangemf, record.data(), function () {
                 }, this.tree);
         },
 
@@ -97,12 +99,12 @@ define([
             if (!firstTime)
                 return;
 
-            var attrtype = TreeView.widget.Commons.getAttributeType(this.columnentity, this.columnattr);
+            var attrtype = Commons.getAttributeType(this.columnentity, this.columnattr);
 
             //dropdown with reference selector dropdown
             if (this.columnattr.indexOf('/') > -1) {
                 this.toDestruct.push(new TreeView.widget.DropDown({
-                        value: TreeView.widget.Commons.objectToGuid(record.data().get(this.columnattr.split("/")[0])), //can be both guid and nothing
+                        value: Commons.objectToGuid(record.data().get(this.columnattr.split("/")[0])), //can be both guid and nothing
                         onChange: dojo.hitch(this, this.applyChange, record),
                         sticky: !this.dataset.isRefSet(),
                         className: 'gv_columnedit_dropdownmenu',
@@ -125,7 +127,7 @@ define([
 
                 //enum map
                 else {
-                    var em = TreeView.widget.Commons.getEnumMap(this.columnentity, this.columnattr)
+                    var em = Commons.getEnumMap(this.columnentity, this.columnattr)
                     for (var i = 0; i < em.length; i++)
                         items.push({value: em[i].key, label: em[i].caption});
                 }
@@ -133,7 +135,7 @@ define([
                 //setup dropdown
                 this.toDestruct.push(new TreeView.widget.DropDown({
                         options: items,
-                        value: TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr, false),
+                        value: Commons.getObjectAttr(record.data(), this.columnattr, false),
                         onChange: dojo.hitch(this, this.applyChange, record),
                         sticky: true,
                         className: 'gv_columnedit_dropdownmenu'
@@ -143,8 +145,8 @@ define([
                 ));
             }
             else if (attrtype == "Boolean") {
-                new TreeView.widget.Checkbox({
-                        value: TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr, false),
+                new Checkbox({
+                        value: Commons.getObjectAttr(record.data(), this.columnattr, false),
                         onChange: dojo.hitch(this, this.applyChange, record),
                         className: 'gv_columnedit_checkbox'
                     },
@@ -172,14 +174,14 @@ define([
                         this.renderEditable(record, domNode, firstTime)
                     else {
                         dojo.empty(domNode);
-                        var attrtype = TreeView.widget.Commons.getAttributeType(this.columnentity, this.columnattr);
+                        var attrtype = Commons.getAttributeType(this.columnentity, this.columnattr);
 
                         //Boolean value?
                         if (attrtype == "Boolean" && !(this.columntruecaption || this.columnfalsecaption)) {
                             this.createDefaultImage(domNode);
-                            new TreeView.widget.Checkbox({ //TODO: MWE, when cleaned up?
+                            new Checkbox({ //TODO: MWE, when cleaned up?
 
-                                    value: TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr, false),
+                                    value: Commons.getObjectAttr(record.data(), this.columnattr, false),
                                     className: 'gv_columnview_checkbox',
                                     readOnly: true
                                 },
@@ -208,13 +210,13 @@ define([
                     }
                     break;
                 case 'attributehtml':
-                    domNode.innerHTML = this.columnprefix + TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr, false) + this.columnpostfix;
+                    domNode.innerHTML = this.columnprefix + Commons.getObjectAttr(record.data(), this.columnattr, false) + this.columnpostfix;
                     this.createDefaultImage(domNode);
                     break;
                 case 'attributeimage':
                     dojo.empty(domNode);
 
-                    var url = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr, false);
+                    var url = getObjectAttr(record.data(), this.columnattr, false);
                     if (!url)
                         url = this.columnimage;
 
@@ -231,8 +233,8 @@ define([
                 case 'thumbnail' :
                     dojo.empty(domNode);
 
-                    var fileid = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
-                    var cd = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, '') + 'changedDate');
+                    var fileid = Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
+                    var cd = Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, '') + 'changedDate');
                     domNode.appendChild(mxui.dom.create("img", {
                         //'class' : 'gg_img ' + this.columnclazz,
                         //'style' : this.columnstyle,
@@ -242,8 +244,8 @@ define([
                 case 'systemimage' :
                     dojo.empty(domNode);
 
-                    var fileid = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
-                    var cd = TreeView.widget.Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, '') + 'changedDate');
+                    var fileid = Commons.getObjectAttr(record.data(), this.columnattr == '' ? 'FileID' : this.columnattr);
+                    var cd = Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, '') + 'changedDate');
 
                     domNode.appendChild(mxui.dom.create("img", {
                         //'class' : 'gg_img ' + this.columnclazz,
@@ -267,7 +269,7 @@ define([
                             var value = this.dataset.getValue(guid);
                             if (value) {
                                 dojo.place(
-                                    TreeView.widget.Commons.renderLabel(
+                                    Commons.renderLabel(
                                         value,
                                         this.columneditable,
                                         {
@@ -289,8 +291,8 @@ define([
 
         _renderAttr: function (record) {
             var object = record.data();
-            var attrtype = TreeView.widget.Commons.getAttributeType(object, this.columnattr);
-            var value = TreeView.widget.Commons.getObjectAttr(object, this.columnattr, attrtype != "DateTime");
+            var attrtype = Commons.getAttributeType(object, this.columnattr);
+            var value = Commons.getObjectAttr(object, this.columnattr, attrtype != "DateTime");
             if (attrtype == "DateTime") {
                 if (!value || "" == value)
                     return "";

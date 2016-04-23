@@ -8,14 +8,14 @@ define([
         grid : null,
 
         constructor : function(data, grid) {
-            logger.debug("TreeView.widget.ColHead.constructor");
+            logger.debug("TreeView.widget.GridView.ColHead.constructor");
             this.grid = grid;
             this.data = data;
 
         },
 
         setup : function(rownode) {
-            logger.debug("TreeView.widget.ColHead.setup");
+            logger.debug("TreeView.widget.GridView.ColHead.setup");
             this.domNode = mxui.dom.create(this.grid.showasdiv ? "div" : "th", {
                 'class': 'gv_th gv_th_' +
                 (1 + this.data.colindex) +

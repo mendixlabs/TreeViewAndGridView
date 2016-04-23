@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/Commons"
+], function(declare, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.SearchControl", null, {
@@ -22,8 +23,8 @@ define([
 
             this.widget = widget;
 
-            this.setupLayout();
-            this.setupSearch();
+            this._setupLayout();
+            this._setupSearch();
 
         },
 
@@ -36,7 +37,7 @@ define([
             dojo.place(this.labelContainer, this.domNode);
         },
 
-        setupSearch: function () {
+        _setupSearch: function () {
             //no dataset? setup stub dataset
             if (this.dataset == null) {
                 this.hasDataset = false;
@@ -141,7 +142,7 @@ define([
             dojo.empty(this.labelContainer);
             if (label != null) {
                 var labelname = label.get(this.dataset.relnameattr);
-                dojo.place(TreeView.widget.Commons.renderLabel(labelname, true), this.labelContainer);
+                dojo.place(Commons.renderLabel(labelname, true), this.labelContainer);
             }
         },
 

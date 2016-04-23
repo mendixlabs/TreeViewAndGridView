@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/Commons"
+], function(declare, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Filter", null, {
@@ -24,14 +25,14 @@ define([
             this.fm = fm;
             dojo.mixin(this, args);
 
-            this.isEnum = TreeView.widget.Commons.getAttributeType(fm.widget.entity, this.filterattr) == "Enum";
+            this.isEnum = Commons.getAttributeType(fm.widget.entity, this.filterattr) == "Enum";
 
             //setup enum menu items
             if (this.isEnum) {
                 this.enumStateMap = {};
 
                 this.enumItems = dojo.map(
-                    TreeView.widget.Commons.getEnumMap(fm.widget.entity, this.filterattr),
+                    Commons.getEnumMap(fm.widget.entity, this.filterattr),
                     function (enumItem) {
 
                         var mi = new dijit.CheckedMenuItem({

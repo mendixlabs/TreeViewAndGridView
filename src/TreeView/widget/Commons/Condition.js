@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/Commons"
+], function(declare, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Condition", null, {
@@ -27,7 +28,7 @@ define([
         },
 
         appliesTo: function (record) {
-            var value = TreeView.widget.Commons.get(record.data(), this.condattr);
+            var value = Commons.get(record.data(), this.condattr);
             if (value === null || value === undefined || /^\s*$/.test("" + value)) {
                 if (dojo.indexOf(this.values, "false") != -1) //This one was suppossed to match on falsy values
                     return true;
