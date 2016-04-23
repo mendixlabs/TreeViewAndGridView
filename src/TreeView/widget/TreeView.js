@@ -833,7 +833,7 @@ dojo.declare("TreeView.widget.RenderNode", null, {
 		}
 	},
 
-	setupColumns : function() {
+	_setupColumns : function() {
 		logger.debug("TreeView.widget.RenderNode.setupColumns");
 		this._colNodes = [];
 
@@ -1189,7 +1189,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 			mxui.wm.focus.put(this.treeNode);
 	},
 
-	setupEvents : function() {
+	_setupEvents : function() {
 		logger.debug("TreeView.widget.TreeView.setupEvents");
 		var lc = TreeView.widget.Commons.liveConnect;
 
@@ -1987,7 +1987,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		this.actLoaded();
 	},
 
-	setupLayout : function() {
+	_setupLayout : function() {
 		logger.debug("TreeView.widget.TreeView.setupLayout");
 		dojo.addClass(this.domNode, 'gg_tree');
 		this.headerNode = mxui.dom.create("div", {'class' : 'gg_header'});
@@ -2006,7 +2006,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		this.grabFocus();
 	},
 
-	setupActions : function() {
+	_setupActions : function() {
 		logger.debug("TreeView.widget.TreeView.setupActions");
 		var data = [];
 		this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf,actshortcut', data);
@@ -2066,7 +2066,7 @@ mxui.widget.declare("TreeView.widget.TreeView", {
 		}, this);
 	},
 
-	setupColumns : function() {
+	_setupColumns : function() {
 		logger.debug("TreeView.widget.TreeView.setupColumns");
 		var data = [];
 		this.splitPropsTo('columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption', data);
