@@ -3,19 +3,19 @@ define([
 ], function(declare) {
     "use strict"
 
-    return declare("TreeView.widget.GridView.Colhead", null, {
+    return declare("TreeView.widget.GridView.ColHead", null, {
         domNode : null, //correspinding render nodes
         grid : null,
 
         constructor : function(data, grid) {
-            logger.debug("TreeView.widget.Colhead.constructor");
+            logger.debug("TreeView.widget.ColHead.constructor");
             this.grid = grid;
             this.data = data;
 
         },
 
         setup : function(rownode) {
-            logger.debug("TreeView.widget.Colhead.setup");
+            logger.debug("TreeView.widget.ColHead.setup");
             this.domNode = mxui.dom.create(this.grid.showasdiv ? "div" : "th", {
                 'class': 'gv_th gv_th_' +
                 (1 + this.data.colindex) +

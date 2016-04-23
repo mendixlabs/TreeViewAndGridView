@@ -2,8 +2,19 @@ require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "TreeView/widget/Commons",
+    "TreeView/widget/GridView/ColHead",
+    "TreeView/widget/GridView/Record",
+    "TreeView/widget/Commons/Action",
+    "TreeView/widget/Commons/Checkbox",
+    "TreeView/widget/Commons/ColRenderer",
+    "TreeView/widget/Commons/Condition",
+    "TreeView/widget/Commons/Dropdown",
+    "TreeView/widget/Commons/Filter",
+    "TreeView/widget/Commons/FilterManager",
+    "TreeView/widget/Commons/RelatedDataset",
+    "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, Commons, NodeListTraverse) {
+], function(declare, _WidgetBase, Commons, ColHead, Record, Action, Checkbox, ColRenderer, Condition, Dropdown, Filter, FilterManager, RelatedDataset, SearchControl) {
     "use strict"
 
     return declare("TreeView.widget.GridView", _WidgetBase, {
@@ -172,7 +183,7 @@ require([
                 });
 
             if (this.searchenabled) {
-                this.searchControl = new TreeView.widget.SearchControl({
+                this.searchControl = new SearchControl({
                     searchplaceholder : this.searchplaceholder,
                     labelentity       : this.labelentity,
                     labelcontextassoc : this.labelcontextassoc,
@@ -252,7 +263,7 @@ require([
 
         _setupEvents : function() {
             logger.debug("TreeView.widget.GridView._setupEvents");
-            var lc = Commons().liveConnect;
+            var lc = Commons.liveConnect;
 
             lc(this, this.gridNode, "onclick", {
                 "gv_multiselect_checkbox" : this.multiSelectClick,
@@ -352,7 +363,7 @@ require([
             this.splitPropsTo('colheadname,colheadcaption,colheadwidth,colheadsortattr,colheadsortdir', data);
             for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
                 d.colindex = i;
-                var colhead = new TreeView.widget.Colhead(d, this);
+                var colhead = new ColHead(d, this);
                 this.colheads.push(colhead);
             }
 
@@ -369,7 +380,7 @@ require([
             dojo.forEach(data, function(item) {
                 if (this.dataset[item.relname])
                 this.configError('Related dataset "' + item.relname + '" is defined twice!');
-                var r = new TreeView.widget.RelatedDataset(item, this);
+                var r = new RelatedDataset(item, this);
                 this.dataset[item.relname] = r;
                 this.addToSchema((item.relitemassocref || item.relitemassocrefset) + "/" + item.relnameattr);
             }, this);
@@ -384,7 +395,7 @@ require([
                 if (d.actmultimf && !!!d.actmf)
                 this.configError(d.actname + ": Actions that define a multi selection microflow need to define a single selection microflow as well. ");
 
-                var action = new TreeView.widget.Action(d, this);
+                var action = new Action(d, this);
 
                 this.actions.push(action);
                 this.actionsByName[action.actname] = action;
@@ -401,7 +412,7 @@ require([
             var data = [];
             this.splitPropsTo('condname,condattr,condvalues,condclass', data);
             for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
-                var cond = new TreeView.widget.Condition(d, this);
+                var cond = new Condition(d, this);
                 if (this.conditions[d.condname])
                 this.configError("Condition name '" + d.condname + "' is not unique!");
 
@@ -415,10 +426,10 @@ require([
             var data = [];
             this.splitPropsTo('filterattr,filtertruecaption,filterfalsecaption,filterbooleandefault', data);
 
-            var fm = this.filterManager = new TreeView.widget.FilterManager(this);
+            var fm = this.filterManager = new FilterManager(this);
 
             this.filters = dojo.map(data, function(d) {
-                return new TreeView.widget.Filter(d, fm);
+                return new Filter(d, fm);
             }, this);
 
             if (this.filters.length > 0)
@@ -528,10 +539,10 @@ require([
 
             if(noevents !== true) {
                 if (this.selectionref)
-                    Commons().store(this.contextObject, this.selectionref,    item.guid);
+                    Commons.store(this.contextObject, this.selectionref,    item.guid);
 
                 if (this.selectionrefset)
-                    Commons().store(this.contextObject, this.selectionrefset, item.guid, "add");
+                    Commons.store(this.contextObject, this.selectionrefset, item.guid, "add");
 
                 this.saveAndFireSelection(item);
             }
@@ -557,10 +568,10 @@ require([
 
             if(noevents !== true) {
                 if (this.selectionref)
-                    Commons().store(this.contextObject, this.selectionref,  lastitem ? lastitem.guid : null);
+                    Commons.store(this.contextObject, this.selectionref,  lastitem ? lastitem.guid : null);
 
                 if (this.selectionrefset)
-                    Commons().store(this.contextObject, this.selectionrefset, item.guid, "rem");
+                    Commons.store(this.contextObject, this.selectionrefset, item.guid, "rem");
 
                 this.saveAndFireSelection(lastitem);
             }
@@ -584,11 +595,11 @@ require([
             }
 
             if (this.selectionref) {
-                Commons().store(this.contextObject, this.selectionref,    item && item.guid);
+                Commons.store(this.contextObject, this.selectionref,    item && item.guid);
             }
 
             if (this.selectionrefset) {
-                Commons().store(this.contextObject, this.selectionrefset, item && item.guid);
+                Commons.store(this.contextObject, this.selectionrefset, item && item.guid);
             }
 
             if (item) {
@@ -626,12 +637,12 @@ require([
             var guids = [];
 
             if (this.selectionref) {
-                var guid = Commons().getObjectAttr(this.contextObject, this.selectionref);
+                var guid = Commons.getObjectAttr(this.contextObject, this.selectionref);
                 if (guid)
                     guids.push(guid);
             }
             if (this.selectionrefset) {
-                guids = guids.concat(Commons().getObjectAttr(this.contextObject, this.selectionrefset));
+                guids = guids.concat(Commons.getObjectAttr(this.contextObject, this.selectionrefset));
             }
             for(var i = 0; i < guids.length; i++) {
                 var record = this.getRecordByGuid(guids[i]);
@@ -1163,22 +1174,22 @@ require([
 
         showError : function(e) {
             logger.debug("TreeView.widget.GridView.showError");
-            Commons().error(e, this);
+            Commons.error(e, this);
         },
 
         mf : function(mf, data, callback) {
             logger.debug("TreeView.widget.GridView.mf");
-            Commons().mf(mf, data, callback, this);
+            Commons.mf(mf, data, callback, this);
         },
 
         configError : function(msg) {
             logger.debug("TreeView.widget.GridView.configError");
-            Commons().configError(this, msg);
+            Commons.configError(this, msg);
         },
 
         splitPropsTo : function(props, target) {
             logger.debug("TreeView.widget.GridView.splitPropsTo");
-            Commons().splitPropsTo(this, props, target);
+            Commons.splitPropsTo(this, props, target);
         }
     });
 });

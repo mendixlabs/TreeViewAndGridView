@@ -12,7 +12,7 @@ define([
 ], function(declare, SimpleFetch, DropDownButton, ComboBox, Button, Menu, MenuItem, FilteringSelect, Select, Dialog) {
     "use strict"
 
-    return declare("TreeView.widget.Commons", null, {
+    var Commons = declare("TreeView.widget.Commons", null, {
         //MX5 hack
         fixObjProps : function(widget, props) {
             var args = {};
@@ -417,4 +417,6 @@ define([
             }
         }
     });
+
+    return Commons();
 });
