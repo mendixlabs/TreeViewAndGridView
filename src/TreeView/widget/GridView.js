@@ -5,143 +5,143 @@ require([
     "TreeView/widget/GridView/ColHead",
     "TreeView/widget/GridView/Record",
     "TreeView/widget/Commons/Action",
+    "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/Commons/Condition",
     "TreeView/widget/Commons/Filter",
     "TreeView/widget/Commons/FilterManager",
     "TreeView/widget/Commons/RelatedDataset",
     "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, Commons, ColHead, Record, Action, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
+], function(declare, _WidgetBase, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
     "use strict"
 
     return declare("TreeView.widget.GridView", _WidgetBase, {
-        _multiSelection : null,
-        _inMultiSelectMode : false, //is true as long only checkboxes are clicked
-        _hoveredRow :  null,
-        _started : false,
-        _suspended : false,
-        _iscallingdatasource : false,
-        contextGUID : null,
+        _multiSelection: null,
+        _inMultiSelectMode: false, //is true as long only checkboxes are clicked
+        _hoveredRow: null,
+        _started: false,
+        _suspended: false,
+        _iscallingdatasource: false,
+        contextGUID: null,
 
-        currentSortColumn : -1,
-        sortInverted : false,
-        count : 0,
-        curpage : 0,
+        currentSortColumn: -1,
+        sortInverted: false,
+        count: 0,
+        curpage: 0,
         firstUpdate: true,
 
-        //data model properties
-        tabindex : -1,
-        entity : '',
-        datasourcemf : '',
-        datasourceoffsetattr : '',
-        datasourcelimitattr  : '',
-        datasourcecountattr  : '',
-        datasourcesearchattr : '',
-        constraint : '',
 
-        //display properties
-        colheadname : '',
-        colheadcaption : '',
-        colheadwidth : '',
-        colheadsortattr : '',
-        colheadsortdir : '',
+            //data model properties
+            tabindex: -1,
+            entity: '',
+            datasourcemf: '',
+            datasourceoffsetattr: '',
+            datasourcelimitattr: '',
+            datasourcecountattr: '',
+            datasourcesearchattr: '',
+            constraint: '',
 
-        //rendering properties
-        columnindex : '',
-        columnname : '',
-        columndataset : '',
-        columnrendermode: '',
-        columnattr  : '',
-        columnimage: '',
-        columnaction: '',
-        columnclazz: '',
-        columnstyle: '',
-        columndateformat: '',
-        columnissearchattr : '',
-        columntruecaption  : '',
-        columnfalsecaption : '',
-        columneditable  : '',
-        columneditdataset : '',
-        columneditautocommit : '',
-        columnonchangemf : '',
-        columncondition : '',
-        columnprefix : '',
-        columnpostfix: '',
+            //display properties
+            colheadname: '',
+            colheadcaption: '',
+            colheadwidth: '',
+            colheadsortattr: '',
+            colheadsortdir: '',
 
-        //action properties
-        actname : '',
-        actshowbutton : '',
-        actclassname  : '',
-        actautohide : '',
-        actbuttoncaption : '',
-        actbuttonimage : '',
-        actmf : '',
-        actmultimf : '',
-        actisdefault : '',
-        actonselect  : '',
-        actconfirmtext : '',
-        //		actonselect : '',
-        actnoselectionmf : '',
-        actdataset : '',
-        actappliestomultiselection : '',
-        actprogressmsg : '',
-        //		actshortcut : '',
+            //rendering properties
+            columnindex: '',
+            columnname: '',
+            columndataset: '',
+            columnrendermode: '',
+            columnattr: '',
+            columnimage: '',
+            columnaction: '',
+            columnclazz: '',
+            columnstyle: '',
+            columndateformat: '',
+            columnissearchattr: '',
+            columntruecaption: '',
+            columnfalsecaption: '',
+            columneditable: '',
+            columneditdataset: '',
+            columneditautocommit: '',
+            columnonchangemf: '',
+            columncondition: '',
+            columnprefix: '',
+            columnpostfix: '',
 
-        //filters
-        filterattr : '',
-        filtertruecaption    : '',
-        filterfalsecaption   : '',
-        filterbooleandefault : '',
+            //action properties
+            actname: '',
+            actshowbutton: '',
+            actclassname: '',
+            actautohide: '',
+            actbuttoncaption: '',
+            actbuttonimage: '',
+            actmf: '',
+            actmultimf: '',
+            actisdefault: '',
+            actonselect: '',
+            actconfirmtext: '',
+            //		actonselect : '',
+            actnoselectionmf: '',
+            actdataset: '',
+            actappliestomultiselection: '',
+            actprogressmsg: '',
+            //		actshortcut : '',
 
-        //advanced settings
-        allowmultiselect  : false,
-        allowsingleselect : true,
-        selectfirstrow    : false,
-        defaultsortcolumn : 0,
-        pagesize : 20,
-        refreshoncontext  : false,
-        refreshonclass    : true,
-        searchenabled     : true,
-        searchplaceholder : '',
-        searchlabeldataset: '',
-        realtimesearch    : false,
-        searchmaxquerysizeenabled	: false,
-        searchmaxquerysize : 10,
-        emptymessage      : '',
-        selectionref      : '',
-        selectionrefset   : '',
-        colheaderenabled  : true,
-        enableschema      : true,
-        showtotals        : true,
-        itemcountmessage  : '',
-        showasdiv         : false,
-        listenchannel     : '',
-        singleclickdefaultaction : false,
+            //filters
+            filterattr: '',
+            filtertruecaption: '',
+            filterfalsecaption: '',
+            filterbooleandefault: '',
 
-        //related datasets
-        relname             : '',
-        rellabel            : '',
-        relentity           : '',
-        relcontextassoc     : '',
-        relitemassocref     : '',
-        relitemassocrefset  : '',
-        relnameattr         : '',
-        relnewitemcaption   : '',
-        relconstraint       : '',
+            //advanced settings
+            allowmultiselect: false,
+            allowsingleselect: true,
+            selectfirstrow: false,
+            defaultsortcolumn: 0,
+            pagesize: 20,
+            refreshoncontext: false,
+            refreshonclass: true,
+            searchenabled: true,
+            searchplaceholder: '',
+            searchlabeldataset: '',
+            realtimesearch: false,
+            searchmaxquerysizeenabled: false,
+            searchmaxquerysize: 10,
+            emptymessage: '',
+            selectionref: '',
+            selectionrefset: '',
+            colheaderenabled: true,
+            enableschema: true,
+            showtotals: true,
+            itemcountmessage: '',
+            showasdiv: false,
+            listenchannel: '',
+            singleclickdefaultaction: false,
 
-        //conditions
-        condname   : '',
-        condattr   : '',
-        condvalues : '',
-        condclass  : '',
+            //related datasets
+            relname: '',
+            rellabel: '',
+            relentity: '',
+            relcontextassoc: '',
+            relitemassocref: '',
+            relitemassocrefset: '',
+            relnameattr: '',
+            relnewitemcaption: '',
+            relconstraint: '',
+
+            //conditions
+            condname: '',
+            condattr: '',
+            condvalues: '',
+            condclass: '',
 
         /* context applied */
         _contextSubscription : null,
 
         constructor : function() {
             logger.debug("TreeView.widget.GridView.constructor");
-
-            // Commons.fixObjProps(this, ["blaat0", "blaat2", "blaat3", "blaat4", "blaat7", "blaat8"])
 
             this.records = [];
             this._multiSelection = [];
@@ -156,6 +156,8 @@ require([
 
         postCreate : function() {
             logger.debug("TreeView.widget.GridView.postCreate");
+
+            Commons.fixObjProps(this, ["blaat0", "blaat2", "blaat3", "blaat4", "blaat7", "blaat8"])
 
             this.verifyDatasourceSettings();
 
@@ -438,7 +440,7 @@ require([
             this.splitPropsTo('columnindex,columnname,columnrendermode,columnattr,columnimage,columneditautocommit,columnonchangemf,columnaction,columnclazz,columnstyle,columnprefix,columnpostfix,columndateformat,columnissearchattr,columntruecaption,columnfalsecaption,columneditdataset,columneditable,columncondition', data);
             for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
                 d.columnentity = this.entity;
-                this.columns.push(new TreeView.widget.Colrenderer(d, this, i));
+                this.columns.push(new ColRenderer(d, this, i));
                 if (d.columnindex * 1 >= this.colheads.length)
                 this.configError(this.id + "  column index out of bounds: " + d.columnname);
 

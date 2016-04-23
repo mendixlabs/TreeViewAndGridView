@@ -199,11 +199,11 @@ define([
                     if (isRefSet) {
                         var guids;
                         if (dojo.isArray(value))
-                            guids = dojo.map(value, objectToGuid);
+                            guids = dojo.map(value, this.objectToGuid);
                         else if (!value)
                             guids = [];
                         else
-                            guids = [objectToGuid(value)]
+                            guids = [this.objectToGuid(value)]
 
 
                         switch (mode) {
@@ -223,7 +223,7 @@ define([
                         if (dojo.isArray(value))
                             throw "Commons.store: cannot assign array to reference";
 
-                        var guid = objectToGuid(value);
+                        var guid = this.objectToGuid(value);
                         res = object.set(attr, guid ? guid : "") //client needs '' as empty
                     }
                 }
@@ -237,7 +237,7 @@ define([
 
                 mx.data[commit === true ? 'commit' : 'save']({
                     mxobj: object,
-                    error: error,
+                    error: this.error,
                     callback: function () {
                         callback && callback();
                     }
@@ -318,7 +318,7 @@ define([
                 });
 
             } else {
-                var guids = dojo.map(dojo.isArray(data) ? data : [data], objectToGuid);
+                var guids = dojo.map(dojo.isArray(data) ? data : [data], this.objectToGuid);
 
                 if (guids.length > 1 && !mfNeedsList)
                     throw "Multiple selection found, but microflow supports only one argument!";

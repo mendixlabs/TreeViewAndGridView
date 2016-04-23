@@ -1,11 +1,11 @@
 define([
     "dojo/_base/declare",
     "TreeView/widget/Commons",
-    "TreeView/widget/Checkbox"
+    "TreeView/widget/Commons/Checkbox"
 ], function(declare, Commons, Checkbox) {
     "use strict"
 
-    return declare("TreeView.widget.Commons.Colrenderer", null, {
+    return declare("TreeView.widget.Commons.ColRenderer", null, {
         columnname: '',
         columnentity: '',
         columnrendermode: '',
