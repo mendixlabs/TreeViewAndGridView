@@ -141,6 +141,8 @@ require([
         constructor : function() {
             logger.debug("TreeView.widget.GridView.constructor");
 
+            // Commons.fixObjProps(this, ["blaat0", "blaat2", "blaat3", "blaat4", "blaat7", "blaat8"])
+
             this.records = [];
             this._multiSelection = [];
 
