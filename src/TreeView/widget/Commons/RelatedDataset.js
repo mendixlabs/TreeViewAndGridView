@@ -45,11 +45,11 @@ define([
         },
 
         getAssoc: function () {
-            return this.relitemassocref != '' ? this.relitemassocref.split("/")[0] : this.relitemassocrefset.split("/")[0];
+            return (this.relitemassocref && this.relitemassocref != '') ? this.relitemassocref.split("/")[0] : this.relitemassocrefset.split("/")[0];
         },
 
         isRefSet: function () {
-            return this.relitemassocrefset != '';
+            return (this.relitemassocrefset && this.relitemassocrefset != '');
         },
 
         getValue: function (item, _) {

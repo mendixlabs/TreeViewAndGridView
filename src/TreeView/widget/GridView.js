@@ -497,7 +497,7 @@ require([
                     error : this.showError
                 }, this);
             } else {
-                this.showError(item);
+                this.onSelect(item);
             }
         },
 

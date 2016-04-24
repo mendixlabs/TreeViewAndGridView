@@ -89,8 +89,9 @@ define([
                 }
             }
 
-            if (this.actonselect)
-                this.tree.connect(this.tree, 'onSelect', dojo.hitch(this, this.invokeOnSelection))
+            if (this.actonselect) {
+                this.tree.connect(this.tree, 'onSelect', dojo.hitch(this, this.invokeOnSelection));
+            }
         },
 
         appliesToSelection : function() {
