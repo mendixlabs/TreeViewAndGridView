@@ -126,9 +126,13 @@ require([
                 if (x.entitychannel) {
                     this.connect(this, 'onSelect', dojo.hitch(this, function (channel, entity, selection) {
                         if (selection != null && selection.isA(entity))
-                            dojo.publish(this.uniqueid + "/" + channel + "/context", [selection.data()]);
+                            // KVL: This used to use this.getContent() as the first part, but that no longer exists.
+                            // Not sure what the alternative is, so we might want to look into that...
+                            dojo.publish("/" + channel + "/context", [selection.data()]);
                         else
-                            dojo.publish(this.uniqueid + "/" + channel + "/context", [null]);
+                            // KVL: This used to use this.getContent() as the first part, but that no longer exists.
+                            // Not sure what the alternative is, so we might want to look into that...
+                            dojo.publish("/" + channel + "/context", [null]);
                     }, x.entitychannel, x.xentity));
                 }
             }
@@ -371,7 +375,7 @@ require([
             logger.debug("TreeView.widget.TreeView.saveAndFireSelection");
             mx.data.save({
                 mxobj: this.getContextObject(),
-                callback: dojo.hitch(this, this.onSelect, item),
+                callback: this.onSelect,
                 error: this.showError
             }, this);
 
