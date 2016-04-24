@@ -1,6 +1,9 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "dijit/form/DropDownButton",
+    "dijit/Menu",
+    "dijit/MenuSeparator"
+], function(declare, DropDownButton, Menu, enuSeparator) {
     "use strict"
 
     return declare("TreeView.widget.Commons.FilterManager", null, {
@@ -12,11 +15,11 @@ define([
             this.widget   = widget;
             this.filters  = [];
 
-            this.menu = new dijit.Menu({
+            this.menu = new Menu({
                 style: "display: none;"
             });
 
-            this.dropdown = new dijit.form.DropDownButton({
+            this.dropdown = new DropDownButton({
                 label : "Filter",
                 dropDown : this.menu
             });
@@ -36,7 +39,7 @@ define([
 
         addFilter : function(filter) {
             if (this.filters.length > 0)
-                this.menu.addChild(new dijit.MenuSeparator());
+                this.menu.addChild(new MenuSeparator());
 
             this.filters.push(filter);
             dojo.forEach(filter.getMenuItems(), function(item) {

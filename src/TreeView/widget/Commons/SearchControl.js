@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dijit/form/ComboBox",
     "TreeView/widget/Commons"
-], function(declare, Commons) {
+], function(declare, ComboBox, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.SearchControl", null, {
@@ -54,7 +55,7 @@ define([
                 );
             }
 
-            this.searchInput = new dijit.form.ComboBox({
+            this.searchInput = new ComboBox({
                 store: this.dataset, //MWE: TODO: works if null?
                 queryExpr: "${0}",
                 searchAttr: 'name',
@@ -101,7 +102,11 @@ define([
                     if (this.searchInput.item != null) {//only auto search on blur if label selection was made
                         this.setSearchFilter("", this.searchInput.item);
                     }
-                })
+                }),
+
+                resize: function () {
+                    
+                }
             });
 
             this.searchInput.loadDropDown();

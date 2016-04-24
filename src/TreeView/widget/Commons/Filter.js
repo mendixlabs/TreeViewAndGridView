@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dijit/CheckedMenuItem",
     "TreeView/widget/Commons"
-], function(declare, Commons) {
+], function(declare, CheckedMenuItem, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Filter", null, {
@@ -35,7 +36,7 @@ define([
                     Commons.getEnumMap(fm.widget.entity, this.filterattr),
                     function (enumItem) {
 
-                        var mi = new dijit.CheckedMenuItem({
+                        var mi = new CheckedMenuItem({
                             label: enumItem.caption,
                             checked: true,
                             onClick: dojo.hitch(this, this.itemClick)
@@ -50,14 +51,14 @@ define([
             //setup boolean menu items
             else {
                 if (this.filtertruecaption)
-                    this.trueitem = new dijit.CheckedMenuItem({
+                    this.trueitem = new CheckedMenuItem({
                         label: this.filtertruecaption,
                         checked: "all" == this.filterbooleandefault || true == this.filterbooleandefault,
                         onClick: dojo.hitch(this, this.itemClick)
                     });
 
                 if (this.filterfalsecaption)
-                    this.falseitem = new dijit.CheckedMenuItem({
+                    this.falseitem = new CheckedMenuItem({
                         label: this.filterfalsecaption,
                         checked: "all" == this.filterbooleandefault || false == this.filterbooleandefault,
                         onClick: dojo.hitch(this, this.itemClick)

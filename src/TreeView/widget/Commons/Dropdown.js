@@ -1,6 +1,10 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "dijit/Menu",
+    "dijit/MenuItem",
+    "dijit/MenuSeparator",
+    "dijit/form/DropDownButton"
+], function(declare, Menu, MenuItem, MenuSeparator, DropDownButton) {
     "use strict"
 
     return declare("TreeView.widget.Commons.DropDown", null, {
@@ -25,11 +29,11 @@ define([
 
             }
 
-            this.menu = new dijit.Menu({
+            this.menu = new Menu({
                 style: "display: none;"
             });
 
-            this.dropdown = new dijit.form.DropDownButton({
+            this.dropdown = new DropDownButton({
                 label: this.label,
                 dropDown: this.menu,
                 onClick: function (e) {
@@ -70,12 +74,12 @@ define([
         createOption: function (item) {
             //separator
             if (item == null)
-                return new dijit.MenuSeparator();
+                return new MenuSeparator();
 
             if (this.sticky && this.value !== null && this.value == item.value) //redraw selection if needed
                 this.dropdown.set('label', item.label);
 
-            return new dijit.MenuItem({
+            return new MenuItem({
                 label: mxui.dom.escapeString(item.label),
                 value: item.value,
                 onClick: item.onClick

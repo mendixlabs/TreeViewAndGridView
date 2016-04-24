@@ -635,12 +635,20 @@ require([
             var guids = [];
 
             if (this.selectionref) {
-                var guid = Commons.get(this.contextObject, this.selectionref);
-                if (guid)
-                    guids.push(guid);
+                this.contextObject.fetch(this.selectionref, function(value) {
+                    if (value)
+                        guids.push(value);
+                });
+                // var guid = TreeView.widget.Commons.getObjectAttr(this.contextObject, this.selectionref);
+                // if (guid)
+                // guids.push(guid);
             }
             if (this.selectionrefset) {
-                guids = guids.concat(Commons.get(this.contextObject, this.selectionrefset));
+                this.contextObject.fetch(this.selectionrefset, function(value) {
+                    if (value)
+                        guids.push(value);
+                });
+                //guids = guids.concat(TreeView.widget.Commons.getObjectAttr(this.contextObject, this.selectionrefset));
             }
             for(var i = 0; i < guids.length; i++) {
                 var record = this.getRecordByGuid(guids[i]);

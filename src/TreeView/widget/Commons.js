@@ -1,15 +1,7 @@
 define([
     "dojo/_base/declare",
     "dojo/data/util/simpleFetch",
-    "dijit/form/DropDownButton",
-    "dijit/form/ComboBox",
-    "dijit/form/Button",
-    "dijit/Menu",
-    "dijit/MenuItem",
-    "dijit/form/FilteringSelect",
-    "dijit/form/Select",
-    "dijit/Dialog"
-], function(declare, SimpleFetch, DropDownButton, ComboBox, Button, Menu, MenuItem, FilteringSelect, Select, Dialog) {
+], function(declare) {
     "use strict"
 
     var Commons = declare("TreeView.widget.Commons", null, {
