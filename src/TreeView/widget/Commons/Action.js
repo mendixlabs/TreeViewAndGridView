@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
-    "TreeView/widget/Commons"
-], function(declare) {
+    "TreeView/widget/Commons",
+    "TreeView/widget/Commons/DropDown",
+], function(declare, Commons, DropDown) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Action", null, {
@@ -63,7 +64,7 @@ define([
                     if (!this.actappliestomultiselection)
                         this.tree.configError("Reference assignment should be allowed to be applied to multi selections! (see the action allow to multiselection property)");
 
-                    this.mxbutton = new TreeView.widget.DropDown({
+                    this.mxbutton = new DropDown({
                             onChange : dojo.hitch(this, this.assignRefToSelection),
                             sticky   : false,
                             label    : this.dataset.rellabel,

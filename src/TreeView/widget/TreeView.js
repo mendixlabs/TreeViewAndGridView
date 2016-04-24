@@ -2,11 +2,12 @@ require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "TreeView/widget/Commons",
+    "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, Commons, Edge, GraphNode, Action) {
+], function(declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict"
 
     return declare("TreeView.widget.TreeView", _WidgetBase, {
@@ -24,77 +25,77 @@ require([
         selectionrefs: null,
         _parent: null,
 
-        //data model properties
-        tabindex: -1,
-        entity: '',
-        parentassocsingle: '',
-        parentassocmulti: '',
-        assoctype: '',
-        assoccaption: '',
-        showassocname: '',
-        constraint: '',
-        allowdnd: '',
-        allowdndcopy: '',
-        dropmf: '',
-        assocclazz: '',
-        assocstyle: '',
+        inputargs: {
+            //data model properties
+            tabindex: -1,
+            entity: '',
+            parentassocsingle: '',
+            parentassocmulti: '',
+            assoctype: '',
+            assoccaption: '',
+            showassocname: '',
+            constraint: '',
+            allowdnd: '',
+            allowdndcopy: '',
+            dropmf: '',
+            assocclazz: '',
+            assocstyle: '',
 
-        //display properties
-        columnname: '',
-        columnentity: '',
-        columnrendermode: '',
-        columnattr: '',
-        columnimage: '',
-        columnaction: '',
-        columnclazz: '',
-        columnstyle: '',
-        columndateformat: '',
-        columnprefix: '',
-        columnpostfix: '',
-        columntruecaption: '',
-        columnfalsecaption: '',
+            //display properties
+            columnname: '',
+            columnentity: '',
+            columnrendermode: '',
+            columnattr: '',
+            columnimage: '',
+            columnaction: '',
+            columnclazz: '',
+            columnstyle: '',
+            columndateformat: '',
+            columnprefix: '',
+            columnpostfix: '',
+            columntruecaption: '',
+            columnfalsecaption: '',
 
-        //action properties
-        actname: '',
-        actentity: '',
-        actshowbutton: '',
-        actautohide: '',
-        actbuttoncaption: '',
-        actbuttonimage: '',
-        actconfirmtext: '',
-        actmf: '',
-        actisdefault: '',
-        actonselect: '',
-        actnoselectionmf: '',
-        actshortcut: '',
-        actprogressmsg: '',
+            //action properties
+            actname: '',
+            actentity: '',
+            actshowbutton: '',
+            actautohide: '',
+            actbuttoncaption: '',
+            actbuttonimage: '',
+            actconfirmtext: '',
+            actmf: '',
+            actisdefault: '',
+            actonselect: '',
+            actnoselectionmf: '',
+            actshortcut: '',
+            actprogressmsg: '',
 
-        //Selection references
-        selectionref: '',
+            //Selection references
+            selectionref: '',
 
-        //advanced settings
-        xentity: '',
-        xburstattr: '',
-        xlisteningform: '',
-        sortattr: '',
-        sortdir: '',
-        entityclazz: '',
-        entitystyle: '',
-        entitychannel: '',
-        allowmultiselect: false,
-        selectionrefset: '',
+            //advanced settings
+            xentity: '',
+            xburstattr: '',
+            xlisteningform: '',
+            sortattr: '',
+            sortdir: '',
+            entityclazz: '',
+            entitystyle: '',
+            entitychannel: '',
+            allowmultiselect: false,
+            selectionrefset: '',
 
-        //general properties
-        expandall: 1,
-        prefetch: true,
-        hiderootnode: true,
-        expandmode: 'arrow', //arrow | row | accordion
-        multiselect: false,
+            //general properties
+            expandall: 1,
+            prefetch: true,
+            hiderootnode: true,
+            expandmode: 'arrow', //arrow | row | accordion
+            multiselect: false
+        },
 
         constructor: function () {
             logger.debug("TreeView.widget.TreeView.startup");
-
-            Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"])
 
             this.dict = {};
             this.types = [];
@@ -110,6 +111,8 @@ require([
         },
 
         postCreate: function() {
+            Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"])
+
             this.splitPropsTo('xentity,xburstattr,xlisteningform,sortattr,sortdir,entityclazz,entitystyle,entitychannel', this.xsettings);
             for (var i = 0; i < this.xsettings.length; i++) {
                 var x = this.xsettings[i];
@@ -286,7 +289,7 @@ require([
             var data = [];
             this.splitPropsTo('columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption', data);
             for (var i = 0, d = null; d = data[i]; i++) {
-                this.columns.push(new TreeView.widget.Colrenderer(d, this, i));
+                this.columns.push(new ColRenderer(d, this, i));
                 if (d.columnaction && !(d.columnaction in this.actionsByName))
                     this.configError(this.id + "  refers to unknown action " + d.columnaction);
 
@@ -351,12 +354,12 @@ require([
             if (this.selectionrefs) {
                 for (i = 0; i < this.selectionrefs.length; i++) {
                     if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf('/') == -1) {
-                        TreeView.widget.Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
+                        Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
                     } else if (this.selectionrefs[i].indexOf('/') > -1) {
                         var patharr = this.selectionrefs[i].split('/');
                         var refentity = patharr[patharr.length - 1];
                         if (refentity.indexOf(node.graphNode.type) > -1) {
-                            TreeView.widget.Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
+                            Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
                         }
                     }
                 }
@@ -570,7 +573,7 @@ require([
 
         _setupEvents: function () {
             logger.debug("TreeView.widget.TreeView._setupEvents");
-            var lc = TreeView.widget.Commons.liveConnect;
+            var lc = Commons.liveConnect;
 
             lc(this, this.treeNode, "onclick", {
                 "gg_assocfold": this.assocFoldClick,
@@ -1167,7 +1170,7 @@ require([
             var gn = item.graphNode;
             //TODO: check whether ar doesn't have double items?
             for (var l = 0, ar = null; ar = actions[l++];) {
-                TreeView.widget.Commons.mf(ar[0], ar[1], function () {
+                Commons.mf(ar[0], ar[1], function () {
 
                     //when all mf's have fired, find the best node to select
                     left -= 1;
@@ -1364,17 +1367,17 @@ require([
 
         configError: function (msg) {
             logger.debug("TreeView.widget.TreeView.configError");
-            TreeView.widget.Commons.configError(this, msg);
+            Commons.configError(this, msg);
         },
 
         showError: function (e) {
             logger.debug("TreeView.widget.TreeView.showError");
-            TreeView.widget.Commons.error(e, this);
+            Commons.error(e, this);
         },
 
         splitPropsTo: function (props, target) {
             logger.debug("TreeView.widget.TreeView.splitPropsTo");
-            TreeView.widget.Commons.splitPropsTo(this, props, target);
+            Commons.splitPropsTo(this, props, target);
         },
 
         close: function () {

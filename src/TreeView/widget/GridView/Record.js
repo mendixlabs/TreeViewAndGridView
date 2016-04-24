@@ -114,7 +114,9 @@ define([
             }
 
             //create renderers
-            for (i = 0, col = null; col = this.grid.columns[i]; i++) {
+            for (i = 0; i < this.grid.columns.length; i++) {
+                var col = this.grid.columns[i];
+
                 if (1 * col.columnindex >= this.grid.colheads.length)
                     this.configError("Column index out of bounds: " + col.columnindex);
 

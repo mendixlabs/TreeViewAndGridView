@@ -1,8 +1,9 @@
 define([
     "dojo/_base/declare",
     "TreeView/widget/Commons",
-    "TreeView/widget/Commons/Checkbox"
-], function(declare, Commons, Checkbox) {
+    "TreeView/widget/Commons/Checkbox",
+    "TreeView/widget/Commons/DropDown"
+], function(declare, Commons, Checkbox, DropDown) {
     "use strict"
 
     return declare("TreeView.widget.Commons.ColRenderer", null, {
@@ -103,7 +104,7 @@ define([
 
             //dropdown with reference selector dropdown
             if (this.columnattr.indexOf('/') > -1) {
-                this.toDestruct.push(new TreeView.widget.DropDown({
+                this.toDestruct.push(new DropDown({
                         value: Commons.objectToGuid(record.data().get(this.columnattr.split("/")[0])), //can be both guid and nothing
                         onChange: dojo.hitch(this, this.applyChange, record),
                         sticky: !this.dataset.isRefSet(),
@@ -133,7 +134,7 @@ define([
                 }
 
                 //setup dropdown
-                this.toDestruct.push(new TreeView.widget.DropDown({
+                this.toDestruct.push(new DropDown({
                         options: items,
                         value: Commons.getObjectAttr(record.data(), this.columnattr, false),
                         onChange: dojo.hitch(this, this.applyChange, record),

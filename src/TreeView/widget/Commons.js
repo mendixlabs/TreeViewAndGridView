@@ -35,7 +35,7 @@ define([
         getEnumMap : function(classname, attrname) {
             var meta = mx.meta.getEntity(classname);
 
-            if (getAttributeType(classname, attrname) != 'Enum')
+            if (this.getAttributeType(classname, attrname) != 'Enum')
                 throw "Not an enumeration: " + args.join(".");
 
             return meta.getEnumMap(attrname);
@@ -73,7 +73,7 @@ define([
         getAttributeType : function(classnameOrObject, attr) {
             var parts = attr.split("/");
             if (parts.length == 3)
-                return getAttributeType(parts[1], parts[2])
+                return this.getAttributeType(parts[1], parts[2])
 
             if (attr.indexOf("/") == -1) {
                 if (classnameOrObject.getEntity)
