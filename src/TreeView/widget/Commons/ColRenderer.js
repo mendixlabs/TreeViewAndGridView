@@ -217,7 +217,7 @@ define([
                 case 'attributeimage':
                     dojo.empty(domNode);
 
-                    var url = getObjectAttr(record.data(), this.columnattr, false);
+                    var url = Commons.getObjectAttr(record.data(), this.columnattr, false);
                     if (!url)
                         url = this.columnimage;
 

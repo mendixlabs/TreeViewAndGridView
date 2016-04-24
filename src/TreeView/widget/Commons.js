@@ -100,7 +100,7 @@ define([
                 //Fine, we have an object
                 if (dojo.isObject(child)) {
                     child = object.getChild(parts[0]); //Get child only works if child was not a guid but object
-                    return getObjectAttr(child, parts[2], renderValue);
+                    return this.getObjectAttr(child, parts[2], renderValue);
                 }
 
                 //Try to retrieve guid in syc
@@ -113,7 +113,7 @@ define([
                         }
                     });
                     if (tmp != null) //callback was invoked in sync :)
-                        return getObjectAttr(tmp, parts[2], renderValue);
+                        return this.getObjectAttr(tmp, parts[2], renderValue);
 
                     //console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
                     //This happens if no retrieve schema was used :-(.
