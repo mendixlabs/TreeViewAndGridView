@@ -17,10 +17,13 @@ define([
         fixObjProps : function(widget, props) {
             var args = {};
 
-            for (var i = 0, prop; prop = props[i]; i++) {
+            for (var i = 0; i < props.length; i++) {
+                var prop = props[i];
                 var arr = widget[prop];
 
-                for (var j = 0, obj; obj = arr[j]; j++) {
+                for (var j = 0; j < arr.length; j++) {
+                    var obj = arr[j];
+
                     for (var p in obj) {
                         (args[p] || (args[p] = [])).push(obj[p]);
                     }
@@ -97,7 +100,7 @@ define([
             }
             var parts = attr.split("/");
             if (parts.length == 3) {
-                var child = object.get(parts[0]);
+                var child = object.getReference(parts[0]);
 
                 if (!child)
                     return "";
@@ -129,8 +132,8 @@ define([
 
             //objects can be returned in X different ways, sometime just a guid, sometimes its an object...
             if (parts.length == 2) {
-                var result = object.get(parts[0]); //incase of of a get object, return the Guids (but sometimes getAttribute gives the object...)
-                if (!result)
+                var result = object.getReferences(parts[0]); //incase of of a get object, return the Guids (but sometimes getAttribute gives the object...)
+                if (!result || result.length == 0)
                     return "";
                 if (result.guid)
                     return result.guid;
@@ -313,8 +316,9 @@ define([
                     if (left < 1 && callback)
                         callback.call(context || window);
                 }
+                var self = this;
                 dojo.forEach(data, function (dataitem) {
-                    mf(mfname, dataitem, cb, context, false, progressMessage);
+                    self.mf(mfname, dataitem, cb, context, false, progressMessage);
                 });
 
             } else {
@@ -368,7 +372,7 @@ define([
 
             var nameprop = props[0];
             for (var i = 0; i < props.length; i++)
-                rawdata[props[i]] = widget[props[i]].split(";");
+                rawdata[props[i]] = widget[props[i]] ? widget[props[i]].split(";") : '';
 
             //create target objects
             for (i = 0; i < rawdata[nameprop].length; i++) {

@@ -1,16 +1,17 @@
 require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
+    "mxui/mixin/_Scriptable",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function(declare, _WidgetBase, _Scriptable, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict"
 
-    return declare("TreeView.widget.TreeView", _WidgetBase, {
+    return declare("TreeView.widget.TreeView", [_WidgetBase, _Scriptable], {
         root: null, //render node
         dict: null, //guid -> GraphNode
         types: null, //type definitions : entityName -> config
@@ -113,7 +114,7 @@ require([
         postCreate: function() {
             Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"])
 
-            this.splitPropsTo('xentity,xburstattr,xlisteningform,sortattr,sortdir,entityclazz,entitystyle,entitychannel', this.xsettings);
+            this.splitPropsTo('xentity,xburstattr,sortattr,sortdir,entityclazz,entitystyle,entitychannel', this.xsettings);
             for (var i = 0; i < this.xsettings.length; i++) {
                 var x = this.xsettings[i];
                 x.entitystyle = x.entitystyle.split(/\||\n/).join(";");
@@ -125,14 +126,14 @@ require([
                 if (x.entitychannel) {
                     this.connect(this, 'onSelect', dojo.hitch(this, function (channel, entity, selection) {
                         if (selection != null && selection.isA(entity))
-                            dojo.publish(this.getContent() + "/" + channel + "/context", [selection.data()]);
+                            dojo.publish(this.uniqueid + "/" + channel + "/context", [selection.data()]);
                         else
-                            dojo.publish(this.getContent() + "/" + channel + "/context", [null]);
+                            dojo.publish(this.uniqueid + "/" + channel + "/context", [null]);
                     }, x.entitychannel, x.xentity));
                 }
             }
 
-            if (this.selectionref != '')
+            if (this.selectionref && this.selectionref != '')
                 this.selectionrefs = this.selectionref.split(';');
 
             this.offerInterface("close");
@@ -227,7 +228,7 @@ require([
         _setupActions: function () {
             logger.debug("TreeView.widget.TreeView._setupActions");
             var data = [];
-            this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf,actshortcut', data);
+            this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf', data);
             for (var i = 0, d = null; d = data[i]; i++) {
                 var action = new Action(d, this);
                 this.actions.push(action);
@@ -278,7 +279,7 @@ require([
 
                 type.recursive = mx.meta.getEntity(type.entity).isA(type.parententity);
 
-                type.assocstyle = type.assocstyle.split(/\||\n/).join(";");
+                type.assocstyle = type.assocstyle ? type.assocstyle.split(/\||\n/).join(";") : '';
 
                 this.useDnd |= type.allowdnd;
             }, this);

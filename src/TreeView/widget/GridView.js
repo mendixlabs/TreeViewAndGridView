@@ -204,7 +204,7 @@ require([
             //listening formloader
             if (this.listenchannel)
                 this.connect(this, 'onSelect', function(item) {
-                    dojo.publish(this.getContent() + "/"+this.listenchannel+"/context", [!item ? null : item.data()]);
+                    dojo.publish(this.uniqueid + "/"+this.listenchannel+"/context", [!item ? null : item.data()]);
                 });
 
             this.setCurrentSortColumn(this.defaultsortcolumn);
@@ -635,12 +635,12 @@ require([
             var guids = [];
 
             if (this.selectionref) {
-                var guid = Commons.getObjectAttr(this.contextObject, this.selectionref);
+                var guid = Commons.get(this.contextObject, this.selectionref);
                 if (guid)
                     guids.push(guid);
             }
             if (this.selectionrefset) {
-                guids = guids.concat(Commons.getObjectAttr(this.contextObject, this.selectionrefset));
+                guids = guids.concat(Commons.get(this.contextObject, this.selectionrefset));
             }
             for(var i = 0; i < guids.length; i++) {
                 var record = this.getRecordByGuid(guids[i]);
@@ -795,7 +795,7 @@ require([
 
             args.filter.sort = [[ sortCol.getSortAttr(), sortdir]];
             args.filter.offset = this.curpage * this.pagesize;
-            args.filter.limit  = this.pagesize;
+            args.filter.amount  = this.pagesize;
 
             //perform the get
             mx.data.get(args);
@@ -803,7 +803,7 @@ require([
 
         buildXpath : function () {
             logger.debug("TreeView.widget.GridView.buildXpath");
-            var xpath = '//' + this.entity + this.constraint.replace(/\[\%CurrentObject\%\]/gi, this.contextGUID);
+            var xpath = '//' + this.entity + (this.constraint ? this.constraint.replace(/\[\%CurrentObject\%\]/gi, this.contextGUID) : '');
 
             if (this.searchControl) {
                 if (!this.searchAttrs)

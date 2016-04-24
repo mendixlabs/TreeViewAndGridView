@@ -4,7 +4,8 @@
  */
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "TreeView/widget/TreeView/RenderNode"
+], function(declare, RenderNode) {
     "use strict"
 
     return declare("TreeView.widget.TreeView.Edge", null, {
@@ -30,7 +31,7 @@ define([
             //add the node for every known parent
             parent.forNodes(function (parentRenderNode) {
                 if (parentRenderNode.children[type.index].collapsed == false) //already expanded parent, add this edge..
-                    new TreeView.widget.RenderNode(child, parentRenderNode, type);
+                    new RenderNode(child, parentRenderNode, type);
             });
         },
 

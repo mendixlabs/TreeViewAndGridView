@@ -48,7 +48,7 @@ define([
             if (this.graphNode.getChildTypes().length > 0)
                 dojo.addClass(this.domNode, 'gg_canhazchildren');
 
-            this.setupColumns();
+            this._setupColumns();
 
             this.draw(true);
 

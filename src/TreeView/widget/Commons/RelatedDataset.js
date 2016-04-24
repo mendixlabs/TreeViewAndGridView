@@ -40,7 +40,7 @@ define([
             this.widget.connect(this.widget, "update", dojo.hitch(this, function (data, cb) {
                 this.contextGuid = data && data.getGuid ? data.getGuid() : data;
                 this.fetchLabels();
-                cb && cb();
+                mendix.lang.nullExec(cb);
             }));
         },
 
@@ -74,7 +74,7 @@ define([
 
             this.hasData = false;
             this._fetchingLabels = true;
-            var xpath = "//" + this.relentity + this.relconstraint + (this.relcontextassoc != '' ? "[" + this.relcontextassoc.split("/")[0] + " = '[%CurrentObject%]']" : '');
+            var xpath = "//" + this.relentity + (this.relconstraint ? this.relconstraint : '') + (this.relcontextassoc ? "[" + this.relcontextassoc.split("/")[0] + " = '[%CurrentObject%]']" : '');
             xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.contextGuid);
             mx.data.get({
                 xpath: xpath,
@@ -173,7 +173,7 @@ define([
         _fetchItems: function (query, resultcallback) {
             var results = [];
             if (this.existingLabels != null)
-                for (key in this.existingLabels)
+                for (var key in this.existingLabels)
                     if (key.indexOf(query.query.name.toLowerCase()) == 0)
                         results.push(this.existingLabels[key]);
 

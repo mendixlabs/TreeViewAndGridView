@@ -295,7 +295,7 @@ define([
 
             //self references leaving from the parent need a recursive constraint
             var reverse = type.recursive && type.assoctype == 'fromparent' ? '[reversed()]' : '';
-            var xpath = "//" + type.entity + "[" + type.assoc + reverse + " = '" + this.guid + "']" + type.constraint;
+            var xpath = "//" + type.entity + "[" + type.assoc + reverse + " = '" + this.guid + "']" + (type.constraint ? type.constraint : '');
             xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.tree.root.guid);
 
             var kwargs = {
