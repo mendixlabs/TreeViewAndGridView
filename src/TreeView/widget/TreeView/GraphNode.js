@@ -6,13 +6,13 @@ define([
     "dojo/_base/declare",
     "TreeView/widget/TreeView/RenderNode"
 ], function(declare, RenderNode) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.TreeView.GraphNode", null, {
         nodes: null, //correspinding render nodes
         tree: null,
         guid: null,
-        type: '',
+        type: "",
         children: null, //stores the state of child edges per type
 
         _data: null,
@@ -42,7 +42,7 @@ define([
                     //householding for retrieving children
                     _afterChildrenCb: null,
                     _retrieving: false
-                }
+                };
             }
 
             this.update(data);
@@ -50,14 +50,15 @@ define([
             this._subscription = mx.data.subscribe({
                 guid: this.guid,
                 callback: dojo.hitch(this, function (thing) {
-                    if (dojo.isObject(thing))
+                    if (dojo.isObject(thing)){
                         this.updateWithRefs(thing);
-                    else
+                    }else{
                         mx.data.get({
                             guid: thing,
                             error: this.tree.showError,
                             callback: dojo.hitch(this, this.updateWithRefs)
                         });
+                    }
                 })
             });
 
@@ -127,7 +128,7 @@ define([
 
                         var isChild = type.assoctype == "fromchild";
                         if (other == null) {
-                            //2a. handle unknown 'other side'
+                            //2a. handle unknown "other side"
                             if (isChild) //skip parents not available in the tree
                                 continue;
                             else {
@@ -145,8 +146,9 @@ define([
                             var nocreate = false;
                             if (type != this.tree._currentLoadingRel && isChild && type.constraint.length) {
                                 var xsettings = this.tree.getXsettings(type.parententity)
-                                if (xsettings != null && xsettings.xburstattr)
+                                if (xsettings != null && xsettings.xburstattr){
                                     nocreate = true;
+                                }
                             }
 
                             //2b. ..find or create edge, mark valid
@@ -182,8 +184,9 @@ define([
                 if (newburst != this._burst) {
                     this._burst = newburst;
                     dojo.forEach(this.children, function (edgeSet) {
-                        if (edgeSet)
+                        if (edgeSet){
                             edgeSet.knowsChildren = false;
+                        }
                     });
 
                     this.forNodes(function (node) {
@@ -207,8 +210,9 @@ define([
         forNodes: function (func) {
             logger.debug("TreeView.widget.GraphNode.forNodes");
             var l = this.nodes.length;
-            for (var i = 0; i < l; i++)
+            for (var i = 0; i < l; i++){
                 func.call(this, this.nodes[i]);
+            }
         },
 
         /**
@@ -230,10 +234,13 @@ define([
         //if a ref(set) was changed, and it refers to unknown ids, fetch them.
         _fetchUnknownChildrenHelper: function (type, guids) {
             logger.debug("TreeView.widget.GraphNode._fetchUnknownChildrenHelper");
-            if (guids.length == 0) //no guids
+            var xpath;
+            if (guids.length == 0) { //no guids
                 return;
-            if (!this.children[type.index].knowsChildren) //never expanded, we need to fetch anyway on the next expand, and the edges will be created by the retrieve. Skip for now
+            }
+            if (!this.children[type.index].knowsChildren) {//never expanded, we need to fetch anyway on the next expand, and the edges will be created by the retrieve. Skip for now
                 return;
+            }
 
             var args = {
                 xpath: xpath,
@@ -247,7 +254,7 @@ define([
                     }
                 }),
                 error: this.tree.showError
-            }
+            };
 
             //Question: should the constraint be applied?
             //- Yes: that is more consistent.
@@ -255,10 +262,9 @@ define([
             //Current implementation: yes if a constraint is used, otherwise, guids is used
 
             if (type.constraint) {
-                var xpath = "//" + type.entity + "[id='" + guids.join("' or id='").substring(5) + "']" + type.constraint;
+                xpath = "//" + type.entity + "[id=\"" + guids.join("\" or id=\"").substring(5) + "\"]" + type.constraint;
                 args.xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.tree.root.guid);
-            }
-            else {
+            } else {
                 args.guids = guids;
             }
 
@@ -268,13 +274,13 @@ define([
         ensureChildren: function (type, callback) {
             logger.debug("TreeView.widget.GraphNode.ensureChildren");
             var c = this.children[type.index];
-            if (c.knowsChildren)
-                callback && callback();
-
-            else if (c._retrieving)
-                callback && c._afterChildrenCb.push(callback);
-
-            else {
+            if (c.knowsChildren) {
+                mendix.lang.nullExec(callback);
+            } else if (c._retrieving) {
+                if (callback) {
+                     c._afterChildrenCb.push(callback);
+                }
+            } else {
                 c._retrieving = true;
                 c._afterChildrenCb = callback ? [callback] : []; //event chain
 
@@ -283,8 +289,9 @@ define([
                     c.knowsChildren = true;
 
                     var f;
-                    while (f = c._afterChildrenCb.shift())
+                    while (f = c._afterChildrenCb.shift()) {
                         f();
+                    }
                 }));
             }
         },
@@ -294,8 +301,8 @@ define([
             var type = c.type;
 
             //self references leaving from the parent need a recursive constraint
-            var reverse = type.recursive && type.assoctype == 'fromparent' ? '[reversed()]' : '';
-            var xpath = "//" + type.entity + "[" + type.assoc + reverse + " = '" + this.guid + "']" + (type.constraint ? type.constraint : '');
+            var reverse = type.recursive && type.assoctype == "fromparent" ? "[reversed()]" : "";
+            var xpath = "//" + type.entity + "[" + type.assoc + reverse + " = \"" + this.guid + "\"]" + (type.constraint ? type.constraint : "");
             xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.tree.root.guid);
 
             var kwargs = {
@@ -305,8 +312,9 @@ define([
 
                     //1. mark edges from here in here invalid
                     var edges = this.tree.getChildEdges(this)[rel.index];
-                    for (var childguid in edges)
+                    for (var childguid in edges){
                         edges[childguid]._valid = false;
+                    }
 
                     try {
                         //if a cacheburst is used, child to parent edgets are not created automatically to avoid byposing constraints.
@@ -325,7 +333,7 @@ define([
                         var child = this.tree.dict[guid];
 
                         var edge =
-                            type.assoctype == 'fromparent'
+                            type.assoctype == "fromparent"
                                 //3a. if this object is the owner of the association, the edges are not created automatically by process data, create them now
                                 ? this.tree.findOrCreateEdge(type, this, child, this)
                                 //3b. otherise, still retrieve the edge to update the index if necessary
@@ -349,11 +357,13 @@ define([
 
             var xsettings = this.tree.getXsettings(type.entity);
 
-            if (!kwargs.filter)
+            if (!kwargs.filter) {
                 kwargs.filter = {};
+            }
 
-            if (xsettings != null)
+            if (xsettings != null) {
                 kwargs.filter.sort = [[xsettings.sortattr, xsettings.sortdir]];
+            }
 
             //perform the get
             mx.data.get(kwargs);
@@ -376,7 +386,7 @@ define([
 
                 this.forNodes(function (node) {
                     node.free();
-                })
+                });
 
                 //Question: which edges should be freed here?
                 //Answer: only the owning ones. Non owning ones should be freed as a result of refreshes of their objects

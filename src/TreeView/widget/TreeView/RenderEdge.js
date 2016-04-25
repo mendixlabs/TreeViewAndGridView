@@ -5,7 +5,7 @@ define([
     "dojo/_base/declare",
     "TreeView/widget/TreeView/RenderNode"
 ], function(declare, RenderNode) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.TreeView.RenderEdge", null, {
         parent: null, //rendernode
@@ -25,20 +25,20 @@ define([
             this.tree = this.parent.tree;
             this.children = [];
 
-            var childNode = this.childNode = mxui.dom.create("ul", {'class': 'gg_assoc_children gg_assoc_' + type.assoc.replace(".", "_")});
-            var wrapperNode = this.domNode = mxui.dom.create("li", {'class': 'gg_assoc_wrapper ' + type.assocclazz});
+            var childNode = this.childNode = mxui.dom.create("ul", {"class": "gg_assoc_children gg_assoc_" + type.assoc.replace(".", "_")});
+            var wrapperNode = this.domNode = mxui.dom.create("li", {"class": "gg_assoc_wrapper " + type.assocclazz});
 
             this.visible = type.showassocname;
             if (this.visible) {
                 var fold = this.foldNode = mxui.dom.create("span", {});
-                var caption = mxui.dom.create("span", {'class': 'gg_assoc_title gg_assoc_' + type.assoc.replace(".", "_")}, type.assoccaption);
-                var div = new mxui.dom.create("div", {'class': 'gg_row', 'style': type.assocstyle}, fold, caption);
+                var caption = mxui.dom.create("span", {"class": "gg_assoc_title gg_assoc_" + type.assoc.replace(".", "_")}, type.assoccaption);
+                var div = new mxui.dom.create("div", {"class": "gg_row", "style": type.assocstyle}, fold, caption);
                 dojo.place(div, wrapperNode);
 
-                dojo.addClass(childNode, 'gg_assoc_wrapped');
-                dojo.addClass(wrapperNode, 'gg_node'); //only identify as node if a wrappernode is available
+                dojo.addClass(childNode, "gg_assoc_wrapped");
+                dojo.addClass(wrapperNode, "gg_node"); //only identify as node if a wrappernode is available
 
-                mxui.dom.data(wrapperNode, 'ggdata', this);
+                mxui.dom.data(wrapperNode, "ggdata", this);
             }
 
             this.setCollapsed(true);
@@ -102,8 +102,9 @@ define([
                         break;
                     }
 
-                if (!found)
+                if (!found){
                     new RenderNode(this.tree.dict[childguid], this.parent, this.type);
+                }
             }
         },
 
@@ -114,23 +115,23 @@ define([
 
                 //collapse
                 if (collapsed) {
-                    dojo.style(this.childNode, 'display', 'none');
+                    dojo.style(this.childNode, "display", "none");
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                        dojo.attr(this.foldNode, 'class', 'gg_assocfold gg_fold gg_folded');
-                    cb && cb();
+                        dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_folded");
+                    mendix.lang.nullExec(cb);
                 }
 
                 //expand
                 else {
-                    dojo.style(this.childNode, 'display', 'block');
+                    dojo.style(this.childNode, "display", "block");
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                        dojo.attr(this.foldNode, 'class', 'gg_assocfold gg_fold gg_loading');
+                        dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_loading");
 
                     this.parent.graphNode.ensureChildren(this.type, dojo.hitch(this, function () {
                         if (!this.collapsed) { //user might have clicked collapse again
-                            dojo.style(this.childNode, 'display', 'block');
+                            dojo.style(this.childNode, "display", "block");
                             if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                                dojo.attr(this.foldNode, 'class', 'gg_assocfold gg_fold gg_unfolded');
+                                dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_unfolded");
                         }
 
 
@@ -139,22 +140,23 @@ define([
 
                         this.updateFoldVisibility();
 
-                        cb && cb();
+                        mendix.lang.nullExec(cb);
                     }));
                 }
 
             }
             else
-                cb && cb();
+                mendix.lang.nullExec(cb);
         },
 
         updateFoldVisibility: function () {
             logger.debug("TreeView.widget.TreeView.RenderEdge.updateFoldVisibility");
             if (this.foldNode) {
-                if (this.children.length == 0)
-                    dojo.style(this.foldNode, 'visibility', 'hidden');
-                else
-                    dojo.style(this.foldNode, 'visibility', '');
+                if (this.children.length == 0){
+                    dojo.style(this.foldNode, "visibility", "hidden");
+                } else {
+                    dojo.style(this.foldNode, "visibility", "");
+                }
             }
             this.parent.updateFoldVisibility();
         },
@@ -166,15 +168,18 @@ define([
 
         free: function () {
             logger.debug("TreeView.widget.TreeView.RenderEdge.free");
-            if (this._destroyed)
+            if (this._destroyed){
                 return;
+            }
             this._destroyed = true;
 
-            for (var i = this.children.length - 1; i >= 0; i--)
+            for (var i = this.children.length - 1; i >= 0; i--){
                 this.children[i].free();
+            }
 
-            if (this.domNode)
+            if (this.domNode){
                 dojo.destroy(this.domNode);
+            }
         }
     });
 });

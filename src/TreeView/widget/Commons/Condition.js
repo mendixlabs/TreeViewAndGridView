@@ -2,13 +2,13 @@ define([
     "dojo/_base/declare",
     "TreeView/widget/Commons"
 ], function(declare, Commons) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.Commons.Condition", null, {
-        condname: '',
-        condattr: '',
-        condvalues: '',
-        condclass: '',
+        condname: "",
+        condattr: "",
+        condvalues: "",
+        condclass: "",
 
         widget: null,
         values: null,
@@ -30,10 +30,11 @@ define([
         appliesTo: function (record) {
             var value = Commons.getObjectAttr(record.data(), this.condattr);
             if (value === null || value === undefined || /^\s*$/.test("" + value)) {
-                if (dojo.indexOf(this.values, "false") != -1) //This one was suppossed to match on falsy values
+                if (dojo.indexOf(this.values, "false") != -1){ //This one was suppossed to match on falsy values
                     return true;
-                else
+                } else {
                     return false;
+                }
             }
             return -1 != dojo.indexOf(this.values, "" + value);
         }

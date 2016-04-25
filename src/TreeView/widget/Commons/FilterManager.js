@@ -3,8 +3,8 @@ define([
     "dijit/form/DropDownButton",
     "dijit/Menu",
     "dijit/MenuSeparator"
-], function(declare, DropDownButton, Menu, enuSeparator) {
-    "use strict"
+], function(declare, DropDownButton, Menu, MenuSeparator) {
+    "use strict";
 
     return declare("TreeView.widget.Commons.FilterManager", null, {
         widget: null,
@@ -24,10 +24,10 @@ define([
                 dropDown : this.menu
             });
 
-            dojo.addClass(this.dropdown.dropDown.domNode, 'gv_filter_dropdown_menu');
+            dojo.addClass(this.dropdown.dropDown.domNode, "gv_filter_dropdown_menu");
 
             this.domNode = this.dropdown.domNode;
-            dojo.addClass(this.domNode, 'gv_filter_dropdown');
+            dojo.addClass(this.domNode, "gv_filter_dropdown");
         },
 
         getSearchConstraints : function() {
@@ -38,8 +38,9 @@ define([
         },
 
         addFilter : function(filter) {
-            if (this.filters.length > 0)
+            if (this.filters.length > 0) {
                 this.menu.addChild(new MenuSeparator());
+            }
 
             this.filters.push(filter);
             dojo.forEach(filter.getMenuItems(), function(item) {

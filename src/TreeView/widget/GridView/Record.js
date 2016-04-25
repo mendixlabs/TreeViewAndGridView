@@ -1,7 +1,7 @@
 define([
     "dojo/_base/declare",
 ], function(declare) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.GridView.Record", null, {
         domNode: null, //correspinding render nodes
@@ -43,7 +43,7 @@ define([
                     else {
                         //xpath datasource? retrieve by xpath, the object might no longer be in the grid constraint
                         mx.data.get({
-                            xpath: grid.buildXpath() + "[id = '" + this.guid + "']",
+                            xpath: grid.buildXpath() + "[id = \"" + this.guid + "\"]",
                             filter: grid.enableschema ? grid._schema : {},
                             callback: dojo.hitch(this, function (data) {
                                 if (data.length > 0)
@@ -85,29 +85,29 @@ define([
         },
 
         setup: function (tablenode) {
-            this.domNode = mxui.dom.create(this.grid.showasdiv ? "div" : "tr", {'class': 'gv_row gv_row_' + tablenode.childElementCount});
+            this.domNode = mxui.dom.create(this.grid.showasdiv ? "div" : "tr", {"class": "gv_row gv_row_" + tablenode.childElementCount});
 
             if (this.grid.showasdiv && this.grid.colheads.length > 0 && this.grid.colheads[0].getWidth())
-                dojo.style(this.domNode, 'width', this.grid.colheads[0].getWidth());
+                dojo.style(this.domNode, "width", this.grid.colheads[0].getWidth());
 
             mxui.dom.data(this.domNode, "data", this);
 
             this.checkbox = mxui.dom.create("input", {
-                'type': 'checkbox',
-                'class': 'gv_multiselect_checkbox',
-                'style': this.grid.allowmultiselect === true ? '' : 'display:none'
+                "type": "checkbox",
+                "class": "gv_multiselect_checkbox",
+                "style": this.grid.allowmultiselect === true ? "" : "display:none"
             });
 
             dojo.place(mxui.dom.create(this.grid.showasdiv ? "div" : "td", {
-                'class': 'gv_cell gv_cell_0 gv_cell_multiselect'
+                "class": "gv_cell gv_cell_0 gv_cell_multiselect"
             }, this.checkbox), this.domNode);
 
-            //create td's
+            //create td"s
             for (var i = 0; i < this.grid.colheads.length; i++) {
                 var cell = mxui.dom.create(this.grid.showasdiv ? "div" : "td", {
-                    'class': 'gv_cell gv_cell_' + this.grid.colheads[i].data.colheadname + ' gv_cell_' + i
+                    "class": "gv_cell gv_cell_" + this.grid.colheads[i].data.colheadname + " gv_cell_" + i
                 });
-                var colwrapper = mxui.dom.create("div", {'class': 'gv_cell_wrapper'});
+                var colwrapper = mxui.dom.create("div", {"class": "gv_cell_wrapper"});
 
                 dojo.place(colwrapper, cell);
                 dojo.place(cell, this.domNode);
@@ -120,11 +120,11 @@ define([
                 if (1 * col.columnindex >= this.grid.colheads.length)
                     this.configError("Column index out of bounds: " + col.columnindex);
 
-                var span = mxui.dom.create("span", {'class': 'gv_column gv_column_' + i});
+                var span = mxui.dom.create("span", {"class": "gv_column gv_column_" + i});
                 this._colNodes.push(span);
 
                 //wrapper node
-                var cw = mxui.dom.create("span", {'class': 'gv_column_wrapper'}, span);
+                var cw = mxui.dom.create("span", {"class": "gv_column_wrapper"}, span);
                 dojo.place(cw, this.domNode.childNodes[1 + 1 * col.columnindex].children[0]);
 
                 col.setupNode(span);

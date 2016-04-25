@@ -23,9 +23,10 @@ define([
             this.options = this.options || [];
 
             if (this.dataset) {
-                this._datasetsub = dojo.connect(this.dataset, 'onReceiveItems', dojo.hitch(this, this.receiveDatasetItems));
-                if (owner)
+                this._datasetsub = dojo.connect(this.dataset, "onReceiveItems", dojo.hitch(this, this.receiveDatasetItems));
+                if (owner){
                     owner.addSubscription(this._datasetsub);
+                }
 
             }
 
@@ -42,8 +43,8 @@ define([
             });
             this.domNode = this.dropdown.domNode;
 
-            dojo.addClass(this.dropdown.dropDown.domNode, 'gv_dropdown_menu ' + this.className);
-            dojo.addClass(this.dropdown.domNode, 'gv_dropdown ' + this.className);
+            dojo.addClass(this.dropdown.dropDown.domNode, "gv_dropdown_menu " + this.className);
+            dojo.addClass(this.dropdown.domNode, "gv_dropdown " + this.className);
 
             dojo.place(this.dropdown.domNode, domNode);
 
@@ -73,11 +74,13 @@ define([
 
         createOption: function (item) {
             //separator
-            if (item == null)
+            if (item == null){
                 return new MenuSeparator();
+            }
 
-            if (this.sticky && this.value !== null && this.value == item.value) //redraw selection if needed
-                this.dropdown.set('label', item.label);
+            if (this.sticky && this.value !== null && this.value == item.value){ //redraw selection if needed
+                this.dropdown.set("label", item.label);
+            }
 
             return new MenuItem({
                 label: mxui.dom.escapeString(item.label),
@@ -91,28 +94,28 @@ define([
         itemClick: function (item, e) {
             this.onChange.call(null, item.value);
             if (this.sticky) {
-                this.dropdown.set('label', item.label);
+                this.dropdown.set("label", item.label);
                 this.value = item.value;
             }
-            e && dojo.stopEvent(e);
+
+            if (e) {
+                dojo.stopEvent(e);
+            }
         },
 
         /* dojo get & set proxying */
         set: function () {
-            if (!this.dropdown._destroyed)
-                return this.dropdown.set.apply(this.dropdown, arguments);
-            return undefined;
+            return !this.dropdown._destroyed ? this.dropdown.set.apply(this.dropdown, arguments) : undefined;
         },
 
         get: function () {
-            if (!this.dropdown._destroyed)
-                return this.dropdown.get.apply(this.dropdown, arguments);
-            return undefined;
+            return !this.dropdown._destroyed ? this.dropdown.get.apply(this.dropdown, arguments) : undefined;
         },
 
         destroy: function () {
-            if (this._datasetsub)
+            if (this._datasetsub){
                 dojo.disconnect(this._datasetsub);
+            }
             this.dropdown.destroy();
             this._destroyed = true;
         },

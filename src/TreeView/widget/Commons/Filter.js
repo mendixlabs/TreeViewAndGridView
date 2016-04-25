@@ -3,7 +3,7 @@ define([
     "dijit/CheckedMenuItem",
     "TreeView/widget/Commons"
 ], function(declare, CheckedMenuItem, Commons) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.Commons.Filter", null, {
         fm: null,
@@ -50,36 +50,38 @@ define([
 
             //setup boolean menu items
             else {
-                if (this.filtertruecaption)
+                if (this.filtertruecaption){
                     this.trueitem = new CheckedMenuItem({
                         label: this.filtertruecaption,
                         checked: "all" == this.filterbooleandefault || true == this.filterbooleandefault,
                         onClick: dojo.hitch(this, this.itemClick)
                     });
-
-                if (this.filterfalsecaption)
+                }
+                if (this.filterfalsecaption){
                     this.falseitem = new CheckedMenuItem({
                         label: this.filterfalsecaption,
                         checked: "all" == this.filterbooleandefault || false == this.filterbooleandefault,
                         onClick: dojo.hitch(this, this.itemClick)
                     });
+                }
             }
 
             this.fm.addFilter(this);
         },
 
         getMenuItems: function () {
-            if (this.isEnum)
+            if (this.isEnum){
                 return this.enumItems;
-
-            else {
-                var res = [];
-                if (this.trueitem)
-                    res.push(this.trueitem);
-                if (this.falseitem)
-                    res.push(this.falseitem);
-                return res;
             }
+
+            var res = [];
+            if (this.trueitem){
+                res.push(this.trueitem);
+            }
+            if (this.falseitem){
+                res.push(this.falseitem);
+            }
+            return res;
         },
 
         getSearchConstraints: function () {
@@ -87,26 +89,28 @@ define([
 
             //enum?
             if (this.isEnum) {
-                for (var key in this.enumStateMap)
-                    if (this.enumStateMap[key].get("checked") === true)
+                for (var key in this.enumStateMap){
+                    if (this.enumStateMap[key].get("checked") === true){
                         res.push(this.filterattr + " = '" + key + "'");
-            }
-
-            //boolean?
-            else {
-                if (this.trueitem && this.trueitem.get("checked") === true)
+                    }
+                }
+            } else { // Boolean?
+                if (this.trueitem && this.trueitem.get("checked") === true){
                     res.push(this.filterattr + " =  true() ");
-                if (this.falseitem && this.falseitem.get("checked") === true)
+                }
+                if (this.falseitem && this.falseitem.get("checked") === true){
                     res.push(this.filterattr + " =  false()");
+                }
 
                 //only one value is defined to filter? Then the other is always true
-                if (this.falseitem ^ this.trueitem)
+                if (this.falseitem ^ this.trueitem){
                     res.push(this.filterattr + " = " + (this.falseitem ? "true()" : "false()"));
+                }
             }
 
-            if (res.length == 0) //filter all out
+            if (res.length == 0) {//filter all out
                 res.push(this.isEnum ? this.filterattr + " = NULL" : this.filterattr + " = true() and " + this.filterattr + " = false()");
-
+            }
             return res;
         },
 

@@ -13,7 +13,7 @@ require([
     "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
 ], function(declare, _WidgetBase, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.GridView", _WidgetBase, {
         _multiSelection: null,
@@ -31,111 +31,111 @@ require([
         firstUpdate: true,
 
 
-            //data model properties
-            tabindex: -1,
-            entity: '',
-            datasourcemf: '',
-            datasourceoffsetattr: '',
-            datasourcelimitattr: '',
-            datasourcecountattr: '',
-            datasourcesearchattr: '',
-            constraint: '',
+        //data model properties
+        tabindex: -1,
+        entity: "",
+        datasourcemf: "",
+        datasourceoffsetattr: "",
+        datasourcelimitattr: "",
+        datasourcecountattr: "",
+        datasourcesearchattr: "",
+        constraint: "",
 
-            //display properties
-            colheadname: '',
-            colheadcaption: '',
-            colheadwidth: '',
-            colheadsortattr: '',
-            colheadsortdir: '',
+        //display properties
+        colheadname: "",
+        colheadcaption: "",
+        colheadwidth: "",
+        colheadsortattr: "",
+        colheadsortdir: "",
 
-            //rendering properties
-            columnindex: '',
-            columnname: '',
-            columndataset: '',
-            columnrendermode: '',
-            columnattr: '',
-            columnimage: '',
-            columnaction: '',
-            columnclazz: '',
-            columnstyle: '',
-            columndateformat: '',
-            columnissearchattr: '',
-            columntruecaption: '',
-            columnfalsecaption: '',
-            columneditable: '',
-            columneditdataset: '',
-            columneditautocommit: '',
-            columnonchangemf: '',
-            columncondition: '',
-            columnprefix: '',
-            columnpostfix: '',
+        //rendering properties
+        columnindex: "",
+        columnname: "",
+        columndataset: "",
+        columnrendermode: "",
+        columnattr: "",
+        columnimage: "",
+        columnaction: "",
+        columnclazz: "",
+        columnstyle: "",
+        columndateformat: "",
+        columnissearchattr: "",
+        columntruecaption: "",
+        columnfalsecaption: "",
+        columneditable: "",
+        columneditdataset: "",
+        columneditautocommit: "",
+        columnonchangemf: "",
+        columncondition: "",
+        columnprefix: "",
+        columnpostfix: "",
 
-            //action properties
-            actname: '',
-            actshowbutton: '',
-            actclassname: '',
-            actautohide: '',
-            actbuttoncaption: '',
-            actbuttonimage: '',
-            actmf: '',
-            actmultimf: '',
-            actisdefault: '',
-            actonselect: '',
-            actconfirmtext: '',
-            //		actonselect : '',
-            actnoselectionmf: '',
-            actdataset: '',
-            actappliestomultiselection: '',
-            actprogressmsg: '',
-            //		actshortcut : '',
+        //action properties
+        actname: "",
+        actshowbutton: "",
+        actclassname: "",
+        actautohide: "",
+        actbuttoncaption: "",
+        actbuttonimage: "",
+        actmf: "",
+        actmultimf: "",
+        actisdefault: "",
+        actonselect: "",
+        actconfirmtext: "",
+        //		actonselect : "",
+        actnoselectionmf: "",
+        actdataset: "",
+        actappliestomultiselection: "",
+        actprogressmsg: "",
+        //		actshortcut : "",
 
-            //filters
-            filterattr: '',
-            filtertruecaption: '',
-            filterfalsecaption: '',
-            filterbooleandefault: '',
+        //filters
+        filterattr: "",
+        filtertruecaption: "",
+        filterfalsecaption: "",
+        filterbooleandefault: "",
 
-            //advanced settings
-            allowmultiselect: false,
-            allowsingleselect: true,
-            selectfirstrow: false,
-            defaultsortcolumn: 0,
-            pagesize: 20,
-            refreshoncontext: false,
-            refreshonclass: true,
-            searchenabled: true,
-            searchplaceholder: '',
-            searchlabeldataset: '',
-            realtimesearch: false,
-            searchmaxquerysizeenabled: false,
-            searchmaxquerysize: 10,
-            emptymessage: '',
-            selectionref: '',
-            selectionrefset: '',
-            colheaderenabled: true,
-            enableschema: true,
-            showtotals: true,
-            itemcountmessage: '',
-            showasdiv: false,
-            listenchannel: '',
-            singleclickdefaultaction: false,
+        //advanced settings
+        allowmultiselect: false,
+        allowsingleselect: true,
+        selectfirstrow: false,
+        defaultsortcolumn: 0,
+        pagesize: 20,
+        refreshoncontext: false,
+        refreshonclass: true,
+        searchenabled: true,
+        searchplaceholder: "",
+        searchlabeldataset: "",
+        realtimesearch: false,
+        searchmaxquerysizeenabled: false,
+        searchmaxquerysize: 10,
+        emptymessage: "",
+        selectionref: "",
+        selectionrefset: "",
+        colheaderenabled: true,
+        enableschema: true,
+        showtotals: true,
+        itemcountmessage: "",
+        showasdiv: false,
+        listenchannel: "",
+        singleclickdefaultaction: false,
 
-            //related datasets
-            relname: '',
-            rellabel: '',
-            relentity: '',
-            relcontextassoc: '',
-            relitemassocref: '',
-            relitemassocrefset: '',
-            relnameattr: '',
-            relnewitemcaption: '',
-            relconstraint: '',
+        //related datasets
+        relname: "",
+        rellabel: "",
+        relentity: "",
+        relcontextassoc: "",
+        relitemassocref: "",
+        relitemassocrefset: "",
+        relnameattr: "",
+        relnewitemcaption: "",
+        relconstraint: "",
 
-            //conditions
-            condname: '',
-            condattr: '',
-            condvalues: '',
-            condclass: '',
+        //conditions
+        condname: "",
+        condattr: "",
+        condvalues: "",
+        condclass: "",
 
         /* context applied */
         _contextSubscription : null,
@@ -157,7 +157,7 @@ require([
         postCreate : function() {
             logger.debug("TreeView.widget.GridView.postCreate");
 
-            Commons.fixObjProps(this, ["blaat0", "blaat2", "blaat3", "blaat4", "blaat7", "blaat8"])
+            Commons.fixObjProps(this, ["blaat0", "blaat2", "blaat3", "blaat4", "blaat7", "blaat8"]);
 
             this.verifyDatasourceSettings();
 
@@ -172,14 +172,14 @@ require([
             this._setupRendering();
             this._setupEvents();
 
-            if (this.refreshonclass)
+            if (this.refreshonclass) {
                 this.subscribe({
-                    'entity' : this.entity,
+                    "entity" : this.entity,
                     callback : dojo.hitch(this, function() {
                         this.fetchAll();
                     })
                 });
-
+            }
             if (this.searchenabled) {
                 this.searchControl = new SearchControl({
                     searchplaceholder : this.searchplaceholder,
@@ -197,16 +197,17 @@ require([
             this._setupFilters();
 
             //triggers data retrieval as well!
-            if (this.defaultsortcolumn < 0 || this.defaultsortcolumn >= this.colheads.length || !this.colheads[this.defaultsortcolumn].getSortAttr())
-                if (!this.datasourcemf)
+            if (this.defaultsortcolumn < 0 || this.defaultsortcolumn >= this.colheads.length || !this.colheads[this.defaultsortcolumn].getSortAttr()){
+                if (!this.datasourcemf){
                     this.configError("Invalid default sort column. The column does not exists or no sort attribute has been defined");
-
+                }
+            }
             //listening formloader
-            if (this.listenchannel)
-                this.connect(this, 'onSelect', function(item) {
+            if (this.listenchannel) {
+                this.connect(this, "onSelect", function(item) {
                     dojo.publish(this.uniqueid + "/"+this.listenchannel+"/context", [!item ? null : item.data()]);
                 });
-
+            }
             this.setCurrentSortColumn(this.defaultsortcolumn);
 
             //this.grabStartupFocus();
@@ -214,8 +215,8 @@ require([
         },
 
         /**
-         called by mxclient whenever context is replaced
-         */
+        called by mxclient whenever context is replaced
+        */
         update : function(obj, cb) {
             logger.debug("TreeView.widget.GridView.update");
 
@@ -229,6 +230,10 @@ require([
             this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
 
             mendix.lang.nullExec(cb);
+        },
+
+        resize: function () {
+            // stub function
         },
 
         suspended : function() {
@@ -246,10 +251,12 @@ require([
 
         uninitialize : function() {
             logger.debug("TreeView.widget.GridView.uninitialize");
-            if (this.searchControl)
+            if (this.searchControl) {
                 this.searchControl.free();
-            if (this.filterManager)
+            }
+            if (this.filterManager) {
                 this.filterManager.free();
+            }
 
             dojo.forEach(this.columns, function(column) {
                 column.free();
@@ -308,7 +315,7 @@ require([
                 //TODO: this can be done more efficient by using onmouseleave and now isDescendant.
                 //Not yet supported by webkit though
                 if (this._hoveredRow && !dojo.isDescendant(this.gridNode, target)) {
-                    dojo.removeClass(this._hoveredRow, 'gv_row_hover');
+                    dojo.removeClass(this._hoveredRow, "gv_row_hover");
                     this._hoveredRow = null;
                 }
             });
@@ -319,27 +326,28 @@ require([
 
         _setupLayout : function() {
             logger.debug("TreeView.widget.GridView._setupLayout");
-            dojo.addClass(this.domNode, 'gv_grid');
-            if (this.showasdiv)
-            dojo.addClass(this.domNode, 'gv_floating_grid');
+            dojo.addClass(this.domNode, "gv_grid");
+            if (this.showasdiv) {
+                dojo.addClass(this.domNode, "gv_floating_grid");
+            }
 
-            this.headerNode = mxui.dom.create("div", {'class' : 'gv_header'});
+            this.headerNode = mxui.dom.create("div", {"class" : "gv_header"});
 
-            this.gridNode = mxui.dom.create(this.showasdiv ? "div" : "table", {'class': 'gv_table'});
+            this.gridNode = mxui.dom.create(this.showasdiv ? "div" : "table", {"class": "gv_table"});
 
-            this.headerRow = mxui.dom.create(this.showasdiv ? "div" : "tr", {'class':'gv_headrow'}, mxui.dom.create(this.showasdiv ? "div" : "th", { 'class' : 'gv_multiselect_column_head gv_th gv_th_0'}));
-            var header = mxui.dom.create(this.showasdiv ? "div" : "thead", {'class':'gv_gridhead'}, this.headerRow);
+            this.headerRow = mxui.dom.create(this.showasdiv ? "div" : "tr", {"class":"gv_headrow"}, mxui.dom.create(this.showasdiv ? "div" : "th", { "class" : "gv_multiselect_column_head gv_th gv_th_0"}));
+            var header = mxui.dom.create(this.showasdiv ? "div" : "thead", {"class":"gv_gridhead"}, this.headerRow);
 
-            dojo.addClass(this.domNode, this.colheaderenabled ? 'gv_columnheaders' : 'gv_nocolumnheaders');
-            dojo.addClass(this.domNode, this.allowmultiselect ? 'gv_multiselect_enabled' : 'gv_multiselect_disabled');
+            dojo.addClass(this.domNode, this.colheaderenabled ? "gv_columnheaders" : "gv_nocolumnheaders");
+            dojo.addClass(this.domNode, this.allowmultiselect ? "gv_multiselect_enabled" : "gv_multiselect_disabled");
 
-            dojo.place(header, this.gridNode, 'first');
+            dojo.place(header, this.gridNode, "first");
 
-            this.footerNode = mxui.dom.create("div", {'class' : 'gv_footer'});
-            this.pagingNode = mxui.dom.create("div", {'class' : 'gv_paging'});
+            this.footerNode = mxui.dom.create("div", {"class" : "gv_footer"});
+            this.pagingNode = mxui.dom.create("div", {"class" : "gv_paging"});
             dojo.place(this.pagingNode, this.footerNode);
 
-            this.searchbarNode = mxui.dom.create("div", {'class' : 'gv_searchnode'});
+            this.searchbarNode = mxui.dom.create("div", {"class" : "gv_searchnode"});
             dojo.place(this.searchbarNode, this.headerNode);
 
             dojo.place(this.headerNode, this.domNode);
@@ -358,8 +366,8 @@ require([
         _setupColumns : function() {
             logger.debug("TreeView.widget.GridView._setupColumns");
             var data = [];
-            this.splitPropsTo('colheadname,colheadcaption,colheadwidth,colheadsortattr,colheadsortdir', data);
-            for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
+            this.splitPropsTo("colheadname,colheadcaption,colheadwidth,colheadsortattr,colheadsortdir", data);
+            for (var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
                 d.colindex = i;
                 var colhead = new ColHead(d, this);
                 this.colheads.push(colhead);
@@ -374,10 +382,10 @@ require([
             logger.debug("TreeView.widget.GridView._setupDatasets");
             this.dataset = {};
             var data = [];
-            this.splitPropsTo('relname,rellabel,relnewitemcaption,relentity,relcontextassoc,relitemassocref,relitemassocrefset,relnameattr,relconstraint', data);
+            this.splitPropsTo("relname,rellabel,relnewitemcaption,relentity,relcontextassoc,relitemassocref,relitemassocrefset,relnameattr,relconstraint", data);
             dojo.forEach(data, function(item) {
                 if (this.dataset[item.relname])
-                this.configError('Related dataset "' + item.relname + '" is defined twice!');
+                this.configError("Related dataset \"" + item.relname + "\" is defined twice!");
                 var r = new RelatedDataset(item, this);
                 this.dataset[item.relname] = r;
                 this.addToSchema((item.relitemassocref || item.relitemassocrefset) + "/" + item.relnameattr);
@@ -387,11 +395,12 @@ require([
         _setupActions : function() {
             logger.debug("TreeView.widget.GridView._setupActions");
             var data = [];
-            this.splitPropsTo('actname,actprogressmsg,actshowbutton,actclassname,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actmultimf,actappliestomultiselection,actisdefault,actonselect,actnoselectionmf,actdataset', data);
-            for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
+            this.splitPropsTo("actname,actprogressmsg,actshowbutton,actclassname,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actmultimf,actappliestomultiselection,actisdefault,actonselect,actnoselectionmf,actdataset", data);
+            for (var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
 
-                if (d.actmultimf && !!!d.actmf)
-                this.configError(d.actname + ": Actions that define a multi selection microflow need to define a single selection microflow as well. ");
+                if (d.actmultimf && !!!d.actmf) {
+                    this.configError(d.actname + ": Actions that define a multi selection microflow need to define a single selection microflow as well. ");
+                }
 
                 var action = new Action(d, this);
 
@@ -408,11 +417,12 @@ require([
         _setupConditions : function() {
             logger.debug("TreeView.widget.GridView._setupConditions");
             var data = [];
-            this.splitPropsTo('condname,condattr,condvalues,condclass', data);
-            for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
+            this.splitPropsTo("condname,condattr,condvalues,condclass", data);
+            for (var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
                 var cond = new Condition(d, this);
-                if (this.conditions[d.condname])
-                this.configError("Condition name '" + d.condname + "' is not unique!");
+                if (this.conditions[d.condname]) {
+                    this.configError("Condition name \"" + d.condname + "\" is not unique!");
+                }
 
                 this.conditions[d.condname] = cond;
                 this.addToSchema(d.condattr);
@@ -422,7 +432,7 @@ require([
         _setupFilters: function() {
             logger.debug("TreeView.widget.GridView._setupFilters");
             var data = [];
-            this.splitPropsTo('filterattr,filtertruecaption,filterfalsecaption,filterbooleandefault', data);
+            this.splitPropsTo("filterattr,filtertruecaption,filterfalsecaption,filterbooleandefault", data);
 
             var fm = this.filterManager = new FilterManager(this);
 
@@ -430,28 +440,31 @@ require([
                 return new Filter(d, fm);
             }, this);
 
-            if (this.filters.length > 0)
-            dojo.place(fm.domNode, this.actions.length > 0 || !this.searchenabled ? this.headerNode : this.searchbarNode, 'last');
+            if (this.filters.length > 0) {
+                dojo.place(fm.domNode, this.actions.length > 0 || !this.searchenabled ? this.headerNode : this.searchbarNode, "last");
+            }
         },
 
         _setupRendering : function() {
             logger.debug("TreeView.widget.GridView._setupRendering");
             var data = [];
-            this.splitPropsTo('columnindex,columnname,columnrendermode,columnattr,columnimage,columneditautocommit,columnonchangemf,columnaction,columnclazz,columnstyle,columnprefix,columnpostfix,columndateformat,columnissearchattr,columntruecaption,columnfalsecaption,columneditdataset,columneditable,columncondition', data);
-            for(var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
+            this.splitPropsTo("columnindex,columnname,columnrendermode,columnattr,columnimage,columneditautocommit,columnonchangemf,columnaction,columnclazz,columnstyle,columnprefix,columnpostfix,columndateformat,columnissearchattr,columntruecaption,columnfalsecaption,columneditdataset,columneditable,columncondition", data);
+            for (var i = 0, d = null; d = data[i]; i++) { // EvdP: what kind of weird loop is this? d = data[i] almost seems an error on first sight. Why not just use data.length to check?
                 d.columnentity = this.entity;
                 this.columns.push(new ColRenderer(d, this, i));
-                if (d.columnindex * 1 >= this.colheads.length)
-                this.configError(this.id + "  column index out of bounds: " + d.columnname);
+                if (d.columnindex * 1 >= this.colheads.length) {
+                    this.configError(this.id + "  column index out of bounds: " + d.columnname);
+                }
 
-                if (d.columnaction && !(d.columnaction in this.actionsByName))
-                this.configError(this.id + "  refers to unknown action " + d.columnaction);
+                if (d.columnaction && !(d.columnaction in this.actionsByName)) {
+                    this.configError(this.id + "  refers to unknown action " + d.columnaction);
+                }
 
                 if (d.columnrendermode === "thumbnail" || d.columnrendermode === "systemimage") {
                     //Add fileID and changedDate to schema
-                    if (!d.columnattr)
-                    this.addToSchema("FileID");
-
+                    if (!d.columnattr) {
+                        this.addToSchema("FileID");
+                    }
                     this.addToSchema(d.columnattr.replace(/FileID/, "") + "changedDate");
                 }
 
@@ -471,15 +484,17 @@ require([
             logger.debug("TreeView.widget.GridView.listenToContext");
             //if reload on context change is enabled, reload as soon as the context object is altered
             if (this.refreshoncontext) {
-                if (this._contextSubscription)
+                if (this._contextSubscription) {
                     mx.data.unsubscribe(this._contextSubscription);
+                }
 
                 if (this.contextGUID) {
                     this._contextSubscription = mx.data.subscribe({
                         guid: this.contextGUID,
                         callback : dojo.hitch(this, function() {
-                            if (!this._iscallingdatasource)
+                            if (!this._iscallingdatasource) {
                                 this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+                            }
                         })
                     });
                 }
@@ -527,20 +542,21 @@ require([
             item.checkbox.checked = true;
 
             if (this.allowsingleselect) {
-                dojo.addClass(item.domNode, 'gv_selected');
+                dojo.addClass(item.domNode, "gv_selected");
                 dojo.window.scrollIntoView(item.domNode);
             }
 
             var idx = dojo.indexOf(this._multiSelection, item);
-            if (idx === -1)
+            if (idx === -1) {
                 this._multiSelection.push(item);
+            }
 
-            if(noevents !== true) {
+            if (noevents !== true) {
                 if (this.selectionref)
-                    Commons.store(this.contextObject, this.selectionref,    item.guid);
+                Commons.store(this.contextObject, this.selectionref,    item.guid);
 
                 if (this.selectionrefset)
-                    Commons.store(this.contextObject, this.selectionrefset, item.guid, "add");
+                Commons.store(this.contextObject, this.selectionrefset, item.guid, "add");
 
                 this.saveAndFireSelection(item);
             }
@@ -548,28 +564,28 @@ require([
 
         removeFromSelection : function(item, noevents) {
             logger.debug("TreeView.widget.GridView.removeFromSelection");
-            dojo.removeClass(item.domNode, 'gv_selected');
+            dojo.removeClass(item.domNode, "gv_selected");
             item.checkbox.checked = false;
 
             var idx = -1;
 
-            for(var i = 0; i < this._multiSelection.length; i++)
-                if (this._multiSelection[i].guid === item.guid) {
-                    idx = i;
-                    break;
-                }
+            for (var i = 0; i < this._multiSelection.length; i++)
+            if (this._multiSelection[i].guid === item.guid) {
+                idx = i;
+                break;
+            }
 
             if (idx > -1)
-                this._multiSelection.splice(idx, 1);
+            this._multiSelection.splice(idx, 1);
 
             var lastitem = this.getLastSelection();
 
             if(noevents !== true) {
                 if (this.selectionref)
-                    Commons.store(this.contextObject, this.selectionref,  lastitem ? lastitem.guid : null);
+                Commons.store(this.contextObject, this.selectionref,  lastitem ? lastitem.guid : null);
 
                 if (this.selectionrefset)
-                    Commons.store(this.contextObject, this.selectionrefset, item.guid, "rem");
+                Commons.store(this.contextObject, this.selectionrefset, item.guid, "rem");
 
                 this.saveAndFireSelection(lastitem);
             }
@@ -610,10 +626,10 @@ require([
             var record = this.getRowForNode(node);
 
             if (node.checked)
-                this.addToSelection(record);
+            this.addToSelection(record);
 
             else
-                this.removeFromSelection(record);
+            this.removeFromSelection(record);
             //}
 
             this._inMultiSelectMode = this._multiSelection.length > 0;
@@ -623,9 +639,10 @@ require([
 
         getRecordByGuid : function(guid) {
             logger.debug("TreeView.widget.GridView.getRecordByGuid");
-            for(var i = 0; i < this.records.length; i++)
-                if (this.records[i].guid == guid)
-                    return this.records[i];
+            for (var i = 0; i < this.records.length; i++)
+            if (this.records[i].guid == guid) {
+                return this.records[i];
+            }
             return null;
         },
 
@@ -636,8 +653,9 @@ require([
 
             if (this.selectionref) {
                 this.contextObject.fetch(this.selectionref, function(value) {
-                    if (value)
+                    if (value) {
                         guids.push(value);
+                    }
                 });
                 // var guid = TreeView.widget.Commons.getObjectAttr(this.contextObject, this.selectionref);
                 // if (guid)
@@ -645,15 +663,17 @@ require([
             }
             if (this.selectionrefset) {
                 this.contextObject.fetch(this.selectionrefset, function(value) {
-                    if (value)
+                    if (value) {
                         guids.push(value);
+                    }
                 });
                 //guids = guids.concat(TreeView.widget.Commons.getObjectAttr(this.contextObject, this.selectionrefset));
             }
-            for(var i = 0; i < guids.length; i++) {
+            for (var i = 0; i < guids.length; i++) {
                 var record = this.getRecordByGuid(guids[i]);
-                if (record)
+                if (record) {
                     this.addToSelection(record, true);
+                }
             }
 
             //select first selection on first update
@@ -680,15 +700,13 @@ require([
                     var idx = dojo.indexOf(guids, item.guid);
                     if (idx > -1) {
                         item.checkbox.checked = true;
-                        dojo.addClass(item.domNode, 'gv_selected');
+                        dojo.addClass(item.domNode, "gv_selected");
                         //replace item in multi selection array with the fresh one, to avoid memory leaks and outdated objects, or any other strange bugs
                         this._multiSelection[idx] = item;
                     }
                 }, this);
-            }
 
-            //else, deselect all non visible items
-            else{
+            } else { //else, deselect all non visible items
 
                 for (var i = this._multiSelection.length - 1; i >= 0; i--) {
                     guids.push(this._multiSelection[i].guid);
@@ -703,7 +721,7 @@ require([
                 }, this);
 
                 if (!selected)
-                    this.setSelection(null);
+                this.setSelection(null);
             }
         },
 
@@ -727,9 +745,7 @@ require([
             logger.debug("TreeView.widget.GridView.fetchAll");
             if (!this.contextGUID || this.isSuspended()) {
                 cb && cb();
-            }
-
-            else if (this.datasourcemf != '') {
+            } else if (this.datasourcemf != "") {
                 this.fetchFromMicroflowDatasource(cb);
             } else {
                 this.fetchFromDatabaseDatasource(cb);
@@ -739,13 +755,13 @@ require([
         fetchFromMicroflowDatasource : function(cb) {
             logger.debug("TreeView.widget.GridView.fetchFromMicroflowDatasource");
             var contextObject = this.contextObject;
-            var filter = '';
+            var filter = "";
             if (this.searchenabled)
-                filter = this.searchControl.searchInput.getValue();
+            filter = this.searchControl.searchInput.getValue();
 
             contextObject.set(this.datasourceoffsetattr, this.curpage * this.pagesize);
             contextObject.set(this.datasourcelimitattr, this.pagesize);
-            contextObject.set(this.datasourcesearchattr, filter && filter != this.searchplaceholder ? filter : '');
+            contextObject.set(this.datasourcesearchattr, filter && filter != this.searchplaceholder ? filter : "");
 
             var self = this;
 
@@ -795,11 +811,13 @@ require([
             //sorting
             var sortCol = this.colheads[this.currentSortColumn];
             var sortdir = sortCol.getSortDir();
-            if (this.sortInverted)
+            if (this.sortInverted) {
                 sortdir = sortdir === "asc" ? "desc" : "asc";
+            }
 
-            if (!sortCol.getSortAttr())
+            if (!sortCol.getSortAttr()) {
                 this.configError("No sortable column : " + this.currentSortColumn + " ("+ sortCol.data.colheadcaption + ")");
+            }
 
             args.filter.sort = [[ sortCol.getSortAttr(), sortdir]];
             args.filter.offset = this.curpage * this.pagesize;
@@ -811,15 +829,16 @@ require([
 
         buildXpath : function () {
             logger.debug("TreeView.widget.GridView.buildXpath");
-            var xpath = '//' + this.entity + (this.constraint ? this.constraint.replace(/\[\%CurrentObject\%\]/gi, this.contextGUID) : '');
+            var xpath = "//" + this.entity + (this.constraint ? this.constraint.replace(/\[\%CurrentObject\%\]/gi, this.contextGUID) : "");
 
             if (this.searchControl) {
-                if (!this.searchAttrs)
+                if (!this.searchAttrs) {
                     this.searchAttrs = dojo.map(dojo.filter(this.columns, function(column) {
                         return column.columnissearchattr && column.columnattr;
                     }), function(column) {
                         return column.columnattr;
                     });
+                }
 
                 if (this.searchmaxquerysizeenabled) {
                     xpath += this.searchControl.getSearchConstraints(this.searchAttrs, this.searchmaxquerysize);
@@ -834,6 +853,7 @@ require([
 
         processData : function(cb, data, count) {
             logger.debug("TreeView.widget.GridView.processData");
+
             this.count = (dojo.isObject(count) ? count.count : count)*1; //Mx 3 returns primitive, Mx 4 an aggregate object
             this.updatePaging();
 
@@ -843,11 +863,12 @@ require([
 
             this.records = [];
 
-            function handleElem(data) {
+            // TODO check scoping
+            var handleElem = function(data) {
                 var r = new Record(data, this);
                 this.records.push(r);
                 r.setup(this.gridNode);
-            }
+            }.bind(this);
 
             dojo.forEach(data, handleElem, this);
 
@@ -855,8 +876,7 @@ require([
             if (count <= this.curpage * this.pagesize && this.curpage > 0) {
                 this.curpage -= 1;
                 this.fetchAll(cb);
-            }
-            else {
+            } else {
                 cb && cb.call(this); //MWE: cb can influence selection, call callback before reapply?
             }
 
@@ -878,324 +898,348 @@ require([
             //show paging at all?
             if (this.count > this.pagesize || this.curpage > 0) {
                 //show prev btn?
-                if (this.curpage > 0)
-                    dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_prev'}, "<"), this.pagingNode);
+                if (this.curpage > 0) {
+                    dojo.place(mxui.dom.create("a", { "class" : "gv_btn_prev"}, "<"), this.pagingNode);
+                }
 
                 //page 1
-                dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (0 === this.curpage ? 'gv_btn_page_active' : '')}, "1"), this.pagingNode);
+                dojo.place(mxui.dom.create("a", { "class" : "gv_btn_page " + (0 === this.curpage ? "gv_btn_page_active" : "")}, "1"), this.pagingNode);
 
                 //paging skipper?
-                if (this.curpage > PAGERSIZE)
-                    dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
+                if (this.curpage > PAGERSIZE) {
+                    dojo.place(mxui.dom.create("a", { "class" : "gv_btn_paging_spacer"}, ".."), this.pagingNode);
+                }
 
-                for(var i = Math.max(this.curpage - PAGERSIZE + 1, 1); i < Math.min(this.curpage + PAGERSIZE , lastpage); i++)
-                    dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (i === this.curpage ? 'gv_btn_page_active' : '')}, "" + (i + 1)), this.pagingNode);
+                for (var i = Math.max(this.curpage - PAGERSIZE + 1, 1); i < Math.min(this.curpage + PAGERSIZE , lastpage); i++) {
+                    dojo.place(mxui.dom.create("a", { "class" : "gv_btn_page " + (i === this.curpage ? "gv_btn_page_active" : "")}, "" + (i + 1)), this.pagingNode);
+                }
 
                 //paging skipper?
-                if (this.curpage < lastpage - PAGERSIZE)
-                    dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_paging_spacer'}, ".."), this.pagingNode);
+                if (this.curpage < lastpage - PAGERSIZE) {
+                    dojo.place(mxui.dom.create("a", { "class" : "gv_btn_paging_spacer"}, ".."), this.pagingNode);
+                }
 
                 //last page
-                dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_page ' + (lastpage === this.curpage ? 'gv_btn_page_active' : '')}, "" + (lastpage + 1)), this.pagingNode);
+                dojo.place(mxui.dom.create("a", { "class" : "gv_btn_page " + (lastpage === this.curpage ? "gv_btn_page_active" : "")}, "" + (lastpage + 1)), this.pagingNode);
 
                 //show next btn?
-                if (this.curpage < lastpage)
-                    dojo.place(mxui.dom.create("a", { 'class' : 'gv_btn_next'}, ">"), this.pagingNode);
+                if (this.curpage < lastpage) {
+                    dojo.place(mxui.dom.create("a", { "class" : "gv_btn_next"}, ">"), this.pagingNode);
+                }
 
             }
 
             if (this.count === 0) {
-                dojo.place(mxui.dom.create("span", {'class' : 'gv_empty_message'}, this.emptymessage), this.pagingNode);
-            }
-            else if (this.showtotals)
-                dojo.place(mxui.dom.create("span", {'class' : 'gv_paging_totals'},
-                    (this.itemcountmessage || (this._multiSelection.length > 1 ? "{1} of {0} item(s) selected." : "{0} item(s) in total")).replace("{0}", this.count).replace("{1}", this._multiSelection.length)
-                ), this.pagingNode);
-        },
+                dojo.place(mxui.dom.create("span", {"class" : "gv_empty_message"}, this.emptymessage), this.pagingNode);
+            } else if (this.showtotals) {
+                dojo.place(mxui.dom.create("span", {"class" : "gv_paging_totals"},
+                (this.itemcountmessage || (this._multiSelection.length > 1 ? "{1} of {0} item(s) selected." : "{0} item(s) in total")).replace("{0}", this.count).replace("{1}", this._multiSelection.length)
+            ), this.pagingNode);
+        }
+    },
 
-        pagingClick : function(e) {
-            logger.debug("TreeView.widget.GridView.pagingClick");
-            if (dojo.hasClass(e.target, "gv_btn_prev"))
-                this.prevPage();
-
-            else if (dojo.hasClass(e.target, "gv_btn_next"))
-                this.nextPage();
-
-            else if (dojo.hasClass(e.target, "gv_btn_page"))
-                this.curpage = (1 * e.target.innerHTML) - 1;
-
-            else
-                return;
-
-            this.fetchAll();
-        },
-
-        prevPage : function() {
-            logger.debug("TreeView.widget.GridView.prevPage");
-            if (this.curpage > 0) {
-                this.curpage -= 1;
-                this.fetchAll(function() {
-                    //select last item when going to previous page
-                    if (!this._inMultiSelectMode) {
-                        if (this.gridNode.childNodes.length > 1)
-                            this.setSelection(this.getRowForNode(this.gridNode.childNodes[this.gridNode.childNodes.length - 1]));
-                        else
-                            this.setSelection(null);
-                    }
-                });
-            }
-        },
-
-        nextPage : function() {
-            logger.debug("TreeView.widget.GridView.nextPage");
-            if (this.curpage < Math.ceil(this.count / this.pagesize) -1) {
-                this.curpage += 1;
-                this.fetchAll(function() {
-                    if (!this._inMultiSelectMode) {
-                        this.selectFirstItem();
-                    }
-                });
-            }
-        },
-
-        selectFirstItem : function() {
-            logger.debug("TreeView.widget.GridView.selectFirstItem");
-            if (this.gridNode.childNodes.length > 1)
-                this.setSelection(this.getRowForNode(this.gridNode.childNodes[1]));
-            else
-                this.setSelection(null);
-        },
-
-        setDefaultSelection: function(){
-            logger.debug("TreeView.widget.GridView.setDefaultSelection");
-            if (this.selectfirstrow) {
-                this.selectFirstItem();
-            }
-        },
-
-        grabStartupFocus : function() {
-            logger.debug("TreeView.widget.GridView.grabStartupFocus");
-            if (this.searchenabled)
-                mxui.wm.focus.put(this.searchControl.searchInput.textbox);
-            else
-                this.grabFocus();
-        },
-
-        grabFocus : function() {
-            logger.debug("TreeView.widget.GridView.grabFocus");
-            if (mxui.wm.focus.get() !== this.gridNode)
-                mxui.wm.focus.put(this.gridNode);
-        },
-
-        getIndex : function(node) {
-            logger.debug("TreeView.widget.GridView.getIndex");
-            return typeof node.cellIndex === "number" ? node.cellIndex : dojo.query(node.parentNode).children().indexOf(node);
-        },
-
-        keypress : function(e) {
-            logger.debug("TreeView.widget.GridView.keypress");
-            var record = this.getLastSelection();//this.getRowForNode(e.target);
-            if (record) {
-                var handled = true;
-                switch (e.keyCode) {
-                    case dojo.keys.SPACE:
-                        //TODO: this and arrow up & down needs distinction between selection and focus to work properly!
-                        if (this.allowmultiselect)
-                            if (record.checkbox.checked) {
-                                if (this.hasMultiSelection()) //do not remove last from selection
-                                    this.removeFromSelection(record);
-                            }
-                            else
-                                this.addToSelection(record);
-
-                    case dojo.keys.ENTER:
-                        this.invokeDefaultAction();
-                        break;
-                    case dojo.keys.DOWN_ARROW :
-                        var next = this.getRowForNode(record.domNode.nextElementSibling);
-                        if (next) {
-                            if (!this._inMultiSelectMode)
-                                this.setSelection(next);
-                        }
-                        else
-                            this.nextPage();
-                        break;
-                    case dojo.keys.UP_ARROW :
-                        var prev = this.getRowForNode(record.domNode.previousElementSibling);
-                        if (prev) {
-                            if (!this._inMultiSelectMode)
-                                this.setSelection(prev);
-                        }
-                        else
-                            this.prevPage();
-                        break;
-                    case dojo.keys.PAGE_UP:
-                    case dojo.keys.LEFT_ARROW:
-                        this.prevPage();
-                        break;
-                    case dojo.keys.PAGE_DOWN:
-                    case dojo.keys.RIGHT_ARROW:
-                        this.nextPage();
-                        break;
-                }
-            }
-            if (handled) {
-                dojo.stopEvent(e);
-            }
-        },
-
-        invokeDefaultAction : function() {
-            logger.debug("TreeView.widget.GridView.invokeDefaultAction");
-            for(var i = 0, a = null; a = this.actions[i++];)
-                if (a.actisdefault && a.appliesToSelection())
-                    a.invokeOnSelection();
-        },
-
-        onRowMouseOver : function(target, e) {
-            if (target !== this._hoveredRow) {
-                this._hoveredRow && dojo.removeClass(this._hoveredRow, 'gv_row_hover');
-                dojo.addClass(target, 'gv_row_hover');
-                this._hoveredRow = target;
-            }
-
-            e.preventDefault();
-            dojo.stopEvent(e);
-            return false; //stop further events
-        },
-
-        getRowForNode : function (node) {
-            logger.debug("TreeView.widget.GridView.getRowForNode");
-            if (!node)
-                return null;
-            if (dojo.hasClass(node, "gv_row")) // EvdP: yes, functionality now depends on a classname, but this can only be avoided by using parentNode, which is errorprone for changes.
-                return mxui.dom.data(node, "data");
-            return this.getRowForNode(node.parentNode);
-        },
-
-        labelClick : function(node) {
-            logger.debug("TreeView.widget.GridView.labelClick");
-            var isClose = dojo.hasClass(node, 'gv_label_close');
-            node = node.parentNode;
-
-            //assuming dataset: { owner: record, guid : guid, dataset: this.columneditdataset, colindex: this.colindex }
-            var data = mxui.dom.data(node, "data");
-            var record = data.owner;
-            var guid   = data.guid;
-            var dataset = this.dataset[data.dataset];
-            var rnd    = this.columns[data.colindex];
-            if (!(record && guid && dataset && rnd))
-                this.showError("Unable to handle labelclick!");
-
-            if (isClose)
-                rnd.applyChange(record, guid, true);
-
-            //clicked on a searchable label?
-            else if (dataset === this.dataset[this.searchlabeldataset])
-                this.searchControl.setSearchFilter('', dataset.existingLabelsById[guid]);
-            else {
-                //TODO: onclick label action
-            }
-        },
-
-        columnClick : function(node) {
-            logger.debug("TreeView.widget.GridView.columnClick");
-            var col = mxui.dom.data(node, 'colindex');
-            var record = this.getRowForNode(node);
-
-            this.columns[col].invokeAction(record);
-        },
-
-        setCurrentSortColumn : function(index) {
-            logger.debug("TreeView.widget.GridView.setCurrentSortColumn");
-            if (this.colheads[index].getSortAttr()) {
-                //MWE: note that colhead index is one less the the TH index in the domTree
-                var colnode = this.headerRow.childNodes[index + 1];
-
-                if (index === this.currentSortColumn) {
-                    this.sortInverted = !this.sortInverted;
-                    dojo.removeClass(colnode, 'gv_sort_up gv_sort_down');
-
-                }
-                else {
-                    if (this.currentSortColumn > -1)
-                        dojo.removeClass(this.headerRow.childNodes[this.currentSortColumn +1], 'gv_sortcolumn gv_sort_up gv_sort_down');
-
-                    this.currentSortColumn = index;
-                    this.sortInverted = false;
-                }
-
-                dojo.addClass(colnode, 'gv_sortcolumn ' + ("asc"  === this.colheads[index].getSortDir() ^ this.sortInverted ? 'gv_sort_up' : 'gv_sort_down'));
-                this.resetAndFetchAll();
-            }
-            //else
-            //		this.configError("Invalid (default) sort column. The column does not exists or no sort attribute has been defined");
-        },
-
-        verifyDatasourceSettings : function() {
-            logger.debug("TreeView.widget.GridView.verifyDatasourceSettings");
-            if (this.datasourcemf) {
-                if (!(this.datasourceoffsetattr && this.datasourcelimitattr && this.datasourcecountattr))
-                    this.configError("Offset, Limit and Count attributes need to be set if a data source microflow is used.");
-
-                if (this.searchenabled && !this.datasourcesearchattr)
-                    this.configError("Search attribute s need to be set if a data source microflow is used and search is enabled.");
-
-                if (this.defaultsortcolumn !== 0)
-                    this.configError("Sorting is not supported if a data source microflow is used.");
-
-                if (this.relname)
-                    this.configError("Datasets are not allowed if a datasource microflow is used");
-
-                if (this.filterattr)
-                    this.configError("Filters are not allowed if a datasource microflow is used");
-
-                if (this.entityConstraint)
-                    this.configError("An entity constraint and datasource microflow cannot be used at the same time");
-            }
-        },
-
-        _schema : null,
-        addToSchema : function( attr) {
-            logger.debug("TreeView.widget.GridView.addToSchema");
-            if (!attr)
+    pagingClick : function(e) {
+        logger.debug("TreeView.widget.GridView.pagingClick");
+        if (dojo.hasClass(e.target, "gv_btn_prev")) {
+            this.prevPage();
+        } else if (dojo.hasClass(e.target, "gv_btn_next")) {
+            this.nextPage();
+        } else if (dojo.hasClass(e.target, "gv_btn_page")) {
+            this.curpage = (1 * e.target.innerHTML) - 1;
+        } else {
             return;
+        }
 
-            if (!this._schema)
+        this.fetchAll();
+    },
+
+    prevPage : function() {
+        logger.debug("TreeView.widget.GridView.prevPage");
+        if (this.curpage > 0) {
+            this.curpage -= 1;
+            this.fetchAll(function() {
+                //select last item when going to previous page
+                if (!this._inMultiSelectMode) {
+                    if (this.gridNode.childNodes.length > 1) {
+                        this.setSelection(this.getRowForNode(this.gridNode.childNodes[this.gridNode.childNodes.length - 1]));
+                    } else {
+                        this.setSelection(null);
+                    }
+                }
+            });
+        }
+    },
+
+    nextPage : function() {
+        logger.debug("TreeView.widget.GridView.nextPage");
+        if (this.curpage < Math.ceil(this.count / this.pagesize) -1) {
+            this.curpage += 1;
+            this.fetchAll(function() {
+                if (!this._inMultiSelectMode) {
+                    this.selectFirstItem();
+                }
+            });
+        }
+    },
+
+    selectFirstItem : function() {
+        logger.debug("TreeView.widget.GridView.selectFirstItem");
+        if (this.gridNode.childNodes.length > 1) {
+            this.setSelection(this.getRowForNode(this.gridNode.childNodes[1]));
+        } else {
+            this.setSelection(null);
+        }
+    },
+
+    setDefaultSelection: function(){
+        logger.debug("TreeView.widget.GridView.setDefaultSelection");
+        if (this.selectfirstrow) {
+            this.selectFirstItem();
+        }
+    },
+
+    grabStartupFocus : function() {
+        logger.debug("TreeView.widget.GridView.grabStartupFocus");
+        if (this.searchenabled) {
+            mxui.wm.focus.put(this.searchControl.searchInput.textbox);
+        } else {
+            this.grabFocus();
+        }
+    },
+
+    grabFocus : function() {
+        logger.debug("TreeView.widget.GridView.grabFocus");
+        if (mxui.wm.focus.get() !== this.gridNode) {
+            mxui.wm.focus.put(this.gridNode);
+        }
+    },
+
+    getIndex : function(node) {
+        logger.debug("TreeView.widget.GridView.getIndex");
+        return typeof node.cellIndex === "number" ? node.cellIndex : dojo.query(node.parentNode).children().indexOf(node);
+    },
+
+    keypress : function(e) {
+        logger.debug("TreeView.widget.GridView.keypress");
+        var record = this.getLastSelection(), //this.getRowForNode(e.target);
+        handled = false;
+        if (record) {
+            handled = true;
+            switch (e.keyCode) {
+                case dojo.keys.SPACE:
+                //TODO: this and arrow up & down needs distinction between selection and focus to work properly!
+                if (this.allowmultiselect)
+                if (record.checkbox.checked) {
+                    if (this.hasMultiSelection()) { //do not remove last from selection
+                        this.removeFromSelection(record);
+                    }
+                } else {
+                    this.addToSelection(record);
+                }
+                break;
+                case dojo.keys.ENTER:
+                this.invokeDefaultAction();
+                break;
+                case dojo.keys.DOWN_ARROW :
+                var next = this.getRowForNode(record.domNode.nextElementSibling);
+                if (next) {
+                    if (!this._inMultiSelectMode) {
+                        this.setSelection(next);
+                    }
+                }
+                else
+                this.nextPage();
+                break;
+                case dojo.keys.UP_ARROW :
+                var prev = this.getRowForNode(record.domNode.previousElementSibling);
+                if (prev) {
+                    if (!this._inMultiSelectMode) {
+                        this.setSelection(prev);
+                    }
+                } else {
+                    this.prevPage();
+                }
+                break;
+                case dojo.keys.PAGE_UP:
+                case dojo.keys.LEFT_ARROW:
+                this.prevPage();
+                break;
+                case dojo.keys.PAGE_DOWN:
+                case dojo.keys.RIGHT_ARROW:
+                this.nextPage();
+                break;
+            }
+        }
+        if (handled) {
+            dojo.stopEvent(e);
+        }
+    },
+
+    invokeDefaultAction : function() {
+        logger.debug("TreeView.widget.GridView.invokeDefaultAction");
+        for (var i = 0, a = null; a = this.actions[i++];) {
+            if (a.actisdefault && a.appliesToSelection()) {
+                a.invokeOnSelection();
+            }
+        }
+    },
+
+    onRowMouseOver : function(target, e) {
+        if (target !== this._hoveredRow) {
+            this._hoveredRow && dojo.removeClass(this._hoveredRow, "gv_row_hover");
+            dojo.addClass(target, "gv_row_hover");
+            this._hoveredRow = target;
+        }
+
+        e.preventDefault();
+        dojo.stopEvent(e);
+        return false; //stop further events
+    },
+
+    getRowForNode : function (node) {
+        logger.debug("TreeView.widget.GridView.getRowForNode");
+        if (!node) {
+            return null;
+        }
+        if (dojo.hasClass(node, "gv_row")) { // EvdP: yes, functionality now depends on a classname, but this can only be avoided by using parentNode, which is errorprone for changes.
+            return mxui.dom.data(node, "data");
+        }
+        return this.getRowForNode(node.parentNode);
+    },
+
+    labelClick : function(node) {
+        logger.debug("TreeView.widget.GridView.labelClick");
+        var isClose = dojo.hasClass(node, "gv_label_close");
+        node = node.parentNode;
+
+        //assuming dataset: { owner: record, guid : guid, dataset: this.columneditdataset, colindex: this.colindex }
+        var data = mxui.dom.data(node, "data");
+        var record = data.owner;
+        var guid   = data.guid;
+        var dataset = this.dataset[data.dataset];
+        var rnd    = this.columns[data.colindex];
+        if (!(record && guid && dataset && rnd)) {
+            this.showError("Unable to handle labelclick!");
+        }
+
+        if (isClose) {
+            rnd.applyChange(record, guid, true);
+        }
+
+        //clicked on a searchable label?
+        else if (dataset === this.dataset[this.searchlabeldataset]) {
+            this.searchControl.setSearchFilter("", dataset.existingLabelsById[guid]);
+        } else {
+            //TODO: onclick label action
+        }
+    },
+
+    columnClick : function(node) {
+        logger.debug("TreeView.widget.GridView.columnClick");
+        var col = mxui.dom.data(node, "colindex"),
+        record = this.getRowForNode(node);
+
+        this.columns[col].invokeAction(record);
+    },
+
+    setCurrentSortColumn : function(index) {
+        logger.debug("TreeView.widget.GridView.setCurrentSortColumn");
+        if (this.colheads[index].getSortAttr()) {
+            //MWE: note that colhead index is one less the the TH index in the domTree
+            var colnode = this.headerRow.childNodes[index + 1];
+
+            if (index === this.currentSortColumn) {
+                this.sortInverted = !this.sortInverted;
+                dojo.removeClass(colnode, "gv_sort_up gv_sort_down");
+
+            } else {
+                if (this.currentSortColumn > -1) {
+                    dojo.removeClass(this.headerRow.childNodes[this.currentSortColumn +1], "gv_sortcolumn gv_sort_up gv_sort_down");
+                }
+
+                this.currentSortColumn = index;
+                this.sortInverted = false;
+            }
+
+            dojo.addClass(colnode, "gv_sortcolumn " + ("asc"  === this.colheads[index].getSortDir() ^ this.sortInverted ? "gv_sort_up" : "gv_sort_down"));
+            this.resetAndFetchAll();
+        }
+        //else
+        //		this.configError("Invalid (default) sort column. The column does not exists or no sort attribute has been defined");
+    },
+
+    verifyDatasourceSettings : function() {
+        logger.debug("TreeView.widget.GridView.verifyDatasourceSettings");
+        if (this.datasourcemf) {
+            if (!(this.datasourceoffsetattr && this.datasourcelimitattr && this.datasourcecountattr)) {
+                this.configError("Offset, Limit and Count attributes need to be set if a data source microflow is used.");
+            }
+
+            if (this.searchenabled && !this.datasourcesearchattr) {
+                this.configError("Search attribute s need to be set if a data source microflow is used and search is enabled.");
+            }
+
+            if (this.defaultsortcolumn !== 0) {
+                this.configError("Sorting is not supported if a data source microflow is used.");
+            }
+
+            if (this.relname) {
+                this.configError("Datasets are not allowed if a datasource microflow is used");
+            }
+
+            if (this.filterattr) {
+                this.configError("Filters are not allowed if a datasource microflow is used");
+            }
+
+            if (this.entityConstraint) {
+                this.configError("An entity constraint and datasource microflow cannot be used at the same time");
+            }
+        }
+    },
+
+    _schema : null,
+    addToSchema : function( attr) {
+        logger.debug("TreeView.widget.GridView.addToSchema");
+        if (!attr) { return; }
+
+        if (!this._schema) {
             this._schema = { references : {}, attributes : [] };
+        }
 
-            if (attr.indexOf("/") > -1) {
+        if (attr.indexOf("/") > -1) {
 
-                var parts = attr.split("/");
+            var parts = attr.split("/");
 
-                if (!(parts[0] in this._schema.references))
+            if (!(parts[0] in this._schema.references)) {
                 this._schema.references[parts[0]] = { attributes : []};
+            }
 
-                if (parts.length > 2)
+            if (parts.length > 2) {
                 this._schema.references[parts[0]].attributes.push(parts[2]);
             }
-            else {
-                this._schema.attributes.push(attr);
-            }
-        },
-
-        showError : function(e) {
-            logger.debug("TreeView.widget.GridView.showError");
-            Commons.error(e, this);
-        },
-
-        mf : function(mf, data, callback) {
-            logger.debug("TreeView.widget.GridView.mf");
-            Commons.mf(mf, data, callback, this);
-        },
-
-        configError : function(msg) {
-            logger.debug("TreeView.widget.GridView.configError");
-            Commons.configError(this, msg);
-        },
-
-        splitPropsTo : function(props, target) {
-            logger.debug("TreeView.widget.GridView.splitPropsTo");
-            Commons.splitPropsTo(this, props, target);
+        } else {
+            this._schema.attributes.push(attr);
         }
-    });
+    },
+
+    showError : function(e) {
+        logger.debug("TreeView.widget.GridView.showError");
+        Commons.error(e, this);
+    },
+
+    mf : function(mf, data, callback) {
+        logger.debug("TreeView.widget.GridView.mf");
+        Commons.mf(mf, data, callback, this);
+    },
+
+    configError : function(msg) {
+        logger.debug("TreeView.widget.GridView.configError");
+        Commons.configError(this, msg);
+    },
+
+    splitPropsTo : function(props, target) {
+        logger.debug("TreeView.widget.GridView.splitPropsTo");
+        Commons.splitPropsTo(this, props, target);
+    }
+});
 });

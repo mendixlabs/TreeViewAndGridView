@@ -10,7 +10,7 @@ define([
 
     return declare("TreeView.widget.TreeView.Edge", null, {
         parent: null, //Graphnode
-        name: '', //assocname
+        name: "", //assocname
         child: null, //Graphnode
         owner: null, //Graphnode, either parent or child
         type: null, //type in tree
@@ -30,8 +30,9 @@ define([
 
             //add the node for every known parent
             parent.forNodes(function (parentRenderNode) {
-                if (parentRenderNode.children[type.index].collapsed == false) //already expanded parent, add this edge..
+                if (parentRenderNode.children[type.index].collapsed == false){ //already expanded parent, add this edge..
                     new RenderNode(child, parentRenderNode, type);
+                }
             });
         },
 
@@ -52,8 +53,9 @@ define([
 
         free: function () {
             logger.debug("TreeView.widget.Edge.free");
-            if (this._destroyed)
+            if (this._destroyed){
                 return;
+            }
             this._destroyed = true;
 
             //1. remove the corresponding child render nodes for every know parent, but only where the parent is the parent of this edge!

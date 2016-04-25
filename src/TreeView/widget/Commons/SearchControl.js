@@ -31,10 +31,10 @@ define([
 
         _setupLayout: function () {
             this.domNode = mxui.dom.create("div", {
-                'class': 'gv_searchBar'
+                "class": "gv_searchBar"
             });
 
-            this.labelContainer = mxui.dom.create("div", {'class': 'gv_searchLabelContainer'});
+            this.labelContainer = mxui.dom.create("div", {"class": "gv_searchLabelContainer"});
             dojo.place(this.labelContainer, this.domNode);
         },
 
@@ -58,7 +58,7 @@ define([
             this.searchInput = new ComboBox({
                 store: this.dataset, //MWE: TODO: works if null?
                 queryExpr: "${0}",
-                searchAttr: 'name',
+                searchAttr: "name",
                 searchDelay: 0,
                 tabIndex: 0,
                 hasDownArrow: false,
@@ -68,33 +68,30 @@ define([
                     if (e.keyCode == dojo.keys.DOWN_ARROW && !this.hasDataset && this.widget.selectFirstItem) { //MWE on arrow down, put focus on grid, but only if no labels are used
                         this.widget.selectFirstItem();
                         this.widget.grabFocus();
-                    }
-                    else if (e.keyCode == dojo.keys.ENTER) {
+                    } else if (e.keyCode == dojo.keys.ENTER) {
                         if (this.searchInput.item != null)
                             this.setSearchFilter("", this.searchInput.item);
                         else {
                             this.setSearchFilter(this.searchInput.get("value"), null);
                         }
-                    }
-                    else if (e.keyCode == dojo.keys.TAB) {
+                    } else if (e.keyCode == dojo.keys.TAB) {
                         if (this.searchInput.item != null) { //do not tab away if tab is used to select an item
                             this.setSearchFilter("", this.searchInput.item);
                             dojo.stopEvent(e);
                         }
-                    }
-                    else if (e.keyCode == dojo.keys.SPACE) {
+                    } else if (e.keyCode == dojo.keys.SPACE) {
                         var name = dojo.trim(this.searchInput.get("value").toLowerCase());
                         for (key in this.existingLabels) //check whether first part is an label, recognize it.
                             if (name == key) {
                                 this.setSearchFilter("", this.existingLabels[key]);
                                 break;
                             }
-                    }
-                    else if (this.realtime) {
-                        if (!this._isSearching)
+                    } else if (this.realtime) {
+                        if (!this._isSearching) {
                             this.setSearchFilter(this.searchInput.get("value"), null);
-                        else
+                        } else {
                             this._searchPending = true;
+                        }
                     }
                 }),
 
@@ -105,39 +102,41 @@ define([
                 }),
 
                 resize: function () {
-                    
+
                 }
             });
 
             this.searchInput.loadDropDown();
-            dojo.addClass(this.searchInput.dropDown.domNode, 'gv_search_labeldropdownmenu');
+            dojo.addClass(this.searchInput.dropDown.domNode, "gv_search_labeldropdownmenu");
 
             var tb = this.searchInput.textbox;
             var self = this;
 
             tb.value = this.searchplaceholder;
-            dojo.addClass(tb, 'tg_search_placeholder');
+            dojo.addClass(tb, "tg_search_placeholder");
 
-            this.widget.connect(tb, 'onfocus', function () {
-                if (self.searchplaceholder == tb.value)
-                    tb.value = '';
-                dojo.removeClass(tb, 'tg_search_placeholder');
+            this.widget.connect(tb, "onfocus", function () {
+                if (self.searchplaceholder == tb.value){
+                    tb.value = "";
+                }
+                dojo.removeClass(tb, "tg_search_placeholder");
             });
 
-            this.widget.connect(tb, 'onblur', function () {
-                if ('' == tb.value && self.searchlabel == null) {
+            this.widget.connect(tb, "onblur", function () {
+                if ("" == tb.value && self.searchlabel == null) {
                     tb.value = self.searchplaceholder;
-                    dojo.addClass(tb, 'tg_search_placeholder');
+                    dojo.addClass(tb, "tg_search_placeholder");
                 }
             });
 
             dojo.place(this.searchInput.domNode, this.domNode);
 
-            //this.connect(this.searchSubmit, 'onclick', dojo.hitch(this, this.performSearch));
-            // this.connect(this.searchReset, 'onclick', dojo.hitch(this, this.resetAndFetchAll));
-            this.widget.connect(this.labelContainer, 'onclick', dojo.hitch(this, function (evt) {
-                if (dojo.hasClass(evt.target, 'gv_label_close'))
+            //this.connect(this.searchSubmit, "onclick", dojo.hitch(this, this.performSearch));
+            // this.connect(this.searchReset, "onclick", dojo.hitch(this, this.resetAndFetchAll));
+            this.widget.connect(this.labelContainer, "onclick", dojo.hitch(this, function (evt) {
+                if (dojo.hasClass(evt.target, "gv_label_close")){
                     this.setSearchFilter(this.searchInput.get("value"), null);//remove the label selection
+                }
             }));
 
 
@@ -178,13 +177,14 @@ define([
             //search for term xpath
             var xpath = "";
 
-            if (!searchAttrs.length)
+            if (!searchAttrs.length){
                 this.widget.configError("No search attributes defined!");
+            }
 
             if (this.searchfilter) {
                 var filtervalues = dojo.map(this.searchfilter.split(/\s+/), mxui.html.escapeQuotes);
 
-                if (typeof limit !== 'undefined' && filtervalues.length > limit) {
+                if (typeof limit !== "undefined" && filtervalues.length > limit) {
                     filtervalues.splice(limit, filtervalues.length - limit);
                 }
 
@@ -196,14 +196,17 @@ define([
                     }, this).join(") and (") + ")]";
             }
 
-            if (this.searchlabel != null)
+            if (this.searchlabel != null){
                 xpath += "[" + this.dataset.getAssoc() + " = '" + this.searchlabel.getGuid() + "']";
+            }
 
             return xpath;
         },
 
         free: function () {
-            this.searchInput && this.searchInput.destroy();
+            if (this.searchInput) {
+                 this.searchInput.destroy();
+            }
         }
     });
 });

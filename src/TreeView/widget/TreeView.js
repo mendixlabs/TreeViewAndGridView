@@ -9,7 +9,7 @@ require([
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
 ], function(declare, _WidgetBase, _Scriptable, Commons, ColRenderer, Edge, GraphNode, Action) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.TreeView", [_WidgetBase, _Scriptable], {
         root: null, //render node
@@ -29,69 +29,69 @@ require([
         inputargs: {
             //data model properties
             tabindex: -1,
-            entity: '',
-            parentassocsingle: '',
-            parentassocmulti: '',
-            assoctype: '',
-            assoccaption: '',
-            showassocname: '',
-            constraint: '',
-            allowdnd: '',
-            allowdndcopy: '',
-            dropmf: '',
-            assocclazz: '',
-            assocstyle: '',
+            entity: "",
+            parentassocsingle: "",
+            parentassocmulti: "",
+            assoctype: "",
+            assoccaption: "",
+            showassocname: "",
+            constraint: "",
+            allowdnd: "",
+            allowdndcopy: "",
+            dropmf: "",
+            assocclazz: "",
+            assocstyle: "",
 
             //display properties
-            columnname: '',
-            columnentity: '',
-            columnrendermode: '',
-            columnattr: '',
-            columnimage: '',
-            columnaction: '',
-            columnclazz: '',
-            columnstyle: '',
-            columndateformat: '',
-            columnprefix: '',
-            columnpostfix: '',
-            columntruecaption: '',
-            columnfalsecaption: '',
+            columnname: "",
+            columnentity: "",
+            columnrendermode: "",
+            columnattr: "",
+            columnimage: "",
+            columnaction: "",
+            columnclazz: "",
+            columnstyle: "",
+            columndateformat: "",
+            columnprefix: "",
+            columnpostfix: "",
+            columntruecaption: "",
+            columnfalsecaption: "",
 
             //action properties
-            actname: '',
-            actentity: '',
-            actshowbutton: '',
-            actautohide: '',
-            actbuttoncaption: '',
-            actbuttonimage: '',
-            actconfirmtext: '',
-            actmf: '',
-            actisdefault: '',
-            actonselect: '',
-            actnoselectionmf: '',
-            actshortcut: '',
-            actprogressmsg: '',
+            actname: "",
+            actentity: "",
+            actshowbutton: "",
+            actautohide: "",
+            actbuttoncaption: "",
+            actbuttonimage: "",
+            actconfirmtext: "",
+            actmf: "",
+            actisdefault: "",
+            actonselect: "",
+            actnoselectionmf: "",
+            actshortcut: "",
+            actprogressmsg: "",
 
             //Selection references
-            selectionref: '',
+            selectionref: "",
 
             //advanced settings
-            xentity: '',
-            xburstattr: '',
-            xlisteningform: '',
-            sortattr: '',
-            sortdir: '',
-            entityclazz: '',
-            entitystyle: '',
-            entitychannel: '',
+            xentity: "",
+            xburstattr: "",
+            xlisteningform: "",
+            sortattr: "",
+            sortdir: "",
+            entityclazz: "",
+            entitystyle: "",
+            entitychannel: "",
             allowmultiselect: false,
-            selectionrefset: '',
+            selectionrefset: "",
 
             //general properties
             expandall: 1,
             prefetch: true,
             hiderootnode: true,
-            expandmode: 'arrow', //arrow | row | accordion
+            expandmode: "arrow", //arrow | row | accordion
             multiselect: false
         },
 
@@ -112,9 +112,9 @@ require([
         },
 
         postCreate: function() {
-            Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"])
+            Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"]);
 
-            this.splitPropsTo('xentity,xburstattr,sortattr,sortdir,entityclazz,entitystyle,entitychannel', this.xsettings);
+            this.splitPropsTo("xentity,xburstattr,sortattr,sortdir,entityclazz,entitystyle,entitychannel", this.xsettings);
             for (var i = 0; i < this.xsettings.length; i++) {
                 var x = this.xsettings[i];
                 x.entitystyle = x.entitystyle.split(/\||\n/).join(";");
@@ -124,21 +124,24 @@ require([
                 this.addToSchema(x.xentity, x.sortattr);
 
                 if (x.entitychannel) {
-                    this.connect(this, 'onSelect', dojo.hitch(this, function (channel, entity, selection) {
-                        if (selection != null && selection.isA(entity))
+                    var onSelectHandler =
+                    this.connect(this, "onSelect", dojo.hitch(this, function (channel, entity, selection) {
+                        if (selection != null && selection.isA(entity)) {
                             // KVL: This used to use this.getContent() as the first part, but that no longer exists.
                             // Not sure what the alternative is, so we might want to look into that...
                             dojo.publish("/" + channel + "/context", [selection.data()]);
-                        else
+                        } else {
                             // KVL: This used to use this.getContent() as the first part, but that no longer exists.
                             // Not sure what the alternative is, so we might want to look into that...
                             dojo.publish("/" + channel + "/context", [null]);
+                        }
                     }, x.entitychannel, x.xentity));
                 }
             }
 
-            if (this.selectionref && this.selectionref != '')
-                this.selectionrefs = this.selectionref.split(';');
+            if (this.selectionref && this.selectionref != "") {
+                this.selectionrefs = this.selectionref.split(";");
+            }
 
             this.offerInterface("close");
 
@@ -156,14 +159,16 @@ require([
             logger.debug("TreeView.widget.TreeView.update");
 
             var guid = (data && data !== undefined) ? data.getGuid() : null;
-            if (this.root != null && this.root.guid == guid) //already the root, just refresh
+            if (this.root != null && this.root.guid == guid) { //already the root, just refresh
                 this.processData([data]);
-            else {
-                if (!this.getXsettings(data.getEntity()))
-                    this.configError("The context of this widget is a '" + data.getEntity() + ", but this type is not further defined in the entities property of the treeview");
+            } else {
+                if (!this.getXsettings(data.getEntity())) {
+                    this.configError("The context of this widget is a '" + data.getEntity() + "', but this type is not further defined in the entities property of the treeview");
+                }
 
-                if (this.root)
+                if (this.root) {
                     this.root.free();
+                }
 
                 this.dict[guid] = new GraphNode(this, data, true);
                 this.root.forNodes(function (node) {
@@ -182,10 +187,13 @@ require([
 
         uninitialize: function () {
             logger.debug("TreeView.widget.TreeView.uninitialize");
-            this.root && this.root.free();
+            if (this.root) {
+                this.root.free();
+            }
 
-            if (this.searchControl)
+            if (this.searchControl) {
                 this.searchControl.free();
+            }
 
             dojo.forEach(this.columns, function (column) {
                 column.free();
@@ -202,6 +210,11 @@ require([
 
         },
 
+
+        resize: function () {
+            // stub function
+        },
+
         resumed: function () {
             logger.debug("TreeView.widget.TreeView.resumed");
             //reapply selection to continue formloader
@@ -212,12 +225,13 @@ require([
 
         _setupLayout: function () {
             logger.debug("TreeView.widget.TreeView._setupLayout");
-            dojo.addClass(this.domNode, 'gg_tree');
-            this.headerNode = mxui.dom.create("div", {'class': 'gg_header'});
+            dojo.addClass(this.domNode, "gg_tree");
+            this.headerNode = mxui.dom.create("div", {"class": "gg_header"});
 
-            this.treeNode = mxui.dom.create("ul", {'class': 'gg_children gg_root_wrapper'});
-            if (this.hiderootnode)
-                dojo.addClass(this.treeNode, 'gg_hiddenroot');
+            this.treeNode = mxui.dom.create("ul", {"class": "gg_children gg_root_wrapper"});
+            if (this.hiderootnode) {
+                dojo.addClass(this.treeNode, "gg_hiddenroot");
+            }
 
             dojo.place(this.headerNode, this.domNode);
             dojo.place(this.treeNode, this.domNode);
@@ -232,7 +246,7 @@ require([
         _setupActions: function () {
             logger.debug("TreeView.widget.TreeView._setupActions");
             var data = [];
-            this.splitPropsTo('actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf', data);
+            this.splitPropsTo("actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf", data);
             for (var i = 0, d = null; d = data[i]; i++) {
                 var action = new Action(d, this);
                 this.actions.push(action);
@@ -247,11 +261,11 @@ require([
 
         _setupTypes: function () {
             logger.debug("TreeView.widget.TreeView._setupTypes");
-            this.splitPropsTo('entity,parentassocsingle,parentassocmulti,constraint,sortattr,sortdir,assoctype,assoccaption,showassocname,allowdnd,allowdndcopy,dropmf,assocclazz,assocstyle', this.types);
+            this.splitPropsTo("entity,parentassocsingle,parentassocmulti,constraint,sortattr,sortdir,assoctype,assoccaption,showassocname,allowdnd,allowdndcopy,dropmf,assocclazz,assocstyle", this.types);
             var i = 0;
             dojo.forEach(this.types, function (type) {
                 //more householding
-                type.isRefset = type.parentassocsingle == '';
+                type.isRefset = type.parentassocsingle == "";
                 type.assoc = type.isRefset ? type.parentassocmulti : type.parentassocsingle;
 
                 type.index = i++;
@@ -274,8 +288,8 @@ require([
 
                 type.assoc = type.assoc.split("/")[0];
 
-                //swap entity types if assoctype is 'from parent'
-                if (type.assoctype == 'fromparent') {
+                //swap entity types if assoctype is "from parent"
+                if (type.assoctype == "fromparent") {
                     var e = type.entity;
                     type.entity = type.parententity;
                     type.parententity = e;
@@ -283,7 +297,7 @@ require([
 
                 type.recursive = mx.meta.getEntity(type.entity).isA(type.parententity);
 
-                type.assocstyle = type.assocstyle ? type.assocstyle.split(/\||\n/).join(";") : '';
+                type.assocstyle = type.assocstyle ? type.assocstyle.split(/\||\n/).join(";") : "";
 
                 this.useDnd |= type.allowdnd;
             }, this);
@@ -292,7 +306,7 @@ require([
         _setupColumns: function () {
             logger.debug("TreeView.widget.TreeView._setupColumns");
             var data = [];
-            this.splitPropsTo('columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption', data);
+            this.splitPropsTo("columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption", data);
             for (var i = 0, d = null; d = data[i]; i++) {
                 this.columns.push(new ColRenderer(d, this, i));
                 if (d.columnaction && !(d.columnaction in this.actionsByName))
@@ -300,8 +314,9 @@ require([
 
                 if (d.columnrendermode == "thumbnail" || d.columnrendermode == "systemimage") {
                     //Add fileID and changedDate to schema
-                    if (d.columnattr == "")
+                    if (d.columnattr == "") {
                         this.addToSchema(d.columnentity, "FileID");
+                    }
 
                     this.addToSchema(d.columnentity, d.columnattr.replace(/FileID/, "") + "changedDate");
                 }
@@ -323,8 +338,9 @@ require([
         setSelection: function (renderNode) {
             logger.debug("TreeView.widget.TreeView.setSelection");
             if (renderNode != this._selection) {
-                if (!this._parent && renderNode)
+                if (!this._parent && renderNode) {
                     this._parent = renderNode.parent;
+                }
 
                 if (this._selection && this._parent != this._selection) {
                     this.testreferences(this._selection);
@@ -332,12 +348,12 @@ require([
 
                 //remove old styling
                 if (this._selection && this._selection.domNode)
-                    dojo.removeClass(this._selection.domNode, 'gg_selected');
+                    dojo.removeClass(this._selection.domNode, "gg_selected");
 
                 //set new selection and styling
                 this._selection = renderNode;
                 if (renderNode) {
-                    dojo.addClass(this._selection.domNode, 'gg_selected');
+                    dojo.addClass(this._selection.domNode, "gg_selected");
                     dojo.window.scrollIntoView(renderNode.domNode);
                 }
 
@@ -358,10 +374,10 @@ require([
             logger.debug("TreeView.widget.TreeView.testreferences");
             if (this.selectionrefs) {
                 for (i = 0; i < this.selectionrefs.length; i++) {
-                    if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf('/') == -1) {
+                    if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf("/") == -1) {
                         Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
-                    } else if (this.selectionrefs[i].indexOf('/') > -1) {
-                        var patharr = this.selectionrefs[i].split('/');
+                    } else if (this.selectionrefs[i].indexOf("/") > -1) {
+                        var patharr = this.selectionrefs[i].split("/");
                         var refentity = patharr[patharr.length - 1];
                         if (refentity.indexOf(node.graphNode.type) > -1) {
                             Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
@@ -386,8 +402,9 @@ require([
 
         getSelection: function (allowEdge) {
             logger.debug("TreeView.widget.TreeView.getSelection");
-            if (this._selection && this._selection.isEdge && !allowEdge)
+            if (this._selection && this._selection.isEdge && !allowEdge) {
                 return this._selection.parent;
+            }
             return this._selection;
         },
 
@@ -425,7 +442,7 @@ require([
             if (!this.edgesByParent[parent.guid][type.index])
                 this.edgesByParent[parent.guid][type.index] = {};
 
-            var place = this.edgesByParent[parent.guid][type.index]
+            var place = this.edgesByParent[parent.guid][type.index];
 
             if (child.guid in place)
                 return place[child.guid];
@@ -467,16 +484,18 @@ require([
             logger.debug("TreeView.widget.TreeView.getXsettings");
             var meta = mx.meta.getEntity(entity);
             for (var i = 0, x = null; x = this.xsettings[i]; i++) {
-                if (meta.isA(x.xentity))
+                if (meta.isA(x.xentity)) {
                     return x;
+                }
             }
             return this.configError("TreeView config error: No Entity settings found for type: " + entity);
         },
 
         getEdgesOwnedBy: function (owner) {
             logger.debug("TreeView.widget.TreeView.getEdgesOwnedBy");
-            if (!(owner.guid in this.edgesByOwner)) //might not be available yet
+            if (!(owner.guid in this.edgesByOwner)) { //might not be available yet
                 this.edgesByOwner[owner.guid] = [];
+            }
 
             return this.edgesByOwner[owner.guid];
         },
@@ -492,8 +511,9 @@ require([
         selectFirstItem: function () {
             logger.debug("TreeView.widget.TreeView.selectFirstItem");
             if (!this.hiderootnode) {
-                if (this.root && this.root.nodes.length > 0)
+                if (this.root && this.root.nodes.length > 0) {
                     this.setSelection(this.root.nodes[0]);
+                }
             }
             //select first child
             else {
@@ -502,8 +522,9 @@ require([
                     var edge = edges[0];
                     this.root.ensureChildren(edge, dojo.hitch(this, function () {
                         var firstRefChildren = this.root.nodes[0].children[edge.index].children;
-                        if (firstRefChildren.length > 0)
+                        if (firstRefChildren.length > 0) {
                             this.setSelection(firstRefChildren[0]);
+                        }
                     }));
                 }
             }
@@ -519,10 +540,11 @@ require([
                 else {
                     var g = new GraphNode(this, mxobj, false);
                     if (this._recordSelectionSuggestion) {
-                        if (!this._selectionSuggestions)
+                        if (!this._selectionSuggestions) {
                             this._selectionSuggestions = [g];
-                        else
+                        } else {
                             this._selectionSuggestions.push(g);
+                        }
                     }
                 }
                 //TODO: pass index along to the appropriate edges...
@@ -572,8 +594,9 @@ require([
 
         grabFocus: function () {
             logger.debug("TreeView.widget.TreeView.grabFocus");
-            if (mxui.wm.focus.get() != this.treeNode)
+            if (mxui.wm.focus.get() != this.treeNode) {
                 mxui.wm.focus.put(this.treeNode);
+            }
         },
 
         _setupEvents: function () {
@@ -590,14 +613,15 @@ require([
                     this.setSelection(mxui.dom.data(node, "ggdata"));
 
                     //expand if a row is clicked somewhere (but avoid folding twice if foldnode is clicked)
-                    if (this.expandmode == 'row' && !dojo.hasClass(e.target, 'gg_nodefold'))
+                    if (this.expandmode == "row" && !dojo.hasClass(e.target, "gg_nodefold")) {
                         this.foldNodeClick(node);
+                    }
                 }
             });
 
             lc(this, this.treeNode, "ondblclick", {
                 "gg_node": function (target, e) {
-                    if (!(dojo.hasClass(e.target, 'gg_fold'))) //do not handle doubleclicks on fold nodes //TODO:nor clickables?
+                    if (!(dojo.hasClass(e.target, "gg_fold"))) //do not handle doubleclicks on fold nodes //TODO:nor clickables?
                         this.invokeDefaultAction(target, e);
                 }
             });
@@ -605,14 +629,16 @@ require([
             lc(this, this.treeNode, "onmouseover", {
                 "gg_column_wrapper": function (target, e) {
                     if (!this.dnd.isdragging && target != this._hoveredCol) {
-                        this.hoveredCol && dojo.removeClass(this.hoveredCol, 'gg_col_hover');
-                        dojo.addClass(target, 'gg_col_hover');
+                        if (this.hoveredCol) {
+                            dojo.removeClass(this.hoveredCol, "gg_col_hover");
+                        }
+                        dojo.addClass(target, "gg_col_hover");
                         this.hoveredCol = target;
                     }
                     return true;
                 },
                 "gg_fold": function (target, e) {
-                    dojo.addClass(target.parentNode, 'gg_fold_hover');
+                    dojo.addClass(target.parentNode, "gg_fold_hover");
                     return true;
                 },
                 "gg_node": this.onRowMouseOver,
@@ -625,7 +651,7 @@ require([
 
             lc(this, this.treeNode, "onmouseout", {
                 "gg_fold": function (target, e) {
-                    dojo.removeClass(target.parentNode, 'gg_fold_hover');
+                    dojo.removeClass(target.parentNode, "gg_fold_hover");
                     return true;
                 }
             });
@@ -640,16 +666,18 @@ require([
 
             this.connect(this.treeNode, "onkeypress", this.keypress);
 
-            if (this.expandmode == 'accordion')
-                dojo.connect(this, 'onSelect', this.updateAccordionForSelection);
+            if (this.expandmode == "accordion") {
+                dojo.connect(this, "onSelect", this.updateAccordionForSelection);
+            }
         },
 
         _getRenderNodeForNode: function (node) {
             logger.debug("TreeView.widget.TreeView._getRenderNodeForNode");
             while (node != null) {
-                if (dojo.hasClass(node, 'gg_node')) {
-                    if (node == this.dnd.tmpnode)
+                if (dojo.hasClass(node, "gg_node")) {
+                    if (node == this.dnd.tmpnode) {
                         return this.dnd.target;
+                    }
                     return mxui.dom.data(node, "ggdata");
                 }
                 node = node.parentNode;
@@ -660,9 +688,10 @@ require([
 
         keypress: function (e) {
             logger.debug("TreeView.widget.TreeView.keypress");
-            var sel = this.getSelection(true);
+            var sel = this.getSelection(true),
+                handled = false;
             if (sel) {
-                var handled = true;
+                handled = true;
                 switch (e.keyCode) {
                     case dojo.keys.ENTER:
                         this.invokeDefaultAction();
@@ -670,75 +699,78 @@ require([
                     case dojo.keys.DOWN_ARROW :
                         if (e.ctrlKey == true) {
                             //TODO: swap
-                        }
-                        else {
+                        }  else {
                             //next one is a child
-                            var fc = this._getRenderNodeForNode(this.findNextNode(sel.domNode, 'gg_node', this.treeNode));
+                            var fc = this._getRenderNodeForNode(this.findNextNode(sel.domNode, "gg_node", this.treeNode));
 
-                            if (fc != null)
+                            if (fc != null) {
                                 this.setSelection(fc);
+                            }
                         }
                         break;
                     case dojo.keys.UP_ARROW :
                         if (e.ctrlKey == true) {
                             //TODO: swap
-                        }
-                        else {
-                            var prev = this._getRenderNodeForNode(this.findPreviousNode(sel.domNode, 'gg_node', this.treeNode));
-                            if (prev)
+                        } else {
+                            var prev = this._getRenderNodeForNode(this.findPreviousNode(sel.domNode, "gg_node", this.treeNode));
+                            if (prev) {
                                 this.setSelection(prev);
+                            }
                         }
                         break;
                     case dojo.keys.LEFT_ARROW:
                         if (e.ctrlKey == false) {
-                            if (!sel.collapsed)
+                            if (!sel.collapsed) {
                                 sel.setCollapsed(true);
-                            else if (sel.getVisibleParent())
+                            } else if (sel.getVisibleParent()) {
                                 this.setSelection(sel.getVisibleParent());
-                        }
-                        else
+                            }
+                        } else {
                             this.itemIndent(this.getSelection(), true); //TODO:
+                        }
                         break;
                     case dojo.keys.RIGHT_ARROW:
                         if (e.ctrlKey == false) {
-                            if (sel.collapsed)
+                            if (sel.collapsed) {
                                 sel.setCollapsed(false);
-                            else {
-                                var fs = this._getRenderNodeForNode(this.findNextNode(sel.domNode, 'gg_node', this.treeNode));
+                            } else {
+                                var fs = this._getRenderNodeForNode(this.findNextNode(sel.domNode, "gg_node", this.treeNode));
                                 if (fs)
                                     this.setSelection(fs);
                             }
+                        } else {
+                            this.itemIndent(this.getSelection(), false); //TODO
                         }
-                        else
-                            this.itemIndent(this.getSelection(), false); //TODO:
                         break;
                     default :
                         if (e.charCode == dojo.keys.SPACE) {
                             sel.setCollapsed(!sel.collapsed);
-                        }
-                        else {
+                        } else {
                             handled = false;
                         }
                         break;
                 }
             }
-            if (handled)
+            if (handled) {
                 dojo.stopEvent(e);
+            }
         },
 
         invokeDefaultAction: function () {
             logger.debug("TreeView.widget.TreeView.invokeDefaultAction");
-            for (var i = 0, a = null; a = this.actions[i++];)
-                if (a.actisdefault && a.appliesToSelection())
+            for (var i = 0, a = null; a = this.actions[i++];) {
+                if (a.actisdefault && a.appliesToSelection()) {
                     a.invokeOnSelection();
+                }
+            }
         },
 
         onRowMouseOver: function (target, e) {
             //logger.debug("TreeView.widget.TreeView.onRowMouseOver");
             //		console.log("over");
             if (!this.dnd.isdragging && target != this._hoveredRow) {
-                this._hoveredRow && dojo.removeClass(this._hoveredRow, 'gg_row_hover');
-                dojo.addClass(target, 'gg_row_hover');
+                this._hoveredRow && dojo.removeClass(this._hoveredRow, "gg_row_hover");
+                dojo.addClass(target, "gg_row_hover");
                 this._hoveredRow = target;
             }
 
@@ -749,9 +781,7 @@ require([
                     )) {
                     this.startDrag(target, e);
                 }
-            }
-
-            else if (this.dnd.isdragging) {
+            } else if (this.dnd.isdragging) {
                 this.onDrag(target, e);
             }
             e.preventDefault();
@@ -784,23 +814,25 @@ require([
 
         resetDndClasses: function (node) {
             logger.debug("TreeView.widget.TreeView.resetDndClasses");
-            if (node)
-                dojo.removeClass(node, 'gg_drag_over gg_drag_accept gg_drag_deny');
+            if (node) {
+                dojo.removeClass(node, "gg_drag_over gg_drag_accept gg_drag_deny");
+            }
         },
 
         startDrag: function (target, e) {
             logger.debug("TreeView.widget.TreeView.startDrag");
             //tmp node for drag an drop operations
-            this.dnd.tmpnode = mxui.dom.create("li", {'class': 'gg_node gg_anchor'}, mxui.dom.create("div", {'class': 'gg_anchor_inner'}));
+            this.dnd.tmpnode = mxui.dom.create("li", {"class": "gg_node gg_anchor"}, mxui.dom.create("div", {"class": "gg_anchor_inner"}));
 
             var current = this.dnd.current = this._getRenderNodeForNode(target);
             this.setSelection(current);
 
             //if this item does not support DnD, go on as usual
-            if (current.isEdge || current.isRoot || !current.type.allowdnd)
+            if (current.isEdge || current.isRoot || !current.type.allowdnd) {
                 return false;
+            }
 
-            var avatar = this.dnd.avatar = mxui.dom.create("div", {'class': 'gg_avatar'}, dojo.clone(current.rowNode)); //TODO: make beter avatar
+            var avatar = this.dnd.avatar = mxui.dom.create("div", {"class": "gg_avatar"}, dojo.clone(current.rowNode)); //TODO: make beter avatar
 
             //hooray, we can start thedrag
             //		console.log("start drag");
@@ -808,26 +840,26 @@ require([
             this.dnd.isdragging = true;
             this.dnd.beginBox = dojo.position(target);
 
-            dojo.addClass(current.domNode, 'gg_dragging');
+            dojo.addClass(current.domNode, "gg_dragging");
 
-            dojo.addClass(avatar, 'gg_avatar');
-            dojo.place(avatar, dojo.body(), 'last');
+            dojo.addClass(avatar, "gg_avatar");
+            dojo.place(avatar, dojo.body(), "last");
 
             //update position
             dojo.style(avatar, {
-                'position': 'absolute',
-                'zIndex': 10000
+                "position": "absolute",
+                "zIndex": 10000
             });
 
             this.dnd.bodyconnect = dojo.connect(dojo.body(), "onmouseup", dojo.hitch(this, function () {
                 this.onEndDrag();
-            }))
+            }));
 
             this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", dojo.hitch(this, function (e) {
                 //console.log("mouse out");
                 dojo.style(this.dnd.avatar, {
-                    'top': (e.pageY + 32) + 'px',
-                    'left': (e.pageX + 32) + 'px'
+                    "top": (e.pageY + 32) + "px",
+                    "left": (e.pageX + 32) + "px"
                 });
 
                 if (this.dnd.target)
@@ -836,7 +868,7 @@ require([
                 this.dnd.accept = false;
                 this.dnd.target = null;
 
-                dojo.addClass(this.dnd.avatar, 'gg_drag_outside');
+                dojo.addClass(this.dnd.avatar, "gg_drag_outside");
             }));
 
             return true;
@@ -855,16 +887,18 @@ require([
             var prevtarget = this.dnd.target;
             var prevbefore = this.dnd.dropbefore;
 
-            if (prevtarget)
+            if (prevtarget) {
                 this.resetDndClasses(prevtarget.domNode);
+            }
 
             var current = this.dnd.current;
             var avatar = this.dnd.avatar;
             var mbox = dojo.marginBox(targetNode.children[0]); //take the first child, as the node itself might include the descendants
             var target = this.dnd.target = this._getRenderNodeForNode(targetNode);
 
-            if (!target)
+            if (!target) {
                 return;
+            }
 
             var candropBefore = this.canDropBefore(current, target);
             var pos;
@@ -879,22 +913,20 @@ require([
             }
             //drag over a real node
             else {
-                pos = this.dnd.pos = 'last';
+                pos = this.dnd.pos = "last";
                 if (candropBefore) {
                     if (oy > mbox.h / 2) {
                         if (target.collapsed == true || target.childNode.children.length == 0) {
-                            this.dnd.tmppos = 'after';
-                            dojo.place(tmpnode, target.domNode, 'after');
-                        }
-                        else {
+                            this.dnd.tmppos = "after";
+                            dojo.place(tmpnode, target.domNode, "after");
+                        } else {
                             //as first child
-                            this.dnd.tmppos = 'first';
-                            dojo.place(tmpnode, target.childNode, 'first');
+                            this.dnd.tmppos = "first";
+                            dojo.place(tmpnode, target.childNode, "first");
                         }
-                    }
-                    else {
-                        this.dnd.tmppos = 'before';
-                        dojo.place(tmpnode, target.domNode, 'before');
+                    } else {
+                        this.dnd.tmppos = "before";
+                        dojo.place(tmpnode, target.domNode, "before");
                     }
                 }
             }
@@ -904,42 +936,41 @@ require([
             //		console.log("DnD over: pos: " + pos + " candropBefore: " + candropBefore + " copy: " + copy + " accept: " + accept + " tmppos: " + this.dnd.tmppos + " rowh: " + mbox.h + " y: " + oy);
             this.resetDndClasses(target.domNode);
             this.resetDndClasses(tmpnode);
-            dojo.removeClass(avatar, 'gg_drag_outside');
+            dojo.removeClass(avatar, "gg_drag_outside");
 
             //update classes according to state
-            if (copy)
-                dojo.addClass(avatar, 'gg_drag_copy');
-            else
-                dojo.removeClass(avatar, 'gg_drag_copy');
-
-            if (pos == 'last') {
-                dojo.addClass(target.domNode, 'gg_drag_over');
-                dojo.addClass(target.domNode, accept ? 'gg_drag_accept' : 'gg_drag_deny');
-            }
-            else {
-                dojo.addClass(tmpnode, 'gg_drag_over gg_drag_accept');
+            if (copy) {
+                dojo.addClass(avatar, "gg_drag_copy");
+            } else {
+                dojo.removeClass(avatar, "gg_drag_copy");
             }
 
-            var acceptTmp = candropBefore && (pos != 'last' || this.dragOver(current, target, this.dnd.tmppos, copy)); //is the tmppos allowed?
-            dojo.style(tmpnode, 'display', acceptTmp ? 'list-item' : 'none');
+            if (pos == "last") {
+                dojo.addClass(target.domNode, "gg_drag_over");
+                dojo.addClass(target.domNode, accept ? "gg_drag_accept" : "gg_drag_deny");
+            } else {
+                dojo.addClass(tmpnode, "gg_drag_over gg_drag_accept");
+            }
+
+            var acceptTmp = candropBefore && (pos != "last" || this.dragOver(current, target, this.dnd.tmppos, copy)); //is the tmppos allowed?
+            dojo.style(tmpnode, "display", acceptTmp ? "list-item" : "none");
 
             dojo.style(avatar, {
-                'top': (e.pageY + 32) + 'px',
-                'left': (e.pageX + 32) + 'px'
+                "top": (e.pageY + 32) + "px",
+                "left": (e.pageX + 32) + "px"
             });
 
             //stop / start the expand timer
             //auto expand stuff
-            if (prevtarget != target || pos != 'last') {
+            if (prevtarget != target || pos != "last") {
                 if (this.dnd.expandtimer) {
                     clearTimeout(this.dnd.expandtimer);
                     this.dnd.expandtimer = null;
                 }
-            }
-            else if (pos == 'last')
+            } else if (pos == "last")
                 if (!this.dnd.expandtimer) {
                     this.dnd.expandtimer = setTimeout(dojo.hitch(this, function (toexpand) {
-                        if (toexpand == this.dnd.target && this.dnd.pos == 'last') { //still the same ?
+                        if (toexpand == this.dnd.target && this.dnd.pos == "last") { //still the same ?
                             toexpand.setCollapsed(false);
                             //if (this.dnd.tmpnode)
                             //	this.dnd.tmpnode.parentNode = null; //hide current tmpnode, mwe: disabled for now, parentNode = null breaks in IE
@@ -964,14 +995,13 @@ require([
             dojo.disconnect(this.dnd.bodyconnect2);
 
             //hide temporary nodes node
-            dojo.style(this.dnd.tmpnode, 'display', 'none');
+            dojo.style(this.dnd.tmpnode, "display", "none");
             dojo.destroy(this.dnd.tmpnode);
             delete this.dnd.tmpnode;
 
             if (result) {
                 this.resetNodesAfterDnD();
-            }
-            else { //revert, move the node back if cancelled
+            } else { //revert, move the node back if cancelled
                 dojo.animateProperty({
                     node: this.dnd.avatar,
                     properties: {
@@ -986,10 +1016,11 @@ require([
 
         resetNodesAfterDnD: function () {
             logger.debug("TreeView.widget.TreeView.resetNodesAfterDnD");
-            if (this.dnd.target)
+            if (this.dnd.target) {
                 this.resetDndClasses(this.dnd.target.domNode);
+            }
             this.resetDndClasses(this.dnd.current.domNode);
-            dojo.removeClass(this.dnd.current.domNode, 'gg_dragging');
+            dojo.removeClass(this.dnd.current.domNode, "gg_dragging");
 
             dojo.destroy(this.dnd.avatar);
             delete this.dnd.avatar;
@@ -999,14 +1030,13 @@ require([
             logger.debug("TreeView.widget.TreeView._findDropAssocs");
             var assocs = [];
 
-            if (pos == 'before' || pos == 'after' || target.isEdge) {
+            if (pos == "before" || pos == "after" || target.isEdge) {
                 //the drop assocation is the association of the current target item, thats easy :)
                 if (!target.isRoot && target.type.allowdnd
                     && (!copy || target.type.allowdndcopy)
                     && item.isA(target.type.entity))
                     assocs.push(target.type);
-            }
-            else {
+            } else {
                 //return find assocition from target -> child with dnd
                 for (var i = 0, a = null; a = this.types[i++];) {
                     if (a.allowdnd
@@ -1029,8 +1059,9 @@ require([
 
             var e = item.graphNode.type;
             //use a cache
-            if (!this.dnd.allowDropBefore)
+            if (!this.dnd.allowDropBefore) {
                 this.dnd.allowDropBefore = {};
+            }
             if (!(e in this.dnd.allowDropBefore)) {
                 var x = item.graphNode.xsettings;
                 this.dnd.allowDropBefore[e] = x && mx.meta.getEntity(e).getAttributeType(x.sortattr) == "Float";
@@ -1049,13 +1080,14 @@ require([
             logger.debug("TreeView.widget.TreeView.dragOver");
             //Avoid drop in self
             //
-            var validSelfdrop = (target == item && (pos == 'before' || pos == 'after'));
+            var validSelfdrop = (target == item && (pos == "before" || pos == "after"));
 
             if (!validSelfdrop) {
                 var cur = target;
                 while (cur != null) {
-                    if (cur == item)
+                    if (cur == item) {
                         return false;
+                    }
                     cur = cur.parent;
                 }
             }
@@ -1073,8 +1105,9 @@ require([
          */
         performDrop: function (item, target, pos, copy) {
             logger.debug("TreeView.widget.TreeView.performDrop");
-            if (!target)
+            if (!target) {
                 return false;
+            }
 
             var assocs = this._findDropAssocs(item, target, pos, copy);
             var actions = []; //microflows to invoke to persist the changes
@@ -1084,29 +1117,30 @@ require([
 
             //determine drop target
             var t = null;
-            if (target.isEdge)
+            if (target.isEdge){
                 t = target.parent.graphNode._data;
-            else if (pos == 'before' || pos == 'after')
+            }else if (pos == "before" || pos == "after"){
                 t = target.parent.graphNode._data
-            else
+            }else{
                 t = target.graphNode._data; //new parent
+            }
 
             //0) always remove existing parent if not copy, regardless which association it was..
             if (!copy) {
                 var assoc1 = item.type;
                 if (assoc1.assoctype == "fromparent") {
-                    if (assoc1.isRefset)
-                        o.removeReferences(assoc1.assoc, [i.getGuid()]);
-                    else
-                        o.set(assoc1.assoc, '');
-
+                    if (assoc1.isRefset){
+                        o.removeReferences(assoc1.assoc, [i.getGuid()]);}
+                    else{
+                        o.set(assoc1.assoc, "");
+}
                     actions.push([assoc1.dropmf, o]); //otherwise o might never know that a child was removed
                 }
                 else { //from child
-                    if (assoc1.isRefset)
+                    if (assoc1.isRefset){
                         i.removeReferences(assoc1.assoc, [o.getGuid()]);
-                    else
-                        i.set(assoc1.assoc, '');
+                    }else{
+                        i.set(assoc1.assoc, "");}
 
                     //actions.push([assoc.dropmf, i]); //MWE: I guess this is not needed, since a drop mf is most likely already fired for i, and this might confuse the logic.
                 }
@@ -1124,48 +1158,47 @@ require([
                     }
 
                     //normal reference
-                    else
+                    else{
                         t.set(assoc.assoc, i.getGuid());
-                }
-
-                //assoc stored in child
-                else {
+                    }
+                } else { //assoc stored in child
                     actions.push([assoc.dropmf, i]);
 
                     if (assoc.isRefset) {
                         i.addReferences(assoc.assoc, [t.getGuid()]);
-                    }
-                    else
+                    } else {
                         i.set(assoc.assoc, t.getGuid()); //copy is not supported, dont bother
+                    }
                 }
             }
 
             //2) update position. Note that this position applies to all assocs! which is a bit weird...
             var x = item.graphNode.xsettings;
             if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
-                if (pos == 'before' || pos == 'after') {
+                if (pos == "before" || pos == "after") {
                     //find the other related element for drop in between
-                    var othernode = pos == 'before' ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
-                    if (this.dnd.tmpnode != null && othernode == this.dnd.tmpnode)
-                        othernode = pos == 'before' ? othernode.previousElementSibling : othernode.nextElementSibling;
+                    var othernode = pos == "before" ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
+                    if (this.dnd.tmpnode != null && othernode == this.dnd.tmpnode) {
+                        othernode = pos == "before" ? othernode.previousElementSibling : othernode.nextElementSibling;
+                    }
                     var other = this._getRenderNodeForNode(othernode);
 
                     var nidx;
-                    if (other == null || other.isEdge) //either first or last
-                        nidx = target.graphNode.getSortIndex() + (pos == 'before' ? -1024 : 32354);
-
-                    else //put between
+                    if (other == null || other.isEdge) { //either first or last
+                        nidx = target.graphNode.getSortIndex() + (pos == "before" ? -1024 : 32354);
+                    } else { //put between
                         nidx = (target.graphNode.getSortIndex() + other.graphNode.getSortIndex()) / 2;
-                }
-                else {
-                    if (pos == 'last')
+                    }
+                } else {
+                    if (pos == "last"){
                         nidx = (target.isEdge ? target.parent : target).findMaxIndex() + 14056;
-                    else
-                        nidx = (target.isEdge ? target.parent : target).findMinIndex() - 4313;
+                    }else{
+                        nidx = (target.isEdge ? target.parent : target).findMinIndex() - 4313;}
                 }
 
-                if (isNaN(nidx))
+                if (isNaN(nidx)) {
                     nidx = 0; //probably div by zero
+                }
 
                 item.graphNode._data.set(x.sortattr, nidx);
             }
@@ -1173,22 +1206,24 @@ require([
             //3) loop items in actions, store the changes and invoke the microflows
             var left = actions.length;
             var gn = item.graphNode;
-            //TODO: check whether ar doesn't have double items?
+            //TODO: check whether ar doesn"t have double items?
             for (var l = 0, ar = null; ar = actions[l++];) {
                 Commons.mf(ar[0], ar[1], function () {
 
-                    //when all mf's have fired, find the best node to select
+                    //when all mf"s have fired, find the best node to select
                     left -= 1;
                     if (left == 0) {
                         //find the best node to animate
                         var bestnode = null;
                         gn.forNodes(function (node) {
-                            if (bestnode == null || node.parent == target || node.parent == target.parent)
+                            if (bestnode == null || node.parent == target || node.parent == target.parent) {
                                 bestnode = node;
+                            }
                         });
 
-                        if (bestnode)
+                        if (bestnode) {
                             this.setSelection(bestnode);
+                        }
                     }
                 }, this);
             }
@@ -1204,8 +1239,9 @@ require([
 
         updateAccordionForSelection: function (record) {
             logger.debug("TreeView.widget.TreeView.updateAccordionForSelection");
-            if (!record)
+            if (!record) {
                 return;
+            }
             record.setCollapsed(false);
 
             var c = record;
@@ -1213,8 +1249,9 @@ require([
             while (p != null) {
                 dojo.forEach(p.children, function (assoc) {
                     if (assoc) dojo.forEach(assoc.children, function (child) {
-                        if (child != c)
+                        if (child != c) {
                             child.setCollapsed(true);
+                        }
                     });
                 });
                 c = p;
@@ -1230,7 +1267,7 @@ require([
 
         columnClick: function (node) {
             logger.debug("TreeView.widget.TreeView.columnClick");
-            var col = mxui.dom.data(node, 'colindex');
+            var col = mxui.dom.data(node, "colindex");
             var renderNode = this._getRenderNodeForNode(node);
 
             this.columns[col].invokeAction(renderNode);
@@ -1238,23 +1275,27 @@ require([
 
         addToSchema: function (entity, attr) {
             logger.debug("TreeView.widget.TreeView.addToSchema");
-            if (!attr)
+            if (!attr) {
                 return;
+            }
 
             var t = this.getXsettings(entity);
             if (attr.indexOf("/") > -1) {
-                if (!t)
+                if (!t) {
                     this.configError("Attribute " + attr + " refers to unconfigured type " + entity);
+                }
 
                 var parts = attr.split("/");
 
-                if (!(parts[0] in t.filter.references))
+                if (!(parts[0] in t.filter.references)) {
                     t.filter.references[parts[0]] = {attributes: []};
+                }
 
-                if (parts.length > 2)
+                if (parts.length > 2) {
                     t.filter.references[parts[0]].attributes.push(parts[2]);
-            }
-            else {
+                }
+
+            } else {
                 t.filter.attributes.push(attr);
             }
         },
@@ -1265,8 +1306,9 @@ require([
         toMap: function (thing) {
             logger.debug("TreeView.widget.TreeView.toMap");
             var res = {};
-            if (thing == "")
+            if (thing == "") {
                 return res;
+            }
             if (dojo.isArray(thing)) {
                 dojo.forEach(thing, function (guid) {
                     res[guid] = true;
@@ -1293,8 +1335,9 @@ require([
             logger.debug("TreeView.widget.TreeView.moveNode");
             var parent = domNode.parentNode;
 
-            if (parent == null)
+            if (parent == null) {
                 throw "tree.moveNode: domNode has no parent";
+            }
 
             dojo.place(domNode, parent, targetIndex);
         },
@@ -1311,30 +1354,35 @@ require([
                 //find a matching parent
                 var cur = node.parentNode;
                 while (cur != null && cur != limitNode) {
-                    if (dojo.hasClass(cur, clazz))
+                    if (dojo.hasClass(cur, clazz)) {
                         return cur;
+                    }
                     cur = cur.parentNode;
                 }
-            }
-            else {
+
+            } else {
                 //find a previously matching sibling
                 var findLast = function (cur) {
                     for (var i = cur.children.length - 1; i >= 0; i--) {
-                        if (dojo.style(cur.children[i], 'display') == 'none')
+                        if (dojo.style(cur.children[i], "display") == "none") {
                             continue;
+                        }
                         var l = findLast(cur.children[i]);
-                        if (l != null)
+                        if (l != null) {
                             return l;
+                        }
                     }
 
-                    if (dojo.hasClass(cur, clazz))
+                    if (dojo.hasClass(cur, clazz)){
                         return cur;
+                    }
                     return null;
                 }
 
                 var lc = findLast(node.previousElementSibling);
-                if (lc)
+                if (lc) {
                     return lc;
+                }
                 return this.findPreviousNode(node.previousElementSibling, clazz, limitNode);
             }
             return null;
@@ -1344,26 +1392,30 @@ require([
             logger.debug("TreeView.widget.TreeView.findNextNode");
             var findChild = function (cur) {
                 for (var i = 0; i < cur.children.length; i++) {
-                    if (dojo.style(cur.children[i], 'display') != 'none') {
-                        if (dojo.hasClass(cur.children[i], clazz))
+                    if (dojo.style(cur.children[i], "display") != "none") {
+                        if (dojo.hasClass(cur.children[i], clazz)) {
                             return cur.children[i];
+                        }
                         var fc = findChild(cur.children[i]);
-                        if (fc)
+                        if (fc) {
                             return fc;
+                        }
                     }
                 }
                 return null;
             }
 
             var fc = findChild(node);
-            if (fc)
+            if (fc){
                 return fc;
+            }
 
             var cur = node;
             while (cur != limitNode && cur != null) {
                 var n = cur.nextElementSibling;
-                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, 'display') != 'none')
+                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, "display") != "none"){
                     return n;
+                }
                 cur = cur.parentNode;
             }
 

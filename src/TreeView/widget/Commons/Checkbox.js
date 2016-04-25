@@ -22,17 +22,20 @@ define([
             dojo.attr(this.checkbox, "readonly", this.readOnly);
             dojo.attr(this.checkbox, "disabled", this.readOnly);
 
-            if (!this.readOnly)
+            if (!this.readOnly){
                 this._clickSubscription = dojo.connect(this.checkbox, "onchange", dojo.hitch(this, this.change));
+            }
 
-            dojo.addClass(this.checkbox, 'gv_checkbox ' + this.className);
+            dojo.addClass(this.checkbox, "gv_checkbox " + this.className);
 
             dojo.place(this.checkbox, domNode);
         },
 
         change: function (e) {
             this.onChange.call(null, this.checkbox.checked);
-            e && e.stopPropagation();
+            if (e) {
+                e.stopPropagation();
+            }
         },
 
         /* dojo get & set proxying */

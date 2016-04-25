@@ -7,23 +7,23 @@ define([
 
     return declare("TreeView.widget.Commons.Action", null, {
         //Not functional
-        actname : '',
-        actentity : '',
-        actshowbutton : '',
-        actclassname : '',
-        actbuttoncaption : '',
-        actbuttonimage : '',
-        actmf : '',
-        actmultimf : '',
+        actname : "",
+        actentity : "",
+        actshowbutton : "",
+        actclassname : "",
+        actbuttoncaption : "",
+        actbuttonimage : "",
+        actmf : "",
+        actmultimf : "",
         actisdefault : false,
         actonselect  : false,
-        actnoselectionmf : '',
-        actshortcut : '',
-        actautohide : '',
-        actconfirmtext : '',
-        actdataset : '',
+        actnoselectionmf : "",
+        actshortcut : "",
+        actautohide : "",
+        actconfirmtext : "",
+        actdataset : "",
         actappliestomultiselection : true,
-        actprogressmsg : '',
+        actprogressmsg : "",
         //*Not functional
 
         tree : null,
@@ -32,7 +32,7 @@ define([
             this.tree = tree;
             dojo.mixin(this, args);
 
-            this.tree.connect(this.tree, 'onSelect', dojo.hitch(this, this.updateToSelection));
+            this.tree.connect(this.tree, "onSelect", dojo.hitch(this, this.updateToSelection));
         },
 
         assignRefToSelection : function(item) {
@@ -41,14 +41,14 @@ define([
 
             Commons.store(
                 //records to objects
-                dojo.map(this.tree.getSelection(), function(item) { return item.data() }),
+                dojo.map(this.tree.getSelection(), function(item) { return item.data(); }),
 
                 this.dataset.getAssoc(), item, "add", false,
                 //callback
                 dojo.hitch(this, function() {
                     this.invokeOnSelection();
 
-                    this.mxbutton.set('value', null);
+                    this.mxbutton.set("value", null);
                 })
             );
 
@@ -59,28 +59,30 @@ define([
                 if (this.actdataset) {
 
                     this.dataset = this.tree.dataset[this.actdataset];
-                    if (this.dataset == null)
+                    if (this.dataset == null){
                         this.tree.configError("Unknown dataset for action: '" + this.actdataset + "'");
-                    if (!this.actappliestomultiselection)
+                    }
+                    if (!this.actappliestomultiselection){
                         this.tree.configError("Reference assignment should be allowed to be applied to multi selections! (see the action allow to multiselection property)");
+                    }
 
                     this.mxbutton = new DropDown({
                             onChange : dojo.hitch(this, this.assignRefToSelection),
                             sticky   : false,
                             label    : this.dataset.rellabel,
                             dataset  : this.dataset,
-                            className : ' gv_action_dropdown ' + this.actclassname
+                            className : " gv_action_dropdown " + this.actclassname
                         },
                         parentNode,
                         null
-                    )
+                    );
                 }
                 else {
                     this.mxbutton = new mxui.widget._Button({
                         caption     : this.actbuttoncaption,
                         icon        : this.actbuttonimage,
                         onClick     : dojo.hitch(this, this.invokeOnSelection),
-                        type        : 'button',
+                        type        : "button",
                         cssclass    : this.actclassname,
                         //title       : column.help, //TODO:?
                         isInactive  : false
@@ -90,18 +92,16 @@ define([
             }
 
             if (this.actonselect) {
-                this.tree.connect(this.tree, 'onSelect', dojo.hitch(this, this.invokeOnSelection));
+                this.tree.connect(this.tree, "onSelect", dojo.hitch(this, this.invokeOnSelection));
             }
         },
 
         appliesToSelection : function() {
-            if (this.actnoselectionmf)
+            if (this.actnoselectionmf){
                 return true;
+            }
 
-            if  (!this.tree.hasSelection() || !this.actmf)
-                return false;
-
-            if (this.tree.hasMultiSelection() && !this.actappliestomultiselection)
+            if  ((!this.tree.hasSelection() || !this.actmf) || (this.tree.hasMultiSelection() && !this.actappliestomultiselection))
                 return false;
 
             return this.appliesTo(this.tree.getSelection());
@@ -109,13 +109,15 @@ define([
 
         //Check if this action is applicable to the mentioned item or item list
         appliesTo : function (item) {
-            if (!this.actentity)
+            if (!this.actentity){
                 return true;
+            }
 
             var applies = true;
             if (dojo.isArray(item)) {
-                for(var i = 0; i < item.length; i++)
+                for(var i = 0; i < item.length; i++){
                     applies &= this.appliesTo(item[i]);
+                }
                 return applies;
             }
 
@@ -129,10 +131,11 @@ define([
 
                 if (!this.mxbutton._destroyed)  {//MWE: wtf?
                     this.mxbutton.set("disabled", !enable);
-                    if (this.actautohide)
-                        dojo.style(this.mxbutton.domNode, 'display', enable ? 'inline-block' : 'none');
-                    else
-                        (enable ? dojo.removeClass : dojo.addClass)(this.mxbutton.domNode, 'gv_button_disabled');
+                    if (this.actautohide){
+                        dojo.style(this.mxbutton.domNode, "display", enable ? "inline-block" : "none");
+                    } else {
+                        (enable ? dojo.removeClass : dojo.addClass)(this.mxbutton.domNode, "gv_button_disabled");
+                    }
                 }
             }
         },
@@ -143,8 +146,9 @@ define([
                 var selection = this.tree.getSelection();
 
                 //invoke on the data of the selected node
-                if (selection && (this.actmf || this.actmultimf))
+                if (selection && (this.actmf || this.actmultimf)){
                     this.invoke(selection);
+                }
 
                 //invoke on the root object
                 else if (this.actnoselectionmf) {
@@ -166,9 +170,9 @@ define([
                     this.tree._recordSelectionSuggestion = true;
 
                     //See ticket 9116, we need to invoke the single argument microflow version for a single argument. Multi argument mf will break
-                    if (dojo.isArray(selection) && selection.length > 1 && this.actmultimf)
-                        Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data() }), null, this.tree, true, this.actprogressmsg);
-                    else {
+                    if (dojo.isArray(selection) && selection.length > 1 && this.actmultimf){
+                        Commons.mf(this.actmultimf, dojo.map(selection, function(item) { return item.data(); }), null, this.tree, true, this.actprogressmsg);
+                    } else {
                         var sel = selection == null || selection == []
                             ? []
                             : dojo.isArray (selection)
@@ -182,8 +186,9 @@ define([
         },
 
         free : function() {
-            if (this.mxbutton && !this.mxbutton._destroyed)
+            if (this.mxbutton && !this.mxbutton._destroyed) {
                 this.mxbutton.destroy();
+            }
         }
     });
 });

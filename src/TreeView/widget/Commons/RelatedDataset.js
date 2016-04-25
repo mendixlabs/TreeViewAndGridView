@@ -5,15 +5,15 @@ define([
     "use strict"
 
     return declare("TreeView.widget.Commons.RelatedDataset", null, {
-        relname: '',
-        rellabel: '',
-        relentity: '',
-        relcontextassoc: '',
-        relitemassocref: '',
-        relitemassocrefset: '',
-        relnameattr: '',
-        relconstraint: '',
-        relnewitemcaption: '',
+        relname: "",
+        rellabel: "",
+        relentity: "",
+        relcontextassoc: "",
+        relitemassocref: "",
+        relitemassocrefset: "",
+        relnameattr: "",
+        relconstraint: "",
+        relnewitemcaption: "",
 
         widget: null,
         contextGuid: null,
@@ -45,23 +45,23 @@ define([
         },
 
         getAssoc: function () {
-            return (this.relitemassocref && this.relitemassocref != '') ? this.relitemassocref.split("/")[0] : this.relitemassocrefset.split("/")[0];
+            return (this.relitemassocref && this.relitemassocref != "") ? this.relitemassocref.split("/")[0] : this.relitemassocrefset.split("/")[0];
         },
 
         isRefSet: function () {
-            return (this.relitemassocrefset && this.relitemassocrefset != '');
+            return (this.relitemassocrefset && this.relitemassocrefset != "");
         },
 
         getValue: function (item, _) {
-            if (typeof (item) == "object")
+            if (typeof (item) == "object"){
                 return item.get(this.relnameattr);
-            else if (/^\d+$/.test(item)) {
+            } else if (/^\d+$/.test(item)) {
                 var obj = this.existingLabelsById[item]; //assuming guid
                 return obj ? this.getValue(obj) : null; //TODO: warn?
-            }
-            else
+            } else {
                 this.widget.showError("Dataset getValue not valid for: " + item);
-            return '';
+            }
+            return "";
         },
 
         getOptions: function () {
@@ -69,12 +69,12 @@ define([
         },
 
         fetchLabels: function () {
-            if (this.contextGuid == null || this._fetchingLabels)
+            if (this.contextGuid == null || this._fetchingLabels){
                 return;
-
+            }
             this.hasData = false;
             this._fetchingLabels = true;
-            var xpath = "//" + this.relentity + (this.relconstraint ? this.relconstraint : '') + (this.relcontextassoc ? "[" + this.relcontextassoc.split("/")[0] + " = '[%CurrentObject%]']" : '');
+            var xpath = "//" + this.relentity + (this.relconstraint ? this.relconstraint : "") + (this.relcontextassoc ? "[" + this.relcontextassoc.split("/")[0] + " = '[%CurrentObject%]']" : "");
             xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.contextGuid);
             mx.data.get({
                 xpath: xpath,
@@ -98,18 +98,18 @@ define([
                 this.existingLabels[label.toLowerCase()] = obj;
                 this.existingLabelsById[value] = obj;
 
-                return {value: value, label: label}
+                return {value: value, label: label};
             }, this);
 
             this._fetchingLabels = false;
 
-            if (this.relnewitemcaption)
+            if (this.relnewitemcaption){
                 this.existingOptions.splice(0, 0, {
-                    value: 'new',
+                    value: "new",
                     label: this.relnewitemcaption,
                     onClick: dojo.hitch(this, this.createNewItem)
                 }, null) //Null = separator
-
+            }
             this.hasData = true;
             this.onReceiveItems(this.existingOptions);
         },
@@ -146,7 +146,7 @@ define([
 
                         Commons.store(label, this.relnameattr, dojo.trim(labelname), null, true, cb);
                     })
-                }, this)
+                }, this);
             }
         },
 
@@ -163,20 +163,22 @@ define([
 
         fetchItemByIdentity: function (args) {
             //TODO: check and error handling
-            if (!this.existingLabelsById)
+            if (!this.existingLabelsById){
                 args.onItem.call(args.scope, null);
-            else
+            } else {
                 args.onItem.call(args.scope, this.existingLabelsById[args.identity]);
+            }
         },
 
         /* Simplefetch api */
         _fetchItems: function (query, resultcallback) {
             var results = [];
-            if (this.existingLabels != null)
-                for (var key in this.existingLabels)
-                    if (key.indexOf(query.query.name.toLowerCase()) == 0)
-                        results.push(this.existingLabels[key]);
-
+            if (this.existingLabels != null){
+                for (var key in this.existingLabels){
+                    if (key.indexOf(query.query.name.toLowerCase()) === 0){
+                        results.push(this.existingLabels[key]);}
+                }
+            }
             resultcallback(results, query);
         }
     });
