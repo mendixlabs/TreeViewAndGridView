@@ -236,7 +236,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 				error : this.showError
 			}, this);
 		} else {
-            this.showError(item);
+            this.onSelect(item);
         }
 	},
 
