@@ -236,7 +236,7 @@ mxui.widget.declare("TreeView.widget.GridView", {
 				error : this.showError
 			}, this);
 		} else {
-            this.showError(item);
+            this.onSelect(item);
         }
 	},
 
@@ -318,38 +318,37 @@ mxui.widget.declare("TreeView.widget.GridView", {
 	setSelection : function(item) {
 		logger.debug("TreeView.widget.GridView.setSelection");
 		//the same selection?
-		if (!item && !this.hasSelection ||
-			item && this._multiSelection.length === 1 && this._multiSelection[0] === item)
-			return;
+		if ((!item && !this.hasSelection) || (item && this._multiSelection.length === 1 && this._multiSelection[0] === item)) {
+            return;
+        }
 
-			this._inMultiSelectMode = false;
+        this._inMultiSelectMode = false;
 
-			while(this.hasSelection())
-			this.removeFromSelection(this.getLastSelection(), true);
+        while(this.hasSelection()) {
+            this.removeFromSelection(this.getLastSelection(), true);
+        }
 
-			if (item)
-			this.addToSelection(item, true);
+        if (item) {
+            this.addToSelection(item, true);
+        }
 
-			if (this.selectionref)
-			TreeView.widget.Commons.store(this.contextObject, this.selectionref,    item && item.guid);
+        if (this.selectionref) {
+            TreeView.widget.Commons.store(this.contextObject, this.selectionref,    item && item.guid);
+        }
 
-			if (this.selectionrefset)
-			TreeView.widget.Commons.store(this.contextObject, this.selectionrefset, item && item.guid);
+        if (this.selectionrefset) {
+            TreeView.widget.Commons.store(this.contextObject, this.selectionrefset, item && item.guid);
+        }
 
-			this.saveAndFireSelection(item);
-		},
+        if (item) {
+            this.saveAndFireSelection(item);
+        }
+    },
 
-		multiSelectClick : function(node, e) {
-			logger.debug("TreeView.widget.GridView.multiSelectClick");
-			var record = this.getRowForNode(node);
-			/*var ms = this._multiSelection;
+    multiSelectClick : function(node, e) {
+        logger.debug("TreeView.widget.GridView.multiSelectClick");
+        var record = this.getRowForNode(node);
 
-			//clicking the current selection and selection length = 1?, reenable selection
-			if (ms.length == 1 && ms[0] == record) {
-			node.checked = true;
-		}
-
-		else {*/
 		if (node.checked)
 		this.addToSelection(record);
 
@@ -466,14 +465,15 @@ mxui.widget.declare("TreeView.widget.GridView", {
 		logger.debug("TreeView.widget.GridView.update");
 		//use the new context
 		this.contextObject = obj;
-		this.contextGUID = obj.getGuid();
-		this.listenToContext();
+        this.contextGUID = (this.contextObject && this.contextObject !== undefined) ? this.contextObject.getGuid() : null;
 
-		//reload
-		this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+        this.listenToContext();
 
-		cb();
-	},
+        //reload
+        this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+
+        mendix.lang.nullExec(cb);
+    },
 
 	suspended : function() {
 		this._suspended = true;
