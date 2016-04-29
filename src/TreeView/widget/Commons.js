@@ -8,6 +8,7 @@ define([
         //MX5 hack
         fixObjProps : function(widget, props) {
             logger.debug("TreeView.widget.Commons.fixObjProps");
+
             var args = {};
 
             for (var i = 0; i < props.length; i++) {
@@ -30,6 +31,7 @@ define([
 
         getEnumMap : function(classname, attrname) {
             logger.debug("TreeView.widget.Commons.getEnumMap");
+
             var meta = mx.meta.getEntity(classname);
 
             if (this.getAttributeType(classname, attrname) != "Enum") {
@@ -48,6 +50,7 @@ define([
          */
         renderLabel : function(name, close, data) {
             logger.debug("TreeView.widget.Commons.renderLabel");
+
             var n = mxui.dom.create(
                 "span",
                 {"class": "gv_label"},
@@ -58,12 +61,13 @@ define([
                 )
             );
 
-            if (close)
+            if (close) {
                 dojo.place(mxui.dom.create(
                     "span",
                     {"class": "gv_label_close"},
                     "x"
                 ), n);
+            }
 
             mxui.dom.data(n, "data", data);
             return n;
@@ -71,13 +75,16 @@ define([
 
         getAttributeType : function(classnameOrObject, attr) {
             logger.debug("TreeView.widget.Commons.getAttributeType");
+
             var parts = attr.split("/");
-            if (parts.length == 3)
-                return this.getAttributeType(parts[1], parts[2])
+            if (parts.length == 3) {
+                return this.getAttributeType(parts[1], parts[2]);
+            }
 
             if (attr.indexOf("/") == -1) {
-                if (classnameOrObject.getEntity)
+                if (classnameOrObject.getEntity) {
                     classnameOrObject = classnameOrObject.getEntity();
+                }
 
                 var meta = mx.meta.getEntity(classnameOrObject);
                 return meta.getAttributeType(attr);
@@ -88,20 +95,24 @@ define([
 
         getObjectAttr : function(object, attr, renderValue) {
             logger.debug("TreeView.widget.Commons.getObjectAttr");
-            if (!object || !attr)
+
+            if (!object || !attr) {
                 return "";
+            }
 
             if (attr.indexOf("/") == -1) {
-                if (renderValue)
+                if (renderValue) {
                     return mx.parser && mx.parser.formatAttribute ? mx.parser.formatAttribute(object, attr) : mxui.html.renderValue(object, attr); //mxui.html.rendervalue moved in 5.~7.
+                }
                 return object.get(attr);
             }
             var parts = attr.split("/");
             if (parts.length == 3) {
                 var child = object.getReference(parts[0]);
 
-                if (!child)
+                if (!child) {
                     return "";
+                }
 
                 //Fine, we have an object
                 if (dojo.isObject(child)) {
@@ -118,8 +129,9 @@ define([
                             tmp = obj;
                         }
                     });
-                    if (tmp != null) //callback was invoked in sync :)
+                    if (tmp != null) {//callback was invoked in sync :)
                         return this.getObjectAttr(tmp, parts[2], renderValue);
+                    }
 
                     //console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
                     //This happens if no retrieve schema was used :-(.
@@ -131,27 +143,31 @@ define([
             //objects can be returned in X different ways, sometime just a guid, sometimes its an object...
             if (parts.length == 2) {
                 var result = object.getReferences(parts[0]); //incase of of a get object, return the Guids (but sometimes getAttribute gives the object...)
-                if (!result || result.length == 0)
+                if (!result || result.length == 0) {
                     return "";
-                if (result.guid)
+                }
+                if (result.guid) {
                     return result.guid;
-                if (/\d+/.test(result))
+                }
+                if (/\d+/.test(result)) {
                     return result;
+                }
             }
             throw "GridCommons.getObjectAttr: Failed to retrieve attribute '" + attr + "'";
-
         },
 
         objectToGuid : function(thing) {
             logger.debug("TreeView.widget.Commons.objectToGuid");
-            if (!thing)
+
+            if (!thing) {
                 return null;
-            if (thing.guid)
+            } else if (thing.guid) {
                 return thing.guid;
-            if (thing.getGuid)
+            } else if (thing.getGuid) {
                 return thing.getGuid();
-            if (/^\d+$/.test(thing))
+            } else if (/^\d+$/.test(thing)) {
                 return thing;
+            }
             throw "Does not look like a MxObject: " + thing;
         },
 
@@ -167,6 +183,7 @@ define([
          */
         store : function(object, attr, value, mode, commit, callback) {
             logger.debug("TreeView.widget.Commons.store");
+
             var res = false;
 
             //list of objects
@@ -223,10 +240,7 @@ define([
                             default:
                                 res = object.set(attr, guids);
                         }
-                    }
-
-                    //single reference
-                    else {
+                    } else { //single reference
                         if (dojo.isArray(value)) {
                             throw "Commons.store: cannot assign array to reference";
                         }
@@ -236,8 +250,9 @@ define([
                     }
                 }
 
-                else
+                else {
                     throw "Commons.store: unsupported attribute path: " + attr;
+                }
 
                 //check res
                 if (res === false) { //set returns undefined if ok, or false on failure
@@ -264,6 +279,7 @@ define([
          */
         liveConnect : function(widget, node, event, map) {
             logger.debug("TreeView.widget.Commons.liveConnect");
+
             if (!node) {
                 throw "liveConnect: no node provided";
             }
@@ -290,9 +306,6 @@ define([
                     }
                     currNode = currNode.parentNode;
                 }
-
-                //e && dojo.stopEvent(e);
-
             });
         },
 
@@ -300,10 +313,10 @@ define([
          * Shows a confirm dialog. If the message is empty, the dialog is skipped altogether, and the callback is invoked inmediately
          * @param  {[type]}   message  [description]
          * @param  {Function} callback [description]
-         * @return {[type]}            [description]
          */
         confirm : function(message, callback, yescaption, nocaption) {
             logger.debug("TreeView.widget.Commons.confirm");
+
             if (!message) {
                 mendix.lang.nullExec(callback);
                 return;
@@ -319,6 +332,7 @@ define([
 
         mf : function(mfname, data, callback, context, mfNeedsList, progressMessage) {
             logger.debug("TreeView.widget.Commons.mf");
+
             //firing on multiple items? wait for all items to finish
             if (dojo.isArray(data) && !mfNeedsList) {
                 var left = data.length;
@@ -332,7 +346,6 @@ define([
                 dojo.forEach(data, function (dataitem) {
                     self.mf(mfname, dataitem, cb, context, false, progressMessage);
                 });
-
             } else {
                 var guids = dojo.map(dojo.isArray(data) ? data : [data], this.objectToGuid);
 
@@ -357,8 +370,9 @@ define([
                         // }
                     },
                     callback: function (_, data) {
-                        if (callback)
+                        if (callback) {
                             callback.call(context || window);
+                        }
                     },
                     async: !!progressMessage
                 });
@@ -367,6 +381,7 @@ define([
 
         configError : function(widget, msg) {
             logger.debug("TreeView.widget.Commons.configError");
+
             msg = "Configuration error in " + widget.id + ": " + msg;
             if (console) {
                 console.error(msg);
@@ -377,6 +392,7 @@ define([
 
         error : function(e) {
             logger.debug("TreeView.widget.Commons.error");
+
             console.error(e);
             throw e;
         },
@@ -423,6 +439,7 @@ define([
          */
         normalizeContext : function(data, cb) {
             logger.debug("TreeView.widget.Commons.normalizeContext");
+            
             //Nothing
             if (data == null) {
                 cb(null, null);

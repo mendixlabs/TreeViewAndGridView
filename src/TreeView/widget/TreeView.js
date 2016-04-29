@@ -187,6 +187,7 @@ require([
 
         uninitialize: function () {
             logger.debug("TreeView.widget.TreeView.uninitialize");
+
             if (this.root) {
                 this.root.free();
             }
@@ -217,6 +218,7 @@ require([
 
         resumed: function () {
             logger.debug("TreeView.widget.TreeView.resumed");
+
             //reapply selection to continue formloader
             var sel = this._selection;
             this._selection = null;
@@ -225,6 +227,7 @@ require([
 
         _setupLayout: function () {
             logger.debug("TreeView.widget.TreeView._setupLayout");
+
             dojo.addClass(this.domNode, "gg_tree");
             this.headerNode = mxui.dom.create("div", {"class": "gg_header"});
 
@@ -245,6 +248,7 @@ require([
 
         _setupActions: function () {
             logger.debug("TreeView.widget.TreeView._setupActions");
+
             var data = [];
             this.splitPropsTo("actname,actprogressmsg,actentity,actshowbutton,actautohide,actbuttoncaption,actconfirmtext,actbuttonimage,actmf,actisdefault,actonselect,actnoselectionmf", data);
             for (var i = 0, d = null; d = data[i]; i++) {
@@ -261,6 +265,7 @@ require([
 
         _setupTypes: function () {
             logger.debug("TreeView.widget.TreeView._setupTypes");
+
             this.splitPropsTo("entity,parentassocsingle,parentassocmulti,constraint,sortattr,sortdir,assoctype,assoccaption,showassocname,allowdnd,allowdndcopy,dropmf,assocclazz,assocstyle", this.types);
             var i = 0;
             dojo.forEach(this.types, function (type) {
@@ -305,6 +310,7 @@ require([
 
         _setupColumns: function () {
             logger.debug("TreeView.widget.TreeView._setupColumns");
+
             var data = [];
             this.splitPropsTo("columnname,columnentity,columnrendermode,columnattr,columnimage,columnaction,columnclazz,columnstyle,columndateformat,columnprefix,columnpostfix,columntruecaption,columnfalsecaption", data);
             for (var i = 0, d = null; d = data[i]; i++) {
@@ -327,16 +333,19 @@ require([
 
         getContextGUID: function () {
             logger.debug("TreeView.widget.TreeView.getContextGUID");
+
             return this.root._data.getGuid();
         },
 
         getContextObject: function () {
             logger.debug("TreeView.widget.TreeView.getContextObject");
+
             return this.root._data;
         },
 
         setSelection: function (renderNode) {
             logger.debug("TreeView.widget.TreeView.setSelection");
+
             if (renderNode != this._selection) {
                 if (!this._parent && renderNode) {
                     this._parent = renderNode.parent;
@@ -372,6 +381,7 @@ require([
 
         testreferences: function (node) {
             logger.debug("TreeView.widget.TreeView.testreferences");
+
             if (this.selectionrefs) {
                 for (i = 0; i < this.selectionrefs.length; i++) {
                     if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf("/") == -1) {
@@ -389,6 +399,7 @@ require([
 
         saveAndFireSelection: function (item) {
             logger.debug("TreeView.widget.TreeView.saveAndFireSelection");
+
             mx.data.save({
                 mxobj: this.getContextObject(),
                 callback: this.onSelect,
@@ -402,6 +413,7 @@ require([
 
         getSelection: function (allowEdge) {
             logger.debug("TreeView.widget.TreeView.getSelection");
+
             if (this._selection && this._selection.isEdge && !allowEdge) {
                 return this._selection.parent;
             }
@@ -410,18 +422,22 @@ require([
 
         hasSelection: function () {
             logger.debug("TreeView.widget.TreeView.hasSelection");
+
             return this.getSelection(false) != null;
         },
 
         hasMultiSelection: function () {
             logger.debug("TreeView.widget.TreeView.hasMultiSelection");
+
             return false;
         },
 
         withSelection: function (scope, cb) {
             logger.debug("TreeView.widget.TreeView.withSelection");
-            if (this.hasSelection())
+
+            if (this.hasSelection()) {
                 cb.call(scope, this.getSelection(false));
+            }
         },
 
         onSelect: function (selection) {
@@ -434,31 +450,37 @@ require([
 
         findOrCreateEdge: function (type, parent, child, owner, nocreate) {
             logger.debug("TreeView.widget.TreeView.findOrCreateEdge");
-            if (!child)
-                throw this.id + "  assertion failed: no child to find or create edge provided. Has it been free-ed somehow?";
 
-            if (!(parent.guid in this.edgesByParent))
+            if (!child) {
+                throw this.id + "  assertion failed: no child to find or create edge provided. Has it been free-ed somehow?";
+            }
+
+            if (!(parent.guid in this.edgesByParent)) {
                 this.edgesByParent[parent.guid] = [];
-            if (!this.edgesByParent[parent.guid][type.index])
+            }
+            if (!this.edgesByParent[parent.guid][type.index]) {
                 this.edgesByParent[parent.guid][type.index] = {};
+            }
 
             var place = this.edgesByParent[parent.guid][type.index];
 
-            if (child.guid in place)
+            if (child.guid in place) {
                 return place[child.guid];
-            else if (nocreate === true)
+            } else if (nocreate === true) {
                 return null;
-            else {
+            } else {
                 var edge = new Edge(type, parent, child, owner);
 
                 //update edgesByParent
                 this.edgesByParent[parent.guid][type.index][child.guid] = edge;
 
                 //update edgesByOwner
-                if (!(owner.guid in this.edgesByOwner))
+                if (!(owner.guid in this.edgesByOwner)) {
                     this.edgesByOwner[owner.guid] = [];
-                if (!this.edgesByOwner[owner.guid][type.index])
+                }
+                if (!this.edgesByOwner[owner.guid][type.index]) {
                     this.edgesByOwner[owner.guid][type.index] = [];
+                }
 
                 this.edgesByOwner[owner.guid][type.index].push(edge);
 
@@ -468,6 +490,7 @@ require([
 
         freeEdge: function (edge) {
             logger.debug("TreeView.widget.TreeView.freeEdge");
+
             //update edgesByParent
             if (edge.parent.guid in this.edgesByParent) {
                 delete this.edgesByParent[edge.parent.guid][edge.type.index][edge.child.guid];
@@ -482,6 +505,7 @@ require([
 
         getXsettings: function (entity) {
             logger.debug("TreeView.widget.TreeView.getXsettings");
+
             var meta = mx.meta.getEntity(entity);
             for (var i = 0, x = null; x = this.xsettings[i]; i++) {
                 if (meta.isA(x.xentity)) {
@@ -493,6 +517,7 @@ require([
 
         getEdgesOwnedBy: function (owner) {
             logger.debug("TreeView.widget.TreeView.getEdgesOwnedBy");
+
             if (!(owner.guid in this.edgesByOwner)) { //might not be available yet
                 this.edgesByOwner[owner.guid] = [];
             }
@@ -502,6 +527,7 @@ require([
 
         getChildEdges: function (parent) {
             logger.debug("TreeView.widget.TreeView.getChildEdges");
+
             if (!(parent.guid in this.edgesByParent))
                 this.edgesByParent[parent.guid] = [];
 
@@ -510,13 +536,12 @@ require([
 
         selectFirstItem: function () {
             logger.debug("TreeView.widget.TreeView.selectFirstItem");
+
             if (!this.hiderootnode) {
                 if (this.root && this.root.nodes.length > 0) {
                     this.setSelection(this.root.nodes[0]);
                 }
-            }
-            //select first child
-            else {
+            } else { //select first child
                 var edges = this.root.getChildTypes();
                 if (edges.length > 0) {
                     var edge = edges[0];
@@ -532,12 +557,13 @@ require([
 
         processData: function (data) {
             logger.debug("TreeView.widget.TreeView.processData");
+
             for (var i = 0; i < data.length; i++) {
                 var mxobj = data[i];
                 var guid = mxobj.getGuid();
-                if (this.dict[guid])
+                if (this.dict[guid]) {
                     this.dict[guid].update(mxobj);
-                else {
+                } else {
                     var g = new GraphNode(this, mxobj, false);
                     if (this._recordSelectionSuggestion) {
                         if (!this._selectionSuggestions) {
@@ -553,6 +579,7 @@ require([
 
         processRecordSelectionSuggestion: function () {
             logger.debug("TreeView.widget.TreeView.processRecordSelectionSuggestion");
+
             var max = 0,
                 cur = null;
             if (this._selectionSuggestions) {
@@ -585,15 +612,12 @@ require([
         },
 
         /*
-
-
          UI Events
-
-
-         */
+        */
 
         grabFocus: function () {
             logger.debug("TreeView.widget.TreeView.grabFocus");
+
             if (mxui.wm.focus.get() != this.treeNode) {
                 mxui.wm.focus.put(this.treeNode);
             }
@@ -601,6 +625,7 @@ require([
 
         _setupEvents: function () {
             logger.debug("TreeView.widget.TreeView._setupEvents");
+
             var lc = Commons.liveConnect;
 
             lc(this, this.treeNode, "onclick", {
@@ -673,6 +698,7 @@ require([
 
         _getRenderNodeForNode: function (node) {
             logger.debug("TreeView.widget.TreeView._getRenderNodeForNode");
+
             while (node != null) {
                 if (dojo.hasClass(node, "gg_node")) {
                     if (node == this.dnd.tmpnode) {
@@ -688,6 +714,7 @@ require([
 
         keypress: function (e) {
             logger.debug("TreeView.widget.TreeView.keypress");
+
             var sel = this.getSelection(true),
                 handled = false;
             if (sel) {
@@ -758,6 +785,7 @@ require([
 
         invokeDefaultAction: function () {
             logger.debug("TreeView.widget.TreeView.invokeDefaultAction");
+
             for (var i = 0, a = null; a = this.actions[i++];) {
                 if (a.actisdefault && a.appliesToSelection()) {
                     a.invokeOnSelection();
@@ -766,8 +794,6 @@ require([
         },
 
         onRowMouseOver: function (target, e) {
-            //logger.debug("TreeView.widget.TreeView.onRowMouseOver");
-            //		console.log("over");
             if (!this.dnd.isdragging && target != this._hoveredRow) {
                 this._hoveredRow && dojo.removeClass(this._hoveredRow, "gg_row_hover");
                 dojo.addClass(target, "gg_row_hover");
@@ -790,8 +816,6 @@ require([
         },
 
         onRowMouseDown: function (target, e) {
-            //logger.debug("TreeView.widget.TreeView.onRowMouseDown");
-            //		console.log("on down");
             if (!this.dnd.isdragging) {
                 this.dnd.mousedown = true;
                 this.dnd.startNode = target;
@@ -803,8 +827,6 @@ require([
         },
 
         onRowMouseUp: function (target, e) {
-            //logger.debug("TreeView.widget.TreeView.onRowMouseUp");
-            //		console.log("on up");
             this.dnd.mousedown = false;
             if (this.dnd.isdragging) {
                 this.onEndDrag(target, e);
@@ -814,6 +836,7 @@ require([
 
         resetDndClasses: function (node) {
             logger.debug("TreeView.widget.TreeView.resetDndClasses");
+
             if (node) {
                 dojo.removeClass(node, "gg_drag_over gg_drag_accept gg_drag_deny");
             }
@@ -821,6 +844,7 @@ require([
 
         startDrag: function (target, e) {
             logger.debug("TreeView.widget.TreeView.startDrag");
+
             //tmp node for drag an drop operations
             this.dnd.tmpnode = mxui.dom.create("li", {"class": "gg_node gg_anchor"}, mxui.dom.create("div", {"class": "gg_anchor_inner"}));
 
@@ -876,6 +900,7 @@ require([
 
         onDrag: function (targetNode, e) {
             logger.debug("TreeView.widget.TreeView.onDrag");
+
             //Hide selection, especially needed in IE.
             if (document.selection && document.selection.empty) {
                 document.selection.empty();
@@ -910,17 +935,14 @@ require([
             //drag over tmpnode
             if (targetNode == tmpnode) {
                 pos = this.dnd.pos = this.dnd.tmppos;
-            }
-            //drag over a real node
-            else {
+            } else { //drag over a real node
                 pos = this.dnd.pos = "last";
                 if (candropBefore) {
                     if (oy > mbox.h / 2) {
                         if (target.collapsed == true || target.childNode.children.length == 0) {
                             this.dnd.tmppos = "after";
                             dojo.place(tmpnode, target.domNode, "after");
-                        } else {
-                            //as first child
+                        } else { //as first child
                             this.dnd.tmppos = "first";
                             dojo.place(tmpnode, target.childNode, "first");
                         }
@@ -933,7 +955,6 @@ require([
 
             var accept = this.dnd.accept = this.dragOver(current, target, pos, copy);
 
-            //		console.log("DnD over: pos: " + pos + " candropBefore: " + candropBefore + " copy: " + copy + " accept: " + accept + " tmppos: " + this.dnd.tmppos + " rowh: " + mbox.h + " y: " + oy);
             this.resetDndClasses(target.domNode);
             this.resetDndClasses(tmpnode);
             dojo.removeClass(avatar, "gg_drag_outside");
@@ -981,11 +1002,7 @@ require([
 
         onEndDrag: function (target, e) {
             logger.debug("TreeView.widget.TreeView.onEndDrag");
-            //		console.log("stop drag");
 
-            //MWE: e is null in the case of the body mouseup
-            //if (e)
-            //	this.onDrag(target, e); //make sure everything is up to date
             var result = this.dnd.accept && this.performDrop(this.dnd.current, this.dnd.target, this.dnd.pos, this.dnd.copy);
 
             //update event state
@@ -1016,6 +1033,7 @@ require([
 
         resetNodesAfterDnD: function () {
             logger.debug("TreeView.widget.TreeView.resetNodesAfterDnD");
+
             if (this.dnd.target) {
                 this.resetDndClasses(this.dnd.target.domNode);
             }
@@ -1028,6 +1046,7 @@ require([
 
         _findDropAssocs: function (item, target, pos, copy) {
             logger.debug("TreeView.widget.TreeView._findDropAssocs");
+
             var assocs = [];
 
             if (pos == "before" || pos == "after" || target.isEdge) {
@@ -1054,6 +1073,7 @@ require([
         //indicate whether it is possible to drop before another item
         canDropBefore: function (item, target) {
             logger.debug("TreeView.widget.TreeView.canDropBefore");
+
             if (!target || target.isEdge) //we cannot drop before assoc nodes
                 return false;
 
@@ -1078,8 +1098,8 @@ require([
          */
         dragOver: function (item, target, pos, copy) {
             logger.debug("TreeView.widget.TreeView.dragOver");
+
             //Avoid drop in self
-            //
             var validSelfdrop = (target == item && (pos == "before" || pos == "after"));
 
             if (!validSelfdrop) {
@@ -1105,6 +1125,7 @@ require([
          */
         performDrop: function (item, target, pos, copy) {
             logger.debug("TreeView.widget.TreeView.performDrop");
+
             if (!target) {
                 return false;
             }
@@ -1119,9 +1140,9 @@ require([
             var t = null;
             if (target.isEdge){
                 t = target.parent.graphNode._data;
-            }else if (pos == "before" || pos == "after"){
+            } else if (pos == "before" || pos == "after"){
                 t = target.parent.graphNode._data
-            }else{
+            } else{
                 t = target.graphNode._data; //new parent
             }
 
@@ -1155,10 +1176,7 @@ require([
                     //reference set (was already removed from orig parent in step 0)
                     if (assoc.isRefset) {
                         t.addReferences(assoc.assoc, [i.getGuid()]);
-                    }
-
-                    //normal reference
-                    else{
+                    } else{ //normal reference
                         t.set(assoc.assoc, i.getGuid());
                     }
                 } else { //assoc stored in child
@@ -1190,9 +1208,9 @@ require([
                         nidx = (target.graphNode.getSortIndex() + other.graphNode.getSortIndex()) / 2;
                     }
                 } else {
-                    if (pos == "last"){
+                    if (pos == "last") {
                         nidx = (target.isEdge ? target.parent : target).findMaxIndex() + 14056;
-                    }else{
+                    } else {
                         nidx = (target.isEdge ? target.parent : target).findMinIndex() - 4313;}
                 }
 
@@ -1233,12 +1251,14 @@ require([
 
         foldNodeClick: function (node) {
             logger.debug("TreeView.widget.TreeView.foldNodeClick");
+
             var renderNode = this._getRenderNodeForNode(node);
             renderNode.setCollapsed(!renderNode.collapsed);
         },
 
         updateAccordionForSelection: function (record) {
             logger.debug("TreeView.widget.TreeView.updateAccordionForSelection");
+
             if (!record) {
                 return;
             }
@@ -1261,12 +1281,14 @@ require([
 
         assocFoldClick: function (node) {
             logger.debug("TreeView.widget.TreeView.assocFoldClick");
+
             var renderEdge = mxui.dom.data(node.parentNode.parentNode, "ggdata");
             renderEdge.setCollapsed(!renderEdge.collapsed);
         },
 
         columnClick: function (node) {
             logger.debug("TreeView.widget.TreeView.columnClick");
+
             var col = mxui.dom.data(node, "colindex");
             var renderNode = this._getRenderNodeForNode(node);
 
@@ -1275,6 +1297,7 @@ require([
 
         addToSchema: function (entity, attr) {
             logger.debug("TreeView.widget.TreeView.addToSchema");
+
             if (!attr) {
                 return;
             }
@@ -1305,6 +1328,7 @@ require([
          */
         toMap: function (thing) {
             logger.debug("TreeView.widget.TreeView.toMap");
+
             var res = {};
             if (thing == "") {
                 return res;
@@ -1333,6 +1357,7 @@ require([
          */
         moveNode: function (domNode, targetIndex) {
             logger.debug("TreeView.widget.TreeView.moveNode");
+
             var parent = domNode.parentNode;
 
             if (parent == null) {
@@ -1350,6 +1375,7 @@ require([
          */
         findPreviousNode: function (node, clazz, limitNode) {
             logger.debug("TreeView.widget.TreeView.findPreviousNode");
+
             if (node.previousElementSibling == null) {
                 //find a matching parent
                 var cur = node.parentNode;
@@ -1359,7 +1385,6 @@ require([
                     }
                     cur = cur.parentNode;
                 }
-
             } else {
                 //find a previously matching sibling
                 var findLast = function (cur) {
@@ -1377,7 +1402,7 @@ require([
                         return cur;
                     }
                     return null;
-                }
+                };
 
                 var lc = findLast(node.previousElementSibling);
                 if (lc) {
@@ -1390,6 +1415,7 @@ require([
 
         findNextNode: function (node, clazz, limitNode) {
             logger.debug("TreeView.widget.TreeView.findNextNode");
+
             var findChild = function (cur) {
                 for (var i = 0; i < cur.children.length; i++) {
                     if (dojo.style(cur.children[i], "display") != "none") {
@@ -1403,7 +1429,7 @@ require([
                     }
                 }
                 return null;
-            }
+            };
 
             var fc = findChild(node);
             if (fc){
@@ -1424,16 +1450,19 @@ require([
 
         configError: function (msg) {
             logger.debug("TreeView.widget.TreeView.configError");
+
             Commons.configError(this, msg);
         },
 
         showError: function (e) {
             logger.debug("TreeView.widget.TreeView.showError");
+
             Commons.error(e, this);
         },
 
         splitPropsTo: function (props, target) {
             logger.debug("TreeView.widget.TreeView.splitPropsTo");
+            
             Commons.splitPropsTo(this, props, target);
         },
 
