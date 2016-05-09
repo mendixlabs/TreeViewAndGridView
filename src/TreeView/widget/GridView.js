@@ -196,7 +196,7 @@ dojo.declare("TreeView.widget.Record", null, {
 		return;
 		this._destroyed = true;
 
-		dojo.forEach(this.subs, function(sub) {
+		dojo.forEach(this._subs, function(sub) {
 			dojo.disconnect(sub);
 		});
 
@@ -1408,6 +1408,9 @@ uninitialize : function() {
 	});
 	dojo.forEach(this.actions, function(action) {
 		action.free();
+	});
+	dojo.forEach(this.records, function(record) {
+		record.free();
 	});
 }
 });
