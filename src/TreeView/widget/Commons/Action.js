@@ -80,7 +80,7 @@ define([
                 else {
                     this.mxbutton = new mxui.widget._Button({
                         caption     : this.actbuttoncaption,
-                        icon        : this.actbuttonimage,
+                        iconUrl     : this.actbuttonimage,
                         onClick     : dojo.hitch(this, this.invokeOnSelection),
                         type        : "button",
                         cssclass    : this.actclassname,
