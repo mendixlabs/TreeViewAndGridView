@@ -261,6 +261,9 @@ require([
             dojo.forEach(this.actions, function(action) {
                 action.free();
             });
+            dojo.forEach(this.records, function(record) {
+                record.free();
+            });
         },
 
         _setupEvents : function() {

@@ -145,7 +145,7 @@ define([
                 return;
             this._destroyed = true;
 
-            dojo.forEach(this.subs, function (sub) {
+            dojo.forEach(this._subs, function (sub) {
                 dojo.disconnect(sub);
             });
 
