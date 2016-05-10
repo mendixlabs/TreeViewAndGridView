@@ -403,7 +403,6 @@ define([
         splitPropsTo : function(widget, propnames, target) {
             logger.debug("TreeView.widget.Commons.splitPropsTo");
 
-            console.log(arguments);
             var props = propnames.split(",");
             var rawdata = {};
 
@@ -439,7 +438,7 @@ define([
          */
         normalizeContext : function(data, cb) {
             logger.debug("TreeView.widget.Commons.normalizeContext");
-            
+
             //Nothing
             if (data == null) {
                 cb(null, null);
