@@ -1,7 +1,7 @@
 define([
     "dojo/_base/declare",
     "TreeView/widget/Commons",
-    "TreeView/widget/Commons/DropDown",
+    "TreeView/widget/Commons/Dropdown",
 ], function(declare, Commons, DropDown) {
     "use strict"
 

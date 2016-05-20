@@ -1,15 +1,16 @@
 require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
-    "mxui/mixin/_Scriptable",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, _Scriptable, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function(declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
+
+    var _Scriptable = mxui.mixin._Scriptable;
 
     return declare("TreeView.widget.TreeView", [_WidgetBase, _Scriptable], {
         root: null, //render node
@@ -1462,7 +1463,7 @@ require([
 
         splitPropsTo: function (props, target) {
             logger.debug("TreeView.widget.TreeView.splitPropsTo");
-            
+
             Commons.splitPropsTo(this, props, target);
         },
 
