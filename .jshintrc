@@ -10,8 +10,7 @@
     "globals"  : {
         "mendix" : false,
         "mx"     : false,
-        "logger" : false,
-        "mxui"   : false
+        "logger" : false
     },
 
     // Relaxing
