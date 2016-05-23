@@ -232,6 +232,15 @@
     border-left: 1px solid #ccc;
 }
 
-.gg_children {
-    outline: none;
+/* remove list styles */
+.gg_assoc_wrapper {
+    list-style: none;
+}
+
+.gg_children.gg_root_wrapper.gg_hiddenroot {
+    list-style: none;
+}
+/* reset bootrap ul li styling*/
+.gg_assoc_children {
+    padding-left: 0;
 }
