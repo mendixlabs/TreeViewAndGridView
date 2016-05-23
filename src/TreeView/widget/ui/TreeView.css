@@ -231,3 +231,7 @@
     margin-left: 8px;
     border-left: 1px solid #ccc;
 }
+
+.gg_children {
+    outline: none;
+}
