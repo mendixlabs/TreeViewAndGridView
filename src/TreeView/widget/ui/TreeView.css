@@ -27,7 +27,7 @@
 }
 
 .gg_column_wrapper {
-    display: inline-block; 
+    display: inline-block;
     float : left;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .gg_nochildren {
-	
+
 }
 
 .gg_row {
@@ -109,7 +109,7 @@
 }
 
 .gg_row_hover > .gg_row{
-	background-color : #e2e2e2;	
+	background-color : #e2e2e2;
 }
 
 .gg_clickable {
@@ -117,7 +117,7 @@
 }
 
 /* note the '>', we don't want to highlight all the descendants! */
-.gg_selected > .gg_row, 
+.gg_selected > .gg_row,
 .gg_selected > .gg_row_hover {
 	background-color : #faffbd;
 	outline: 1px dotted #333;
@@ -126,7 +126,7 @@
 /* Drag and drop styling */
 
 .gg_dragging > .gg_row {
-	background-color : #e2e2e2;	
+	background-color : #e2e2e2;
 	opacity : 0.5;
 	color : #444;
 }
@@ -153,7 +153,7 @@
 }
 
 .gg_drag_accept {
-	border-top-color : #BFDF8B;	
+	border-top-color : #BFDF8B;
 }
 
 .gg_drag_deny {
@@ -176,7 +176,7 @@
 }
 
 .gg_drag_deny > .gg_anchor_inner {
-	border-color: #FC807E; 
+	border-color: #FC807E;
 }
 
 .gg_drag_outside {
@@ -230,6 +230,10 @@
     padding-left: 8px;
     margin-left: 8px;
     border-left: 1px solid #ccc;
+}
+
+.gg_children {
+    outline: none;
 }
 
 /* remove list styles */
