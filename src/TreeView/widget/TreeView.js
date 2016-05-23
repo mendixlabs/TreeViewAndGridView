@@ -651,7 +651,23 @@ require([
                         this.invokeDefaultAction(target, e);
                 }
             });
-
+            lc(this, this.treeNode, "mouseleave", {
+                "gg_assoc_wrapper": function (target, e) {
+                    dojo.removeClass(target, "gg_row_hover");
+                    this._hoveredRow = null;
+                    return true;
+                },
+                "gg_column_wrapper": function (target, e) {
+                    dojo.removeClass(target, "gg_col_hover");
+                    this.hoveredCol = null;
+                    return true;
+                },
+                "gg_node": function (target, e) {
+                    dojo.removeClass(target, "gg_row_hover");
+                    this._hoveredRow = null;
+                    return true;
+                }
+            });
             lc(this, this.treeNode, "onmouseover", {
                 "gg_column_wrapper": function (target, e) {
                     if (!this.dnd.isdragging && target != this._hoveredCol) {
