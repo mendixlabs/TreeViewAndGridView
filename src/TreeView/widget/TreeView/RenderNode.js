@@ -53,7 +53,11 @@ define([
             this.draw(true);
 
             this.setCollapsed(true);
-
+            
+            // set depth based on having a parent, root is 0, should be done before creating Rendering Edges.
+            if (this.parent != null) {
+                this.depth = this.parent.depth + 1;
+            }
 
             //setup child edges
             dojo.forEach(this.graphNode.getChildTypes(), function (type) {
@@ -67,7 +71,6 @@ define([
             }
             //place in parent
             else {
-                this.depth = this.parent.depth + 1;
                 this.getEdge().add(this);
             }
 
