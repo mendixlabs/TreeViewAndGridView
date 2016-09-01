@@ -416,7 +416,7 @@ define([
                 var obj = {};
                 var hasdata = false;
                 for (var key in rawdata) {
-                    var val = obj[key] = rawdata[key][i];
+                    var val = obj[key] = rawdata[key][i] || ""; // if undefined make an empty string.
                     if (/^true$/.test(obj[key])) {
                         obj[key] = true;
                     } else if (/^false$/.test(obj[key])) {
