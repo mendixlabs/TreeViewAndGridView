@@ -407,7 +407,7 @@ require([
                 error: this.showError
             }, this);
 
-            mx.data.objectUpdateNotification(this.getContextObject());
+            //mx.data.objectUpdateNotification(this.getContextObject());
 
             this.onSelect(item);
         },
