@@ -5,7 +5,7 @@
 define([
     "dojo/_base/declare",
     "TreeView/widget/TreeView/RenderNode"
-], function(declare, RenderNode) {
+], function (declare, RenderNode) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.GraphNode", null, {
@@ -50,9 +50,9 @@ define([
             this._subscription = mx.data.subscribe({
                 guid: this.guid,
                 callback: dojo.hitch(this, function (thing) {
-                    if (dojo.isObject(thing)){
+                    if (dojo.isObject(thing)) {
                         this.updateWithRefs(thing);
-                    }else{
+                    } else {
                         mx.data.get({
                             guid: thing,
                             error: this.tree.showError,
@@ -146,7 +146,7 @@ define([
                             var nocreate = false;
                             if (type != this.tree._currentLoadingRel && isChild && type.constraint.length) {
                                 var xsettings = this.tree.getXsettings(type.parententity)
-                                if (xsettings != null && xsettings.xburstattr){
+                                if (xsettings != null && xsettings.xburstattr) {
                                     nocreate = true;
                                 }
                             }
@@ -184,7 +184,7 @@ define([
                 if (newburst != this._burst) {
                     this._burst = newburst;
                     dojo.forEach(this.children, function (edgeSet) {
-                        if (edgeSet){
+                        if (edgeSet) {
                             edgeSet.knowsChildren = false;
                         }
                     });
@@ -210,7 +210,7 @@ define([
         forNodes: function (func) {
             logger.debug("TreeView.widget.GraphNode.forNodes");
             var l = this.nodes.length;
-            for (var i = 0; i < l; i++){
+            for (var i = 0; i < l; i++) {
                 func.call(this, this.nodes[i]);
             }
         },
@@ -275,10 +275,10 @@ define([
             logger.debug("TreeView.widget.GraphNode.ensureChildren");
             var c = this.children[type.index];
             if (c.knowsChildren) {
-                mendix.lang.nullExec(callback);
+                callback && callback();
             } else if (c._retrieving) {
                 if (callback) {
-                     c._afterChildrenCb.push(callback);
+                    c._afterChildrenCb.push(callback);
                 }
             } else {
                 c._retrieving = true;
@@ -312,7 +312,7 @@ define([
 
                     //1. mark edges from here in here invalid
                     var edges = this.tree.getChildEdges(this)[rel.index];
-                    for (var childguid in edges){
+                    for (var childguid in edges) {
                         edges[childguid]._valid = false;
                     }
 

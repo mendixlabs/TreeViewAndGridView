@@ -1,12 +1,12 @@
 define([
     "dojo/_base/declare",
     "dojo/data/util/simpleFetch",
-], function(declare) {
+], function (declare) {
     "use strict";
 
     var Commons = declare("TreeView.widget.Commons", null, {
         //MX5 hack
-        fixObjProps : function(widget, props) {
+        fixObjProps: function (widget, props) {
             logger.debug("TreeView.widget.Commons.fixObjProps");
 
             var args = {};
@@ -29,7 +29,7 @@ define([
             }
         },
 
-        getEnumMap : function(classname, attrname) {
+        getEnumMap: function (classname, attrname) {
             logger.debug("TreeView.widget.Commons.getEnumMap");
 
             var meta = mx.meta.getEntity(classname);
@@ -48,15 +48,15 @@ define([
          * @param  {[type]} data  [datamap object to be attached to the domnode]
          * @return {[type]} node      [description]
          */
-        renderLabel : function(name, close, data) {
+        renderLabel: function (name, close, data) {
             logger.debug("TreeView.widget.Commons.renderLabel");
 
             var n = mxui.dom.create(
                 "span",
-                {"class": "gv_label"},
+                { "class": "gv_label" },
                 mxui.dom.create(
                     "span",
-                    {"class": "gv_label_name"},
+                    { "class": "gv_label_name" },
                     name ? name : ""
                 )
             );
@@ -64,7 +64,7 @@ define([
             if (close) {
                 dojo.place(mxui.dom.create(
                     "span",
-                    {"class": "gv_label_close"},
+                    { "class": "gv_label_close" },
                     "x"
                 ), n);
             }
@@ -73,7 +73,7 @@ define([
             return n;
         },
 
-        getAttributeType : function(classnameOrObject, attr) {
+        getAttributeType: function (classnameOrObject, attr) {
             logger.debug("TreeView.widget.Commons.getAttributeType");
 
             var parts = attr.split("/");
@@ -93,7 +93,7 @@ define([
             return false;
         },
 
-        getObjectAttr : function(object, attr, renderValue) {
+        getObjectAttr: function (object, attr, renderValue) {
             logger.debug("TreeView.widget.Commons.getObjectAttr");
 
             if (!object || !attr) {
@@ -156,7 +156,7 @@ define([
             throw "GridCommons.getObjectAttr: Failed to retrieve attribute '" + attr + "'";
         },
 
-        objectToGuid : function(thing) {
+        objectToGuid: function (thing) {
             logger.debug("TreeView.widget.Commons.objectToGuid");
 
             if (!thing) {
@@ -181,7 +181,7 @@ define([
          * @param  {Function} callback [callback function]
          * @return {[type]}            [description]
          */
-        store : function(object, attr, value, mode, commit, callback) {
+        store: function (object, attr, value, mode, commit, callback) {
             logger.debug("TreeView.widget.Commons.store");
 
             var res = false;
@@ -192,7 +192,7 @@ define([
                 var cb = function () {
                     left -= 1;
                     if (left < 1) {
-                        mendix.lang.nullExec(callback);
+                        callback && callback();
                     }
                 };
 
@@ -231,10 +231,10 @@ define([
                         }
 
                         switch (mode) {
-                            case "add" :
+                            case "add":
                                 res = object.addReferences(attr, guids);
                                 break;
-                            case "rem" :
+                            case "rem":
                                 res = object.removeReferences(attr, guids);
                                 break;
                             default:
@@ -263,7 +263,7 @@ define([
                     mxobj: object,
                     error: this.error,
                     callback: function () {
-                        mendix.lang.nullExec(callback);
+                        callback && callback();
                     }
                 });
             }
@@ -277,7 +277,7 @@ define([
          * @param {[type]} event [description]
          * @param {[type]} map of className -> function(node, event) -> boolean. (If false, further event are stopped)
          */
-        liveConnect : function(widget, node, event, map) {
+        liveConnect: function (widget, node, event, map) {
             logger.debug("TreeView.widget.Commons.liveConnect");
 
             if (!node) {
@@ -314,11 +314,11 @@ define([
          * @param  {[type]}   message  [description]
          * @param  {Function} callback [description]
          */
-        confirm : function(message, callback, yescaption, nocaption) {
+        confirm: function (message, callback, yescaption, nocaption) {
             logger.debug("TreeView.widget.Commons.confirm");
 
             if (!message) {
-                mendix.lang.nullExec(callback);
+                callback && callback();
                 return;
             }
 
@@ -330,7 +330,7 @@ define([
             });
         },
 
-        mf : function(mfname, data, callback, context, mfNeedsList, progressMessage) {
+        mf: function (mfname, data, callback, context, mfNeedsList, progressMessage) {
             logger.debug("TreeView.widget.Commons.mf");
 
             //firing on multiple items? wait for all items to finish
@@ -379,7 +379,7 @@ define([
             }
         },
 
-        configError : function(widget, msg) {
+        configError: function (widget, msg) {
             logger.debug("TreeView.widget.Commons.configError");
 
             msg = "Configuration error in " + widget.id + ": " + msg;
@@ -390,7 +390,7 @@ define([
             throw msg;
         },
 
-        error : function(e) {
+        error: function (e) {
             logger.debug("TreeView.widget.Commons.error");
 
             console.error(e);
@@ -400,7 +400,7 @@ define([
         /**
          * splits the given properties up to objects in target per index. First property indicates targetobjects name
          */
-        splitPropsTo : function(widget, propnames, target) {
+        splitPropsTo: function (widget, propnames, target) {
             logger.debug("TreeView.widget.Commons.splitPropsTo");
 
             var props = propnames.split(",");
@@ -436,13 +436,13 @@ define([
          * @param  {[function(object, guid)]} cb to be invoked when resolved [description]
          * @return {[type]}      [description]
          */
-        normalizeContext : function(data, cb) {
+        normalizeContext: function (data, cb) {
             logger.debug("TreeView.widget.Commons.normalizeContext");
 
             //Nothing
             if (data == null) {
                 cb(null, null);
-            } else if (typeof(data) != "object" && /^\d+$/.test(data)) { //GUid only
+            } else if (typeof (data) != "object" && /^\d+$/.test(data)) { //GUid only
                 mx.data.get({
                     guid: data,
                     callback: function (mxobj) {
