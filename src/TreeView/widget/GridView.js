@@ -516,7 +516,7 @@ require([
             this.updatePaging(); //update selected items label
 
             if (this.selectionref || this.selectionrefset) {
-                mx.data.save({
+                mx.data.commit({
                     mxobj: this.contextObject,
                     callback: dojo.hitch(this, this.onSelect, item),
                     error: this.showError
@@ -786,7 +786,7 @@ require([
 
             var self = this;
 
-            mx.data.save({
+            mx.data.commit({
                 mxobj: contextObject,
                 callback: function () {
                     self._iscallingdatasource = true;
