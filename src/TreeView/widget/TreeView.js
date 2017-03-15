@@ -10,9 +10,8 @@ require([
 ], function (declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
 
-    var _Scriptable = mxui.mixin._Scriptable;
 
-    return declare("TreeView.widget.TreeView", [_WidgetBase, _Scriptable], {
+    return declare("TreeView.widget.TreeView", [_WidgetBase], {
         root: null, //render node
         dict: null, //guid -> GraphNode
         types: null, //type definitions : entityName -> config
@@ -144,7 +143,6 @@ require([
                 this.selectionrefs = this.selectionref.split(";");
             }
 
-            this.offerInterface("close");
 
             this._setupTypes();
 
