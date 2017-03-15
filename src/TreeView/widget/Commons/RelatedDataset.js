@@ -1,7 +1,7 @@
 define([
     "dojo/_base/declare",
     "TreeView/widget/Commons"
-], function(declare, Commons) {
+], function (declare, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.RelatedDataset", null, {
@@ -40,7 +40,7 @@ define([
             this.widget.connect(this.widget, "update", dojo.hitch(this, function (data, cb) {
                 this.contextGuid = data && data.getGuid ? data.getGuid() : data;
                 this.fetchLabels();
-                mendix.lang.nullExec(cb);
+                cb && cb();
             }));
         },
 
@@ -53,7 +53,7 @@ define([
         },
 
         getValue: function (item, _) {
-            if (typeof (item) == "object"){
+            if (typeof (item) == "object") {
                 return item.get(this.relnameattr);
             } else if (/^\d+$/.test(item)) {
                 var obj = this.existingLabelsById[item]; //assuming guid
@@ -69,7 +69,7 @@ define([
         },
 
         fetchLabels: function () {
-            if (this.contextGuid == null || this._fetchingLabels){
+            if (this.contextGuid == null || this._fetchingLabels) {
                 return;
             }
             this.hasData = false;
@@ -98,12 +98,12 @@ define([
                 this.existingLabels[label.toLowerCase()] = obj;
                 this.existingLabelsById[value] = obj;
 
-                return {value: value, label: label};
+                return { value: value, label: label };
             }, this);
 
             this._fetchingLabels = false;
 
-            if (this.relnewitemcaption){
+            if (this.relnewitemcaption) {
                 this.existingOptions.splice(0, 0, {
                     value: "new",
                     label: this.relnewitemcaption,
@@ -136,9 +136,9 @@ define([
                     callback: dojo.hitch(this, function (label) {
                         var cb = callback
                             ? dojo.hitch(this, callback, {
-                            value: label.getGuid(),
-                            label: labelname
-                        })
+                                value: label.getGuid(),
+                                label: labelname
+                            })
                             : null;
 
                         if (this.relcontextassoc)
@@ -163,7 +163,7 @@ define([
 
         fetchItemByIdentity: function (args) {
             //TODO: check and error handling
-            if (!this.existingLabelsById){
+            if (!this.existingLabelsById) {
                 args.onItem.call(args.scope, null);
             } else {
                 args.onItem.call(args.scope, this.existingLabelsById[args.identity]);
@@ -173,10 +173,11 @@ define([
         /* Simplefetch api */
         _fetchItems: function (query, resultcallback) {
             var results = [];
-            if (this.existingLabels != null){
-                for (var key in this.existingLabels){
-                    if (key.indexOf(query.query.name.toLowerCase()) === 0){
-                        results.push(this.existingLabels[key]);}
+            if (this.existingLabels != null) {
+                for (var key in this.existingLabels) {
+                    if (key.indexOf(query.query.name.toLowerCase()) === 0) {
+                        results.push(this.existingLabels[key]);
+                    }
                 }
             }
             resultcallback(results, query);
