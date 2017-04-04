@@ -494,11 +494,11 @@ require([
             //if reload on context change is enabled, reload as soon as the context object is altered
             if (this.refreshoncontext) {
                 if (this._contextSubscription) {
-                    mx.data.unsubscribe(this._contextSubscription);
+                    this.unsubscribe(this._contextSubscription);
                 }
 
                 if (this.contextGUID) {
-                    this._contextSubscription = mx.data.subscribe({
+                    this._contextSubscription = this.subscribe({
                         guid: this.contextGUID,
                         callback : dojo.hitch(this, function() {
                             if (!this._iscallingdatasource) {
@@ -516,7 +516,7 @@ require([
             this.updatePaging(); //update selected items label
 
             if (this.selectionref || this.selectionrefset) {
-                mx.data.save({
+                mx.data.commit({
                     mxobj : this.contextObject,
                     callback : dojo.hitch(this, this.onSelect, item),
                     error : this.showError
@@ -786,13 +786,12 @@ require([
 
             var self = this;
 
-            mx.data.save({
+            mx.data.commit({
                 mxobj : contextObject,
                 callback : function(){
                     self._iscallingdatasource = true;
-                    mx.data.action({
+                    mx.ui.action(self.datasourcemf, {
                         params : {
-                            actionname : self.datasourcemf,
                             applyto     : "selection",
                             guids : ["" + contextObject.getGuid()]
                         },

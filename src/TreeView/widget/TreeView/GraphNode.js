@@ -47,7 +47,7 @@ define([
 
             this.update(data);
 
-            this._subscription = mx.data.subscribe({
+            this._subscription = this.tree.subscribe({
                 guid: this.guid,
                 callback: dojo.hitch(this, function (thing) {
                     if (dojo.isObject(thing)){
@@ -380,7 +380,7 @@ define([
                 this._destroyed = true;
 
                 if (this._subscription)
-                    mx.data.unsubscribe(this._subscription);
+                    this.tree.unsubscribe(this._subscription);
 
                 delete this.tree.dict[this.guid];
 

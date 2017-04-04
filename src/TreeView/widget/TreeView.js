@@ -401,13 +401,13 @@ require([
         saveAndFireSelection: function (item) {
             logger.debug("TreeView.widget.TreeView.saveAndFireSelection");
 
-            mx.data.save({
+            mx.data.commit({
                 mxobj: this.getContextObject(),
                 callback: this.onSelect,
                 error: this.showError
             }, this);
 
-            mx.data.objectUpdateNotification(this.getContextObject());
+            //mx.data.objectUpdateNotification(this.getContextObject());
 
             this.onSelect(item);
         },

@@ -23,7 +23,7 @@ define([
 
             this.grid = grid;
 
-            this._subscription = mx.data.subscribe({
+            this._subscription = grid.subscribe({
                 guid: this.guid,
                 callback: dojo.hitch(this, function (thing) {
                     //Do not update while suspended; all data will be fetch upon resume.
@@ -152,7 +152,7 @@ define([
             dojo.destroy(this.domNode);
 
             if (this._subscription)
-                mx.data.unsubscribe(this._subscription);
+                this.grid.unsubscribe(this._subscription);
 
         }
     });
