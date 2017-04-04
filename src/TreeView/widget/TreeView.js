@@ -182,7 +182,7 @@ require([
                 this.selectFirstItem();
             }
 
-            mendix.lang.nullExec(cb);
+            if (cb && typeof cb === "function") { cb(); }
         },
 
 

@@ -275,7 +275,7 @@ define([
             logger.debug("TreeView.widget.GraphNode.ensureChildren");
             var c = this.children[type.index];
             if (c.knowsChildren) {
-                mendix.lang.nullExec(callback);
+                if (callback && typeof callback === "function") { callback(); }
             } else if (c._retrieving) {
                 if (callback) {
                      c._afterChildrenCb.push(callback);

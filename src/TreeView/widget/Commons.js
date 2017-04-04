@@ -192,7 +192,7 @@ define([
                 var cb = function () {
                     left -= 1;
                     if (left < 1) {
-                        mendix.lang.nullExec(callback);
+                        if (callback && typeof callback === "function") { callback(); }
                     }
                 };
 
@@ -263,7 +263,7 @@ define([
                     mxobj: object,
                     error: this.error,
                     callback: function () {
-                        mendix.lang.nullExec(callback);
+                        if (callback && typeof callback === "function") { callback(); }
                     }
                 });
             }
@@ -318,7 +318,7 @@ define([
             logger.debug("TreeView.widget.Commons.confirm");
 
             if (!message) {
-                mendix.lang.nullExec(callback);
+                if (callback && typeof callback === "function") { callback(); }
                 return;
             }
 

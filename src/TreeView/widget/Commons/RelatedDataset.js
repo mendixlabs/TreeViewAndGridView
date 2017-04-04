@@ -40,7 +40,7 @@ define([
             this.widget.connect(this.widget, "update", dojo.hitch(this, function (data, cb) {
                 this.contextGuid = data && data.getGuid ? data.getGuid() : data;
                 this.fetchLabels();
-                mendix.lang.nullExec(cb);
+                if (cb && typeof cb === "function") { cb(); }
             }));
         },
 

@@ -118,7 +118,7 @@ define([
                     dojo.style(this.childNode, "display", "none");
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
                         dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_folded");
-                    mendix.lang.nullExec(cb);
+                    if (cb && typeof cb === "function") { cb(); }
                 }
 
                 //expand
@@ -140,13 +140,13 @@ define([
 
                         this.updateFoldVisibility();
 
-                        mendix.lang.nullExec(cb);
+                        if (cb && typeof cb === "function") { cb(); }
                     }));
                 }
 
             }
             else
-                mendix.lang.nullExec(cb);
+                if (cb && typeof cb === "function") { cb(); }
         },
 
         updateFoldVisibility: function () {

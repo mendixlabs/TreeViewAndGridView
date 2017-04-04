@@ -168,7 +168,7 @@ define([
         setCollapsed: function (newvalue, cb) {
             logger.debug("TreeView.widget.TreeView.RenderNode.setCollapsed");
             if (newvalue == this.collapsed) {
-                mendix.lang.nullExec(cb);
+                if (cb && typeof cb === "function") { cb(); }
                 return;
             }
 
@@ -176,7 +176,7 @@ define([
             if (this.collapsed) {
                 dojo.style(this.childNode, "display", "none"); //TODO: anim
                 dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_folded" : "gg_nofold"));
-                mendix.lang.nullExec(cb);
+                if (cb && typeof cb === "function") { cb(); }
             } else {
                 dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
 
@@ -188,7 +188,7 @@ define([
 
                     this.updateFoldVisibility();
 
-                    mendix.lang.nullExec(cb);
+                    if (cb && typeof cb === "function") { cb(); }
                 });
 
                 var left = 0;

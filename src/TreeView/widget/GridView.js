@@ -225,7 +225,7 @@ require([
             //reload
             this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
 
-            mendix.lang.nullExec(cb);
+            if (cb && typeof cb === "function") { cb(); }
         },
 
         resize: function () {
@@ -762,7 +762,7 @@ require([
             logger.debug("TreeView.widget.GridView.fetchAll");
 
             if (!this.contextGUID || this.isSuspended()) {
-                mendix.lang.nullExec(cb);
+                if (cb && typeof cb === "function") { cb(); }
             } else if (this.datasourcemf != "") {
                 this.fetchFromMicroflowDatasource(cb);
             } else {
