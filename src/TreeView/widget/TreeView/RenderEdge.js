@@ -103,7 +103,7 @@ define([
                     }
 
                 if (!found) {
-                    new RenderNode(this.tree.dict[childguid], this.parent, this.type);
+                    new RenderNode.constructor(this.tree.dict[childguid], this.parent, this.type);
                 }
             }
         },
