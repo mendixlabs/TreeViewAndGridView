@@ -1,12 +1,11 @@
 {
   "name": "TreeView",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "",
   "license": "",
   "author": "",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "del": "^2.2.2",
     "gulp": "^3.9.1",
