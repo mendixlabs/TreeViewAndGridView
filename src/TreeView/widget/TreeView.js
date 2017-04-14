@@ -7,12 +7,11 @@ require([
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function(declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function (declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
 
-    var _Scriptable = mxui.mixin._Scriptable;
 
-    return declare("TreeView.widget.TreeView", [_WidgetBase, _Scriptable], {
+    return declare("TreeView.widget.TreeView", [_WidgetBase], {
         root: null, //render node
         dict: null, //guid -> GraphNode
         types: null, //type definitions : entityName -> config
@@ -112,31 +111,31 @@ require([
             this.xsettings = [];
         },
 
-        postCreate: function() {
+        postCreate: function () {
             Commons.fixObjProps(this, ["blaat4", "blaat", "blaat2", "blaat3", "blaat5"]);
 
             this.splitPropsTo("xentity,xburstattr,sortattr,sortdir,entityclazz,entitystyle,entitychannel", this.xsettings);
             for (var i = 0; i < this.xsettings.length; i++) {
                 var x = this.xsettings[i];
                 x.entitystyle = x.entitystyle.split(/\||\n/).join(";");
-                x.filter = {references: {}, attributes: []};
+                x.filter = { references: {}, attributes: [] };
 
                 this.addToSchema(x.xentity, x.xburstattr);
                 this.addToSchema(x.xentity, x.sortattr);
 
                 if (x.entitychannel) {
                     var onSelectHandler =
-                    this.connect(this, "onSelect", dojo.hitch(this, function (channel, entity, selection) {
-                        if (selection != null && selection.isA(entity)) {
-                            // KVL: This used to use this.getContent() as the first part, but that no longer exists.
-                            // Not sure what the alternative is, so we might want to look into that...
-                            dojo.publish("/" + channel + "/context", [selection.data()]);
-                        } else {
-                            // KVL: This used to use this.getContent() as the first part, but that no longer exists.
-                            // Not sure what the alternative is, so we might want to look into that...
-                            dojo.publish("/" + channel + "/context", [null]);
-                        }
-                    }, x.entitychannel, x.xentity));
+                        this.connect(this, "onSelect", dojo.hitch(this, function (channel, entity, selection) {
+                            if (selection != null && selection.isA(entity)) {
+                                // KVL: This used to use this.getContent() as the first part, but that no longer exists.
+                                // Not sure what the alternative is, so we might want to look into that...
+                                dojo.publish("/" + channel + "/context", [selection.data()]);
+                            } else {
+                                // KVL: This used to use this.getContent() as the first part, but that no longer exists.
+                                // Not sure what the alternative is, so we might want to look into that...
+                                dojo.publish("/" + channel + "/context", [null]);
+                            }
+                        }, x.entitychannel, x.xentity));
                 }
             }
 
@@ -144,7 +143,6 @@ require([
                 this.selectionrefs = this.selectionref.split(";");
             }
 
-            this.offerInterface("close");
 
             this._setupTypes();
 
@@ -182,7 +180,7 @@ require([
                 this.selectFirstItem();
             }
 
-            mendix.lang.nullExec(cb);
+            cb && cb();
         },
 
 
@@ -230,9 +228,9 @@ require([
             logger.debug("TreeView.widget.TreeView._setupLayout");
 
             dojo.addClass(this.domNode, "gg_tree");
-            this.headerNode = mxui.dom.create("div", {"class": "gg_header"});
+            this.headerNode = mxui.dom.create("div", { "class": "gg_header" });
 
-            this.treeNode = mxui.dom.create("ul", {"class": "gg_children gg_root_wrapper"});
+            this.treeNode = mxui.dom.create("ul", { "class": "gg_children gg_root_wrapper" });
             if (this.hiderootnode) {
                 dojo.addClass(this.treeNode, "gg_hiddenroot");
             }
@@ -401,13 +399,11 @@ require([
         saveAndFireSelection: function (item) {
             logger.debug("TreeView.widget.TreeView.saveAndFireSelection");
 
-            mx.data.save({
+            mx.data.commit({
                 mxobj: this.getContextObject(),
                 callback: this.onSelect,
                 error: this.showError
             }, this);
-
-            mx.data.objectUpdateNotification(this.getContextObject());
 
             this.onSelect(item);
         },
@@ -740,10 +736,10 @@ require([
                     case dojo.keys.ENTER:
                         this.invokeDefaultAction();
                         break;
-                    case dojo.keys.DOWN_ARROW :
+                    case dojo.keys.DOWN_ARROW:
                         if (e.ctrlKey == true) {
                             //TODO: swap
-                        }  else {
+                        } else {
                             //next one is a child
                             var fc = this._getRenderNodeForNode(this.findNextNode(sel.domNode, "gg_node", this.treeNode));
 
@@ -752,7 +748,7 @@ require([
                             }
                         }
                         break;
-                    case dojo.keys.UP_ARROW :
+                    case dojo.keys.UP_ARROW:
                         if (e.ctrlKey == true) {
                             //TODO: swap
                         } else {
@@ -786,7 +782,7 @@ require([
                             this.itemIndent(this.getSelection(), false); //TODO
                         }
                         break;
-                    default :
+                    default:
                         if (e.charCode == dojo.keys.SPACE) {
                             sel.setCollapsed(!sel.collapsed);
                         } else {
@@ -863,7 +859,7 @@ require([
             logger.debug("TreeView.widget.TreeView.startDrag");
 
             //tmp node for drag an drop operations
-            this.dnd.tmpnode = mxui.dom.create("li", {"class": "gg_node gg_anchor"}, mxui.dom.create("div", {"class": "gg_anchor_inner"}));
+            this.dnd.tmpnode = mxui.dom.create("li", { "class": "gg_node gg_anchor" }, mxui.dom.create("div", { "class": "gg_anchor_inner" }));
 
             var current = this.dnd.current = this._getRenderNodeForNode(target);
             this.setSelection(current);
@@ -873,7 +869,7 @@ require([
                 return false;
             }
 
-            var avatar = this.dnd.avatar = mxui.dom.create("div", {"class": "gg_avatar"}, dojo.clone(current.rowNode)); //TODO: make beter avatar
+            var avatar = this.dnd.avatar = mxui.dom.create("div", { "class": "gg_avatar" }, dojo.clone(current.rowNode)); //TODO: make beter avatar
 
             //hooray, we can start thedrag
             //		console.log("start drag");
@@ -1155,11 +1151,11 @@ require([
 
             //determine drop target
             var t = null;
-            if (target.isEdge){
+            if (target.isEdge) {
                 t = target.parent.graphNode._data;
-            } else if (pos == "before" || pos == "after"){
+            } else if (pos == "before" || pos == "after") {
                 t = target.parent.graphNode._data
-            } else{
+            } else {
                 t = target.graphNode._data; //new parent
             }
 
@@ -1167,18 +1163,20 @@ require([
             if (!copy) {
                 var assoc1 = item.type;
                 if (assoc1.assoctype == "fromparent") {
-                    if (assoc1.isRefset){
-                        o.removeReferences(assoc1.assoc, [i.getGuid()]);}
-                    else{
+                    if (assoc1.isRefset) {
+                        o.removeReferences(assoc1.assoc, [i.getGuid()]);
+                    }
+                    else {
                         o.set(assoc1.assoc, "");
-}
+                    }
                     actions.push([assoc1.dropmf, o]); //otherwise o might never know that a child was removed
                 }
                 else { //from child
-                    if (assoc1.isRefset){
+                    if (assoc1.isRefset) {
                         i.removeReferences(assoc1.assoc, [o.getGuid()]);
-                    }else{
-                        i.set(assoc1.assoc, "");}
+                    } else {
+                        i.set(assoc1.assoc, "");
+                    }
 
                     //actions.push([assoc.dropmf, i]); //MWE: I guess this is not needed, since a drop mf is most likely already fired for i, and this might confuse the logic.
                 }
@@ -1193,7 +1191,7 @@ require([
                     //reference set (was already removed from orig parent in step 0)
                     if (assoc.isRefset) {
                         t.addReferences(assoc.assoc, [i.getGuid()]);
-                    } else{ //normal reference
+                    } else { //normal reference
                         t.set(assoc.assoc, i.getGuid());
                     }
                 } else { //assoc stored in child
@@ -1228,7 +1226,8 @@ require([
                     if (pos == "last") {
                         nidx = (target.isEdge ? target.parent : target).findMaxIndex() + 14056;
                     } else {
-                        nidx = (target.isEdge ? target.parent : target).findMinIndex() - 4313;}
+                        nidx = (target.isEdge ? target.parent : target).findMinIndex() - 4313;
+                    }
                 }
 
                 if (isNaN(nidx)) {
@@ -1328,7 +1327,7 @@ require([
                 var parts = attr.split("/");
 
                 if (!(parts[0] in t.filter.references)) {
-                    t.filter.references[parts[0]] = {attributes: []};
+                    t.filter.references[parts[0]] = { attributes: [] };
                 }
 
                 if (parts.length > 2) {
@@ -1415,7 +1414,7 @@ require([
                         }
                     }
 
-                    if (dojo.hasClass(cur, clazz)){
+                    if (dojo.hasClass(cur, clazz)) {
                         return cur;
                     }
                     return null;
@@ -1449,14 +1448,14 @@ require([
             };
 
             var fc = findChild(node);
-            if (fc){
+            if (fc) {
                 return fc;
             }
 
             var cur = node;
             while (cur != limitNode && cur != null) {
                 var n = cur.nextElementSibling;
-                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, "display") != "none"){
+                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, "display") != "none") {
                     return n;
                 }
                 cur = cur.parentNode;
