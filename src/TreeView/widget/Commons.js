@@ -259,7 +259,7 @@ define([
                     throw "Commons.store: Unable to update attribute: " + attr;
                 }
 
-                mx.data[commit === true ? "commit" : "save"]({
+                mx.data.commit({
                     mxobj: object,
                     error: this.error,
                     callback: function () {
@@ -354,9 +354,6 @@ define([
                 }
 
                 mx.ui.action(mfname, {
-                    store: {
-                        caller: context
-                    },
                     params: {
                         applyto: "selection",
                         guids: guids

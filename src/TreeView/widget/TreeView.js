@@ -269,7 +269,7 @@ require([
             var i = 0;
             dojo.forEach(this.types, function (type) {
                 //more householding
-                type.isRefset = type.parentassocsingle == "";
+                type.isRefset = type.parentassocsingle === "" || !type.parentassocsingle;
                 type.assoc = type.isRefset ? type.parentassocmulti : type.parentassocsingle;
 
                 type.index = i++;
@@ -1097,7 +1097,7 @@ require([
             }
             if (!(e in this.dnd.allowDropBefore)) {
                 var x = item.graphNode.xsettings;
-                this.dnd.allowDropBefore[e] = x && mx.meta.getEntity(e).getAttributeType(x.sortattr) == "Float";
+                this.dnd.allowDropBefore[e] = x && mx.meta.getEntity(e).getAttributeType(x.sortattr) == "Decimal";
             }
             return this.dnd.allowDropBefore[e];
         },
@@ -1207,7 +1207,7 @@ require([
 
             //2) update position. Note that this position applies to all assocs! which is a bit weird...
             var x = item.graphNode.xsettings;
-            if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Float") {
+            if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Decimal") {
                 if (pos == "before" || pos == "after") {
                     //find the other related element for drop in between
                     var othernode = pos == "before" ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
