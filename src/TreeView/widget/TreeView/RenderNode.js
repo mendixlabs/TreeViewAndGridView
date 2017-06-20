@@ -78,15 +78,10 @@ define([
 
             if (this.tree.expandall > this.depth) {
                 this.setCollapsed(false);
-            } else if (this.tree.prefetch == true) {
-                dojo.forEach(this.graphNode.getChildTypes(), function (type) {
-                    if (!graphNode.children[type.index].knowsChildren) {
-                        graphNode.ensureChildren(type, dojo.hitch(this, function () {
-                            this.children[type.index].placeChildren();
-                            this.children[type.index].updateFoldVisibility();
-                        }));
-                    }
-                }, this);
+            } else if (this.tree.prefetch){
+                // Expand and collaps to prefetch all children
+                this.setCollapsed(false); 
+                this.setCollapsed(true);
             }
 
         },
