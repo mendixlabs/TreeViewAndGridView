@@ -162,15 +162,27 @@ define([
         },
 
         render: function (record, domNode, firstTime) {
-            if (this.columnaction != ""){
+            logger.debug("ColRenderer.render");
+            if (this.columnaction !== ""){
                 dojo.addClass(domNode, "gg_clickable");
             }
 
-            if (this.condition && !this.condition.appliesTo(record)) {
-                dojo.style(domNode.parentNode, "display", "none");
-                return; //hide
+            if (this.condition) {
+                this.condition.appliesToAsync(record, dojo.hitch(this, function (applied) {
+                    if (applied) {
+                        this.renderRecord(record, domNode, firstTime);
+                    } else {
+                        dojo.style(domNode.parentNode, "display", "none");
+                        return; //hide
+                    }
+                }));
+            } else {
+                this.renderRecord(record, domNode, firstTime);
             }
+        },
 
+        renderRecord: function (record, domNode, firstTime) {
+            logger.debug("ColRenderer.renderRecord");
             dojo.style(domNode.parentNode, "display", "");
 
             switch (this.columnrendermode) {
