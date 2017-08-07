@@ -198,6 +198,7 @@ define([
                             return cb("");
                         })
                     });
+                    return;
                 }
             }
 
