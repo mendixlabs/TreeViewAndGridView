@@ -190,7 +190,7 @@ define([
                         noCache: false,
                         callback: dojo.hitch(this, function (obj) { //async = false option would be nice!
                             if (obj != null) {//callback was invoked in sync :)
-                                return this.getObjectAttr(obj, parts[2], renderValue, cb);
+                                return this.getObjectAttrAsync(obj, parts[2], renderValue, cb);
                             }
 
                             console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
