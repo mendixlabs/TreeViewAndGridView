@@ -1,9 +1,10 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/Checkbox",
     "TreeView/widget/Commons/Dropdown"
-], function(declare, Commons, Checkbox, DropDown) {
+], function(declare, lang, Commons, Checkbox, DropDown) {
     "use strict";
 
     return declare("TreeView.widget.Commons.ColRenderer", null, {
@@ -87,7 +88,7 @@ define([
                 newvalue,
                 this.dataset && this.dataset.isRefSet() && remove === true ? "rem" : "add",
                 this.columneditautocommit && !this.columnonchangemf, //MWE: ignore auto commit setting if onchange is used
-                dojo.hitch(this, this._fireOnChange, record)
+                lang.hitch(this, this._fireOnChange, record)
             );
         },
 
@@ -107,7 +108,7 @@ define([
             if (this.columnattr.indexOf("/") > -1) {
                 this.toDestruct.push(new DropDown({
                         value: Commons.objectToGuid(record.data().get(this.columnattr.split("/")[0])), //can be both guid and nothing
-                        onChange: dojo.hitch(this, this.applyChange, record),
+                        onChange: lang.hitch(this, this.applyChange, record),
                         sticky: !this.dataset.isRefSet(),
                         className: "gv_columnedit_dropdownmenu",
                         dataset: this.dataset,
@@ -136,11 +137,11 @@ define([
                 }
 
                 //setup dropdown
-                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, lang.hitch(this, function (value) {
                     this.toDestruct.push(new DropDown({
                             options: items,
                             value: value,
-                            onChange: dojo.hitch(this, this.applyChange, record),
+                            onChange: lang.hitch(this, this.applyChange, record),
                             sticky: true,
                             className: "gv_columnedit_dropdownmenu"
                         },
@@ -149,10 +150,10 @@ define([
                     ));
                 }));
             } else if (attrtype === "Boolean") {
-                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, lang.hitch(this, function (value) {
                     new Checkbox({
                             value: value,
-                            onChange: dojo.hitch(this, this.applyChange, record),
+                            onChange: lang.hitch(this, this.applyChange, record),
                             className: "gv_columnedit_checkbox"
                         },
                         domNode
@@ -171,7 +172,7 @@ define([
             }
 
             if (this.condition) {
-                this.condition.appliesToAsync(record, dojo.hitch(this, function (applied) {
+                this.condition.appliesToAsync(record, lang.hitch(this, function (applied) {
                     if (applied) {
                         this.renderRecord(record, domNode, firstTime);
                     } else {
@@ -200,7 +201,7 @@ define([
                         if (attrtype === "Boolean" && !(this.columntruecaption || this.columnfalsecaption)) {
                             this.createDefaultImage(domNode);
 
-                            Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                            Commons.getObjectAttrAsync(record.data(), this.columnattr, false, lang.hitch(this, function (value) {
                                 new Checkbox({ //TODO: MWE, when cleaned up?
                                         value: value,
                                         className: "gv_columnview_checkbox",
@@ -211,7 +212,7 @@ define([
                             }));
 
                         } else {//Any other value
-                            this._renderAttrAsync(record, dojo.hitch(this, function (value) {
+                            this._renderAttrAsync(record, lang.hitch(this, function (value) {
                                 if (value === null || value === undefined){
                                     value = "";
                                 }
@@ -232,7 +233,7 @@ define([
                     }
                     break;
                 case "attributehtml":
-                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, lang.hitch(this, function (value) {
                         domNode.innerHTML = this.columnprefix + value + this.columnpostfix;
                         this.createDefaultImage(domNode);
                     }));
@@ -240,7 +241,7 @@ define([
                 case "attributeimage":
                     dojo.empty(domNode);
 
-                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (url) {
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, lang.hitch(this, function (url) {
                         if (!url){
                             url = this.columnimage;
                         }
@@ -260,8 +261,8 @@ define([
                 case "thumbnail" :
                     dojo.empty(domNode);
 
-                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, dojo.hitch(this, function (fileid) {
-                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, dojo.hitch(this, function (cd) {
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, lang.hitch(this, function (fileid) {
+                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, lang.hitch(this, function (cd) {
                             domNode.appendChild(mxui.dom.create("img", {
                                 //"class" : "gg_img " + this.columnclazz,
                                 //"style" : this.columnstyle,
@@ -274,8 +275,8 @@ define([
                 case "systemimage" :
                     dojo.empty(domNode);
 
-                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, dojo.hitch(this, function (fileid) {
-                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, dojo.hitch(this, function (cd) {
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, lang.hitch(this, function (fileid) {
+                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, lang.hitch(this, function (cd) {
                             domNode.appendChild(mxui.dom.create("img", {
                                 //"class" : "gg_img " + this.columnclazz,
                                 //"style" : this.columnstyle,
@@ -290,7 +291,7 @@ define([
                     dojo.empty(domNode);
 
                     if (firstTime === true) {
-                        record.addSubscription(dojo.connect(this.dataset, "onReceiveItems", dojo.hitch(this, function (items) {
+                        record.addSubscription(dojo.connect(this.dataset, "onReceiveItems", lang.hitch(this, function (items) {
                             this.render(record, domNode);
                         })));
                     }
@@ -324,7 +325,7 @@ define([
         _renderAttrAsync: function (record, cb) {
             var object = record.data();
             var attrtype = Commons.getAttributeType(object, this.columnattr);
-            Commons.getObjectAttrAsync(object, this.columnattr, attrtype !== "DateTime", dojo.hitch(this, function (value) {
+            Commons.getObjectAttrAsync(object, this.columnattr, attrtype !== "DateTime", lang.hitch(this, function (value) {
                 if (attrtype === "DateTime") {
                     if (!value || "" === value){
                         return cb("");

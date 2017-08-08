@@ -1,13 +1,14 @@
 require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
+    "dojo/_base/lang",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function (declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function (declare, _WidgetBase, lang, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
 
 
@@ -125,7 +126,7 @@ require([
 
                 if (x.entitychannel) {
                     var onSelectHandler =
-                        this.connect(this, "onSelect", dojo.hitch(this, function (channel, entity, selection) {
+                        this.connect(this, "onSelect", lang.hitch(this, function (channel, entity, selection) {
                             if (selection != null && selection.isA(entity)) {
                                 // KVL: This used to use this.getContent() as the first part, but that no longer exists.
                                 // Not sure what the alternative is, so we might want to look into that...
@@ -542,7 +543,7 @@ require([
                 var edges = this.root.getChildTypes();
                 if (edges.length > 0) {
                     var edge = edges[0];
-                    this.root.ensureChildren(edge, dojo.hitch(this, function () {
+                    this.root.ensureChildren(edge, lang.hitch(this, function () {
                         var firstRefChildren = this.root.nodes[0].children[edge.index].children;
                         if (firstRefChildren.length > 0) {
                             this.setSelection(firstRefChildren[0]);
@@ -888,11 +889,11 @@ require([
                 "zIndex": 10000
             });
 
-            this.dnd.bodyconnect = dojo.connect(dojo.body(), "onmouseup", dojo.hitch(this, function () {
+            this.dnd.bodyconnect = dojo.connect(dojo.body(), "onmouseup", lang.hitch(this, function () {
                 this.onEndDrag();
             }));
 
-            this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", dojo.hitch(this, function (e) {
+            this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", lang.hitch(this, function (e) {
                 //console.log("mouse out");
                 dojo.style(this.dnd.avatar, {
                     "top": (e.pageY + 32) + "px",
@@ -1003,7 +1004,7 @@ require([
                 }
             } else if (pos == "last")
                 if (!this.dnd.expandtimer) {
-                    this.dnd.expandtimer = setTimeout(dojo.hitch(this, function (toexpand) {
+                    this.dnd.expandtimer = setTimeout(lang.hitch(this, function (toexpand) {
                         if (toexpand == this.dnd.target && this.dnd.pos == "last") { //still the same ?
                             toexpand.setCollapsed(false);
                             //if (this.dnd.tmpnode)
@@ -1039,7 +1040,7 @@ require([
                         top: this.dnd.beginBox.y
                     },
                     duration: 500,
-                    onEnd: dojo.hitch(this, this.resetNodesAfterDnD)
+                    onEnd: lang.hitch(this, this.resetNodesAfterDnD)
                 }).play();
             }
         },

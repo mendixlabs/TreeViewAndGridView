@@ -1,10 +1,11 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dijit/Menu",
     "dijit/MenuItem",
     "dijit/MenuSeparator",
     "dijit/form/DropDownButton"
-], function(declare, Menu, MenuItem, MenuSeparator, DropDownButton) {
+], function(declare, lang, Menu, MenuItem, MenuSeparator, DropDownButton) {
     "use strict"
 
     return declare("TreeView.widget.Commons.DropDown", null, {
@@ -23,7 +24,7 @@ define([
             this.options = this.options || [];
 
             if (this.dataset) {
-                this._datasetsub = dojo.connect(this.dataset, "onReceiveItems", dojo.hitch(this, this.receiveDatasetItems));
+                this._datasetsub = dojo.connect(this.dataset, "onReceiveItems", lang.hitch(this, this.receiveDatasetItems));
                 if (owner){
                     owner.addSubscription(this._datasetsub);
                 }
@@ -86,8 +87,8 @@ define([
                 label: mxui.dom.escapeString(item.label),
                 value: item.value,
                 onClick: item.onClick
-                    ? dojo.hitch(item, item.onClick, dojo.hitch(this, this.itemClick)) //pass itemClick as callback to the onClick, so it can be invoked
-                    : dojo.hitch(this, this.itemClick, item)
+                    ? lang.hitch(item, item.onClick, lang.hitch(this, this.itemClick)) //pass itemClick as callback to the onClick, so it can be invoked
+                    : lang.hitch(this, this.itemClick, item)
             });
         },
 

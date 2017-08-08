@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "dojo/_base/lang"
+], function(declare, lang) {
     "use strict";
 
     return declare("TreeView.widget.GridView.Record", null, {
@@ -25,7 +26,7 @@ define([
 
             this._subscription = mx.data.subscribe({
                 guid: this.guid,
-                callback: dojo.hitch(this, function (thing) {
+                callback: lang.hitch(this, function (thing) {
                     //Do not update while suspended; all data will be fetch upon resume.
                     if (this.grid.isSuspended())
                         return;
@@ -34,7 +35,7 @@ define([
                         //microflow data? retrieve by id
                         mx.data.get({
                             guid: this.guid,
-                            callback: dojo.hitch(this, function (data) {
+                            callback: lang.hitch(this, function (data) {
                                 this.update(data);
                             }),
                             error: grid.showError
@@ -45,7 +46,7 @@ define([
                         mx.data.get({
                             xpath: grid.buildXpath() + "[id = \"" + this.guid + "\"]",
                             filter: grid.enableschema ? grid._schema : {},
-                            callback: dojo.hitch(this, function (data) {
+                            callback: lang.hitch(this, function (data) {
                                 if (data.length > 0)
                                     this.update(data[0]);
                             }),
@@ -76,7 +77,7 @@ define([
                 var condition = this.grid.conditions[key];
                 var clz = condition.getClass();
                 if (clz) { //checking if class is cheaper than checking the condition itself
-                    condition.appliesToAsync(this, dojo.hitch(this, function (applies) {
+                    condition.appliesToAsync(this, lang.hitch(this, function (applies) {
                         if (applies)
                             dojo.addClass(this.domNode, clz);
                         else

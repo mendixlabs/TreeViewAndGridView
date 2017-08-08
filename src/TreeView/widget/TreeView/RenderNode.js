@@ -1,8 +1,9 @@
 //A Node in the rendering
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/TreeView/RenderEdge"
-], function (declare, RenderEdge) {
+], function (declare, lang, RenderEdge) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.RenderNode", null, {
@@ -53,7 +54,7 @@ define([
             this.draw(true);
 
             this.setCollapsed(true);
-            
+
             // set depth based on having a parent, root is 0, should be done before creating Rendering Edges.
             if (this.parent != null) {
                 this.depth = this.parent.depth + 1;
@@ -81,7 +82,7 @@ define([
             } else if (this.tree.prefetch == true) {
                 dojo.forEach(this.graphNode.getChildTypes(), function (type) {
                     if (!graphNode.children[type.index].knowsChildren) {
-                        graphNode.ensureChildren(type, dojo.hitch(this, function () {
+                        graphNode.ensureChildren(type, lang.hitch(this, function () {
                             this.children[type.index].placeChildren();
                             this.children[type.index].updateFoldVisibility();
                         }));
@@ -183,7 +184,7 @@ define([
             } else {
                 dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
 
-                var allChildrenCallback = dojo.hitch(this, function () {
+                var allChildrenCallback = lang.hitch(this, function () {
                     if (!this.collapsed) { //user might have clicked collapse again
                         dojo.style(this.childNode, "display", "block"); //TODO: anim
                         dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_unfolded" : "gg_nofold"));
@@ -200,7 +201,7 @@ define([
                 dojo.forEach(this.children, function (re) {
                     if (re && !re.visible) { //collapse if no wrapper node available
                         left += 1;
-                        re.setCollapsed(false, dojo.hitch(self, function () {
+                        re.setCollapsed(false, lang.hitch(self, function () {
                             left -= 1;
                             if (left == 0) {
                                 allChildrenCallback();

@@ -3,8 +3,9 @@
  */
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/TreeView/RenderNode"
-], function (declare, RenderNode) {
+], function (declare, lang, RenderNode) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.RenderEdge", null, {
@@ -127,7 +128,7 @@ define([
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
                         dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_loading");
 
-                    this.parent.graphNode.ensureChildren(this.type, dojo.hitch(this, function () {
+                    this.parent.graphNode.ensureChildren(this.type, lang.hitch(this, function () {
                         if (!this.collapsed) { //user might have clicked collapse again
                             dojo.style(this.childNode, "display", "block");
                             if (this.foldNode) //if wrapper node not visible, there is no foldnode..

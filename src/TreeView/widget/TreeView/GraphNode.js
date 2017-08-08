@@ -4,8 +4,9 @@
  */
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/TreeView/RenderNode"
-], function (declare, RenderNode) {
+], function (declare, lang, RenderNode) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.GraphNode", null, {
@@ -49,14 +50,14 @@ define([
 
             this._subscription = mx.data.subscribe({
                 guid: this.guid,
-                callback: dojo.hitch(this, function (thing) {
+                callback: lang.hitch(this, function (thing) {
                     if (dojo.isObject(thing)) {
                         this.updateWithRefs(thing);
                     } else {
                         mx.data.get({
                             guid: thing,
                             error: this.tree.showError,
-                            callback: dojo.hitch(this, this.updateWithRefs)
+                            callback: lang.hitch(this, this.updateWithRefs)
                         });
                     }
                 })
@@ -245,7 +246,7 @@ define([
             var args = {
                 xpath: xpath,
                 filter: type.filter,
-                callback: dojo.hitch(this, function (data) {
+                callback: lang.hitch(this, function (data) {
                     this.tree.processData(data); //data should always be one (or zero if not in constraint)
 
                     for (var i = 0; i < data.length; i++) { //create the assocations
@@ -284,7 +285,7 @@ define([
                 c._retrieving = true;
                 c._afterChildrenCb = callback ? [callback] : []; //event chain
 
-                this._retrieveChildrenCore(c, dojo.hitch(this, function () {
+                this._retrieveChildrenCore(c, lang.hitch(this, function () {
                     c._retrieving = false;
                     c.knowsChildren = true;
 
@@ -308,7 +309,7 @@ define([
             var kwargs = {
                 xpath: xpath,
                 filter: this.tree.getXsettings(type.entity).filter,
-                callback: dojo.hitch(this, function (rel, data) {
+                callback: lang.hitch(this, function (rel, data) {
 
                     //1. mark edges from here in here invalid
                     var edges = this.tree.getChildEdges(this)[rel.index];

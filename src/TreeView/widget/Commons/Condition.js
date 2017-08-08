@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/Commons"
-], function(declare, Commons) {
+], function(declare, lang, Commons) {
     "use strict";
 
     return declare("TreeView.widget.Commons.Condition", null, {
@@ -42,7 +43,7 @@ define([
 
         appliesToAsync: function (record, cb) {
             logger.debug("Condition.appliesToAsync");
-            Commons.getObjectAttrAsync(record.data(), this.condattr, false, dojo.hitch(this, function(value) {
+            Commons.getObjectAttrAsync(record.data(), this.condattr, false, lang.hitch(this, function(value) {
                 if (value === null || value === undefined || /^\s*$/.test("" + value)) {
                     if (dojo.indexOf(this.values, "false") != -1){ //This one was suppossed to match on falsy values
                         return cb(true);

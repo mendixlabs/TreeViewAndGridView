@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dojo/data/util/simpleFetch",
-], function (declare) {
+], function (declare, lang) {
     "use strict";
 
     var Commons = declare("TreeView.widget.Commons", null, {
@@ -188,7 +189,7 @@ define([
                     mx.data.get({
                         guid: child,
                         noCache: false,
-                        callback: dojo.hitch(this, function (obj) { //async = false option would be nice!
+                        callback: lang.hitch(this, function (obj) { //async = false option would be nice!
                             if (obj != null) {//callback was invoked in sync :)
                                 return this.getObjectAttrAsync(obj, parts[2], renderValue, cb);
                             }
