@@ -76,10 +76,12 @@ define([
                 var condition = this.grid.conditions[key];
                 var clz = condition.getClass();
                 if (clz) { //checking if class is cheaper than checking the condition itself
-                    if (condition.appliesTo(this))
-                        dojo.addClass(this.domNode, clz);
-                    else
-                        dojo.removeClass(this.domNode, clz);
+                    condition.appliesToAsync(this, dojo.hitch(this, function (applies) {
+                        if (applies)
+                            dojo.addClass(this.domNode, clz);
+                        else
+                            dojo.removeClass(this.domNode, clz);
+                    }));
                 }
             }
         },

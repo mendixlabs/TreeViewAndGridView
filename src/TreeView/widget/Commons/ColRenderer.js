@@ -4,7 +4,7 @@ define([
     "TreeView/widget/Commons/Checkbox",
     "TreeView/widget/Commons/Dropdown"
 ], function(declare, Commons, Checkbox, DropDown) {
-    "use strict"
+    "use strict";
 
     return declare("TreeView.widget.Commons.ColRenderer", null, {
         columnname: "",
@@ -39,9 +39,9 @@ define([
             this.tree = tree;
             this.colindex = colindex;
 
-            if ((this.columneditable && this.columnattr.indexOf("/") > -1) || (this.columnrendermode == "dataset")) {
+            if ((this.columneditable && this.columnattr.indexOf("/") > -1) || (this.columnrendermode === "dataset")) {
                 this.dataset = this.tree.dataset[this.columneditdataset];
-                if (this.dataset == null){
+                if (this.dataset === null){
                     this.tree.configError("Unknown dataset for editable reference '" + this.columnattr + "': " + this.columneditdataset + "'");
                 }
             }
@@ -117,11 +117,11 @@ define([
                     record
                 ));
 
-            } else if (attrtype == "Enum" || (attrtype == "Boolean" && (this.columntruecaption || this.columnfalsecaption))) {
+            } else if (attrtype === "Enum" || (attrtype === "Boolean" && (this.columntruecaption || this.columnfalsecaption))) {
                 var items = [];
 
                 //boolean
-                if (attrtype == "Boolean"){
+                if (attrtype === "Boolean"){
                     items = [
                         {value: true, label: this.columntruecaption || "Yes"},
                         {value: false, label: this.columnfalsecaption || "No"}
@@ -136,25 +136,28 @@ define([
                 }
 
                 //setup dropdown
-                this.toDestruct.push(new DropDown({
-                        options: items,
-                        value: Commons.getObjectAttr(record.data(), this.columnattr, false),
-                        onChange: dojo.hitch(this, this.applyChange, record),
-                        sticky: true,
-                        className: "gv_columnedit_dropdownmenu"
-                    },
-                    domNode,
-                    record
-                ));
-
-            } else if (attrtype == "Boolean") {
-                new Checkbox({
-                        value: Commons.getObjectAttr(record.data(), this.columnattr, false),
-                        onChange: dojo.hitch(this, this.applyChange, record),
-                        className: "gv_columnedit_checkbox"
-                    },
-                    domNode
-                );
+                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                    this.toDestruct.push(new DropDown({
+                            options: items,
+                            value: value,
+                            onChange: dojo.hitch(this, this.applyChange, record),
+                            sticky: true,
+                            className: "gv_columnedit_dropdownmenu"
+                        },
+                        domNode,
+                        record
+                    ));
+                }));
+            } else if (attrtype === "Boolean") {
+                Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                    new Checkbox({
+                            value: value,
+                            onChange: dojo.hitch(this, this.applyChange, record),
+                            className: "gv_columnedit_checkbox"
+                        },
+                        domNode
+                    );
+                }));
             }
             else {
                 this.tree.configError("This widget does not currently support edit for property " + this.columnattr + " type: " + attrtype);
@@ -194,26 +197,30 @@ define([
                         var attrtype = Commons.getAttributeType(this.columnentity, this.columnattr);
 
                         //Boolean value?
-                        if (attrtype == "Boolean" && !(this.columntruecaption || this.columnfalsecaption)) {
+                        if (attrtype === "Boolean" && !(this.columntruecaption || this.columnfalsecaption)) {
                             this.createDefaultImage(domNode);
-                            new Checkbox({ //TODO: MWE, when cleaned up?
 
-                                    value: Commons.getObjectAttr(record.data(), this.columnattr, false),
-                                    className: "gv_columnview_checkbox",
-                                    readOnly: true
-                                },
-                                domNode
-                            );
+                            Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                                new Checkbox({ //TODO: MWE, when cleaned up?
+                                        value: value,
+                                        className: "gv_columnview_checkbox",
+                                        readOnly: true
+                                    },
+                                    domNode
+                                );
+                            }));
+
                         } else {//Any other value
-                            var value = this._renderAttr(record);
-                            if (value === null || value === undefined){
-                                value = "";
-                            }
+                            this._renderAttrAsync(record, dojo.hitch(this, function (value) {
+                                if (value === null || value === undefined){
+                                    value = "";
+                                }
 
-                            dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g, "<br/>") + this.columnpostfix);
-                            dojo.attr(domNode, "title", value);
+                                dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g, "<br/>") + this.columnpostfix);
+                                dojo.attr(domNode, "title", value);
 
-                            this.createDefaultImage(domNode);
+                                this.createDefaultImage(domNode);
+                            }));
                         }
                     }
 
@@ -225,22 +232,25 @@ define([
                     }
                     break;
                 case "attributehtml":
-                    domNode.innerHTML = this.columnprefix + Commons.getObjectAttr(record.data(), this.columnattr, false) + this.columnpostfix;
-                    this.createDefaultImage(domNode);
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (value) {
+                        domNode.innerHTML = this.columnprefix + value + this.columnpostfix;
+                        this.createDefaultImage(domNode);
+                    }));
                     break;
                 case "attributeimage":
                     dojo.empty(domNode);
 
-                    var url = Commons.getObjectAttr(record.data(), this.columnattr, false);
-                    if (!url){
-                        url = this.columnimage;
-                    }
-
-                    domNode.appendChild(mxui.dom.create("img", {
-                        //"class" : "gg_img " + this.columnclazz,
-                        //"style" : this.columnstyle,
-                        "src": url
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr, false, dojo.hitch(this, function (url) {
+                        if (!url){
+                            url = this.columnimage;
+                        }
+                        domNode.appendChild(mxui.dom.create("img", {
+                            //"class" : "gg_img " + this.columnclazz,
+                            //"style" : this.columnstyle,
+                            "src": url
+                        }));
                     }));
+
                     break;
                 case "image":
                     if (firstTime === true){
@@ -250,25 +260,30 @@ define([
                 case "thumbnail" :
                     dojo.empty(domNode);
 
-                    var fileid = Commons.getObjectAttr(record.data(), this.columnattr == "" ? "FileID" : this.columnattr);
-                    var cd = Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate");
-                    domNode.appendChild(mxui.dom.create("img", {
-                        //"class" : "gg_img " + this.columnclazz,
-                        //"style" : this.columnstyle,
-                        "src": "file?thumb=true&target=internal&fileID=" + fileid + "&changedDate=" + cd
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, dojo.hitch(this, function (fileid) {
+                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, dojo.hitch(this, function (cd) {
+                            domNode.appendChild(mxui.dom.create("img", {
+                                //"class" : "gg_img " + this.columnclazz,
+                                //"style" : this.columnstyle,
+                                "src": "file?thumb=true&target=internal&fileID=" + fileid + "&changedDate=" + cd
+                            }));
+                        }));
                     }));
+
                     break;
                 case "systemimage" :
                     dojo.empty(domNode);
 
-                    var fileid = Commons.getObjectAttr(record.data(), this.columnattr == "" ? "FileID" : this.columnattr);
-                    var cd = Commons.getObjectAttr(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate");
-
-                    domNode.appendChild(mxui.dom.create("img", {
-                        //"class" : "gg_img " + this.columnclazz,
-                        //"style" : this.columnstyle,
-                        "src": "file?thumb=false&target=internal&fileID=" + fileid + "&changedDate=" + cd
+                    Commons.getObjectAttrAsync(record.data(), this.columnattr === "" ? "FileID" : this.columnattr, false, dojo.hitch(this, function (fileid) {
+                        Commons.getObjectAttrAsync(record.data(), this.columnattr.replace(/FileID/, "") + "changedDate", false, dojo.hitch(this, function (cd) {
+                            domNode.appendChild(mxui.dom.create("img", {
+                                //"class" : "gg_img " + this.columnclazz,
+                                //"style" : this.columnstyle,
+                                "src": "file?thumb=true&target=internal&fileID=" + fileid + "&changedDate=" + cd
+                            }));
+                        }));
                     }));
+
                     break;
                 case "dataset":
                     //only subscribe when the record is new
@@ -306,22 +321,23 @@ define([
             }
         },
 
-        _renderAttr: function (record) {
+        _renderAttrAsync: function (record, cb) {
             var object = record.data();
             var attrtype = Commons.getAttributeType(object, this.columnattr);
-            var value = Commons.getObjectAttr(object, this.columnattr, attrtype != "DateTime");
-            if (attrtype == "DateTime") {
-                if (!value || "" == value){
-                    return "";
+            Commons.getObjectAttrAsync(object, this.columnattr, attrtype !== "DateTime", dojo.hitch(this, function (value) {
+                if (attrtype === "DateTime") {
+                    if (!value || "" === value){
+                        return cb("");
+                    }
+                    return cb(dojo.date.locale.format(new Date(value), {
+                        selector: "date",
+                        datePattern: this.columndateformat !== "" ? this.columndateformat : "EEE dd MMM y"
+                    }));
+                } else if (attrtype === "Boolean" && (this.columntruecaption || this.columnfalsecaption)){
+                    return cb(value === "Yes" ? this.columntruecaption : this.columnfalsecaption);
                 }
-                return dojo.date.locale.format(new Date(value), {
-                    selector: "date",
-                    datePattern: this.columndateformat != "" ? this.columndateformat : "EEE dd MMM y"
-                });
-            } else if (attrtype == "Boolean" && (this.columntruecaption || this.columnfalsecaption)){
-                return value == "Yes" ? this.columntruecaption : this.columnfalsecaption;
-            }
-            return value;
+                return cb(value);
+            }));
         },
 
         free: function () {
