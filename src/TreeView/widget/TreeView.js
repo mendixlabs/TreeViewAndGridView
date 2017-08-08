@@ -385,7 +385,7 @@ require([
             logger.debug("TreeView.widget.TreeView.testreferences");
 
             if (this.selectionrefs) {
-                for (i = 0; i < this.selectionrefs.length; i++) {
+                for (var i = 0; i < this.selectionrefs.length; i++) {
                     if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf("/") == -1) {
                         Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
                     } else if (this.selectionrefs[i].indexOf("/") > -1) {
@@ -604,7 +604,7 @@ require([
                                 self.setSelection(node);
                             });
                         }
-                    })
+                    });
                 }
             }
             delete this._selectionSuggestions;
@@ -1157,7 +1157,7 @@ require([
             if (target.isEdge) {
                 t = target.parent.graphNode._data;
             } else if (pos == "before" || pos == "after") {
-                t = target.parent.graphNode._data
+                t = target.parent.graphNode._data;
             } else {
                 t = target.graphNode._data; //new parent
             }
@@ -1211,6 +1211,7 @@ require([
             //2) update position. Note that this position applies to all assocs! which is a bit weird...
             var x = item.graphNode.xsettings;
             if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Decimal") {
+                var nidx;
                 if (pos == "before" || pos == "after") {
                     //find the other related element for drop in between
                     var othernode = pos == "before" ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
@@ -1219,7 +1220,6 @@ require([
                     }
                     var other = this._getRenderNodeForNode(othernode);
 
-                    var nidx;
                     if (other == null || other.isEdge) { //either first or last
                         nidx = target.graphNode.getSortIndex() + (pos == "before" ? -1024 : 32354);
                     } else { //put between

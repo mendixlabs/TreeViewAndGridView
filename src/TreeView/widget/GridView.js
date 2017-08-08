@@ -559,8 +559,17 @@ require([
                 dojo.window.scrollIntoView(item.domNode);
             }
 
-            var idx = dojo.indexOf(this._multiSelection, item);
-            if (idx === -1) {
+            var index = dojo.indexOf(this._multiSelection, item);
+
+            if (index === -1) {
+                for(var i = 0; i < this._multiSelection; i++) {
+                    if (this._multiSelection[i].guid === item.guid) {
+                        index = i;
+                    }
+                }
+            }
+
+            if (index === -1) {
                 this._multiSelection.push(item);
             }
 
@@ -880,6 +889,12 @@ require([
             logger.debug("TreeView.widget.GridView.processData");
 
             this.count = (dojo.isObject(count) ? count.count : count) * 1; //Mx 3 returns primitive, Mx 4 an aggregate object
+
+            // TODO: count is an object in MX7, this.count will be NaN.
+            if (isNaN(this.count)) {
+                this.count = parseInt(count);
+            }
+
             this.updatePaging();
 
             dojo.forEach(this.records, function (record) {
