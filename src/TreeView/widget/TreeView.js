@@ -2,13 +2,15 @@ require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "dojo/_base/lang",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function (declare, _WidgetBase, lang, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function (declare, _WidgetBase, lang, attr, domStyle, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
 
 
@@ -238,7 +240,7 @@ require([
 
             dojo.place(this.headerNode, this.domNode);
             dojo.place(this.treeNode, this.domNode);
-            dojo.attr(this.treeNode, {
+            attr.set(this.treeNode, {
                 tabindex: this.tabindex,
                 focusindex: 0
             });
@@ -884,7 +886,7 @@ require([
             dojo.place(avatar, dojo.body(), "last");
 
             //update position
-            dojo.style(avatar, {
+            domStyle.set(avatar, {
                 "position": "absolute",
                 "zIndex": 10000
             });
@@ -895,7 +897,7 @@ require([
 
             this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", lang.hitch(this, function (e) {
                 //console.log("mouse out");
-                dojo.style(this.dnd.avatar, {
+                domStyle.set(this.dnd.avatar, {
                     "top": (e.pageY + 32) + "px",
                     "left": (e.pageX + 32) + "px"
                 });
@@ -988,9 +990,9 @@ require([
             }
 
             var acceptTmp = candropBefore && (pos != "last" || this.dragOver(current, target, this.dnd.tmppos, copy)); //is the tmppos allowed?
-            dojo.style(tmpnode, "display", acceptTmp ? "list-item" : "none");
+            domStyle.set(tmpnode, "display", acceptTmp ? "list-item" : "none");
 
-            dojo.style(avatar, {
+            domStyle.set(avatar, {
                 "top": (e.pageY + 32) + "px",
                 "left": (e.pageX + 32) + "px"
             });
@@ -1026,7 +1028,7 @@ require([
             dojo.disconnect(this.dnd.bodyconnect2);
 
             //hide temporary nodes node
-            dojo.style(this.dnd.tmpnode, "display", "none");
+            domStyle.set(this.dnd.tmpnode, "display", "none");
             dojo.destroy(this.dnd.tmpnode);
             delete this.dnd.tmpnode;
 
@@ -1406,7 +1408,7 @@ require([
                 //find a previously matching sibling
                 var findLast = function (cur) {
                     for (var i = cur.children.length - 1; i >= 0; i--) {
-                        if (dojo.style(cur.children[i], "display") == "none") {
+                        if (domStyle.set(cur.children[i], "display") == "none") {
                             continue;
                         }
                         var l = findLast(cur.children[i]);
@@ -1435,7 +1437,7 @@ require([
 
             var findChild = function (cur) {
                 for (var i = 0; i < cur.children.length; i++) {
-                    if (dojo.style(cur.children[i], "display") != "none") {
+                    if (domStyle.set(cur.children[i], "display") != "none") {
                         if (dojo.hasClass(cur.children[i], clazz)) {
                             return cur.children[i];
                         }
@@ -1456,7 +1458,7 @@ require([
             var cur = node;
             while (cur != limitNode && cur != null) {
                 var n = cur.nextElementSibling;
-                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, "display") != "none") {
+                if (n != null && dojo.hasClass(n, clazz) && domStyle.set(n, "display") != "none") {
                     return n;
                 }
                 cur = cur.parentNode;

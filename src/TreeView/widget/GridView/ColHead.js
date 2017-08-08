@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "dojo/dom-style"
+], function(declare, domStyle) {
     "use strict";
 
     return declare("TreeView.widget.GridView.ColHead", null, {
@@ -23,7 +24,7 @@ define([
                 (this.data.colheadsortattr ? " gv_th_sortable" : " gv_th_unsortable")
             });
             if (this.data.colheadwidth){
-                dojo.style(this.domNode, "width", this.getWidth());
+                domStyle.set(this.domNode, "width", this.getWidth());
             }
             //sort caption?
             if (this.data.colheadcaption){

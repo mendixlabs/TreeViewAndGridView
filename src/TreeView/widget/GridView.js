@@ -2,6 +2,7 @@ require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
     "dojo/_base/lang",
+    "dojo/dom-attr",
     "TreeView/widget/Commons",
     "TreeView/widget/GridView/ColHead",
     "TreeView/widget/GridView/Record",
@@ -13,7 +14,7 @@ require([
     "TreeView/widget/Commons/RelatedDataset",
     "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
-], function (declare, _WidgetBase, lang, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
+], function (declare, _WidgetBase, lang, attr, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
     "use strict";
 
     return declare("TreeView.widget.GridView", _WidgetBase, {
@@ -358,7 +359,7 @@ require([
             dojo.place(this.gridNode, this.domNode);
             dojo.place(this.footerNode, this.domNode);
 
-            dojo.attr(this.gridNode, {
+            attr.set(this.gridNode, {
                 tabindex: this.tabindex,
                 focusindex: 0
             });

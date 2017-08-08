@@ -2,8 +2,10 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/TreeView/RenderEdge"
-], function (declare, lang, RenderEdge) {
+], function (declare, lang, attr, domStyle, RenderEdge) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.RenderNode", null, {
@@ -136,9 +138,9 @@ define([
             logger.debug("TreeView.widget.TreeView.RenderNode.updateFoldVisibility");
             if (this.foldNode) {
                 if (!this.hasVisibleEdge && this.getChildCount() == 0) {
-                    dojo.style(this.foldNode, "visibility", "hidden");
+                    domStyle.set(this.foldNode, "visibility", "hidden");
                 } else {
-                    dojo.style(this.foldNode, "visibility", "");
+                    domStyle.set(this.foldNode, "visibility", "");
                 }
             }
         },
@@ -178,16 +180,16 @@ define([
 
             this.collapsed = newvalue;
             if (this.collapsed) {
-                dojo.style(this.childNode, "display", "none"); //TODO: anim
-                dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_folded" : "gg_nofold"));
+                domStyle.set(this.childNode, "display", "none"); //TODO: anim
+                attr.set(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_folded" : "gg_nofold"));
                 cb && cb();
             } else {
-                dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
+                attr.set(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
 
                 var allChildrenCallback = lang.hitch(this, function () {
                     if (!this.collapsed) { //user might have clicked collapse again
-                        dojo.style(this.childNode, "display", "block"); //TODO: anim
-                        dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_unfolded" : "gg_nofold"));
+                        domStyle.set(this.childNode, "display", "block"); //TODO: anim
+                        attr.set(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_unfolded" : "gg_nofold"));
                     }
 
                     this.updateFoldVisibility();

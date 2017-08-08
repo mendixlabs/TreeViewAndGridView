@@ -1,9 +1,10 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
+    "dojo/dom-style",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/Dropdown",
-], function(declare, lang, Commons, DropDown) {
+], function(declare, lang, domStyle, Commons, DropDown) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Action", null, {
@@ -133,7 +134,7 @@ define([
                 if (!this.mxbutton._destroyed)  {//MWE: wtf?
                     this.mxbutton.set("disabled", !enable);
                     if (this.actautohide){
-                        dojo.style(this.mxbutton.domNode, "display", enable ? "inline-block" : "none");
+                        domStyle.set(this.mxbutton.domNode, "display", enable ? "inline-block" : "none");
                     } else {
                         (enable ? dojo.removeClass : dojo.addClass)(this.mxbutton.domNode, "gv_button_disabled");
                     }

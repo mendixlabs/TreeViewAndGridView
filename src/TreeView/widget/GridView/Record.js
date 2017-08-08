@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
-    "dojo/_base/lang"
-], function(declare, lang) {
+    "dojo/_base/lang",
+    "dojo/dom-style"
+], function(declare, lang, domStyle) {
     "use strict";
 
     return declare("TreeView.widget.GridView.Record", null, {
@@ -91,7 +92,7 @@ define([
             this.domNode = mxui.dom.create(this.grid.showasdiv ? "div" : "tr", {"class": "gv_row gv_row_" + tablenode.childElementCount});
 
             if (this.grid.showasdiv && this.grid.colheads.length > 0 && this.grid.colheads[0].getWidth())
-                dojo.style(this.domNode, "width", this.grid.colheads[0].getWidth());
+                domStyle.set(this.domNode, "width", this.grid.colheads[0].getWidth());
 
             mxui.dom.data(this.domNode, "data", this);
 

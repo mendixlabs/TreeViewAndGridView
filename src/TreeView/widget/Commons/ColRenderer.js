@@ -1,10 +1,13 @@
 define([
     "dojo/_base/declare",
     "dojo/_base/lang",
+    "dojo/html",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/Checkbox",
     "TreeView/widget/Commons/Dropdown"
-], function(declare, lang, Commons, Checkbox, DropDown) {
+], function(declare, lang, html, attr, domStyle, Commons, Checkbox, DropDown) {
     "use strict";
 
     return declare("TreeView.widget.Commons.ColRenderer", null, {
@@ -60,7 +63,7 @@ define([
         },
 
         setupNode: function (parentNode) {
-            dojo.attr(parentNode.parentNode, "style", this.columnstyle);
+            attr.set(parentNode.parentNode, "style", this.columnstyle);
             dojo.addClass(parentNode.parentNode, this.columnclazz);
 
             mxui.dom.data(parentNode.parentNode, "colindex", this.colindex);
@@ -176,7 +179,7 @@ define([
                     if (applied) {
                         this.renderRecord(record, domNode, firstTime);
                     } else {
-                        dojo.style(domNode.parentNode, "display", "none");
+                        domStyle.set(domNode.parentNode, "display", "none");
                         return; //hide
                     }
                 }));
@@ -187,7 +190,7 @@ define([
 
         renderRecord: function (record, domNode, firstTime) {
             logger.debug("ColRenderer.renderRecord");
-            dojo.style(domNode.parentNode, "display", "");
+            domStyle.set(domNode.parentNode, "display", "");
 
             switch (this.columnrendermode) {
                 case "attribute":
@@ -217,8 +220,8 @@ define([
                                     value = "";
                                 }
 
-                                dojo.html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g, "<br/>") + this.columnpostfix);
-                                dojo.attr(domNode, "title", value);
+                                html.set(domNode, this.columnprefix + mxui.dom.escapeString(value).replace(/\n/g, "<br/>") + this.columnpostfix);
+                                attr.set(domNode, "title", value);
 
                                 this.createDefaultImage(domNode);
                             }));
