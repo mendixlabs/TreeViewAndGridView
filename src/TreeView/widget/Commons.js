@@ -416,7 +416,7 @@ define([
                     throw "Multiple selection found, but microflow supports only one argument!";
                 }
 
-                mx.ui.action(mfname, {
+                var mfObject = {
                     params: {
                         applyto: "selection",
                         guids: guids
@@ -435,7 +435,18 @@ define([
                         }
                     },
                     async: !!progressMessage
-                });
+                };
+
+                if (!mx.version || mx.version && parseInt(mx.version.split(".")[0]) < 7) {
+                    // < Mendix 7
+                    mfObject.store = {
+                        caller: this.mxform
+                    };
+                } else {
+                    mfObject.origin = this.mxform;
+                }
+
+                mx.ui.action(mfname, mfObject, this);
             }
         },
 
