@@ -10,7 +10,8 @@
     "globals"  : {
         "mendix" : false,
         "mx"     : false,
-        "logger" : false
+        "logger" : false,
+        "mxui"   : false
     },
 
     // Relaxing
@@ -19,5 +20,9 @@
     // Environments
     "browser"  : true,
     "devel"    : true,
-    "dojo"     : true
+    "dojo"     : true,
+    "-W083"    : true,
+    "-W084"    : true,
+    "-W030"    : true,
+    "-W116"    : true
 }

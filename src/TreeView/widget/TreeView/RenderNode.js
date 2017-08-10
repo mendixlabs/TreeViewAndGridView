@@ -1,8 +1,11 @@
 //A Node in the rendering
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/TreeView/RenderEdge"
-], function (declare, RenderEdge) {
+], function (declare, lang, attr, domStyle, RenderEdge) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.RenderNode", null, {
@@ -53,7 +56,7 @@ define([
             this.draw(true);
 
             this.setCollapsed(true);
-            
+
             // set depth based on having a parent, root is 0, should be done before creating Rendering Edges.
             if (this.parent != null) {
                 this.depth = this.parent.depth + 1;
@@ -81,7 +84,7 @@ define([
             } else if (this.tree.prefetch == true) {
                 dojo.forEach(this.graphNode.getChildTypes(), function (type) {
                     if (!graphNode.children[type.index].knowsChildren) {
-                        graphNode.ensureChildren(type, dojo.hitch(this, function () {
+                        graphNode.ensureChildren(type, lang.hitch(this, function () {
                             this.children[type.index].placeChildren();
                             this.children[type.index].updateFoldVisibility();
                         }));
@@ -135,9 +138,9 @@ define([
             logger.debug("TreeView.widget.TreeView.RenderNode.updateFoldVisibility");
             if (this.foldNode) {
                 if (!this.hasVisibleEdge && this.getChildCount() == 0) {
-                    dojo.style(this.foldNode, "visibility", "hidden");
+                    domStyle.set(this.foldNode, "visibility", "hidden");
                 } else {
-                    dojo.style(this.foldNode, "visibility", "");
+                    domStyle.set(this.foldNode, "visibility", "");
                 }
             }
         },
@@ -177,16 +180,16 @@ define([
 
             this.collapsed = newvalue;
             if (this.collapsed) {
-                dojo.style(this.childNode, "display", "none"); //TODO: anim
-                dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_folded" : "gg_nofold"));
+                domStyle.set(this.childNode, "display", "none"); //TODO: anim
+                attr.set(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_folded" : "gg_nofold"));
                 cb && cb();
             } else {
-                dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
+                attr.set(this.foldNode, "class", "gg_nodefold gg_fold gg_loading");
 
-                var allChildrenCallback = dojo.hitch(this, function () {
+                var allChildrenCallback = lang.hitch(this, function () {
                     if (!this.collapsed) { //user might have clicked collapse again
-                        dojo.style(this.childNode, "display", "block"); //TODO: anim
-                        dojo.attr(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_unfolded" : "gg_nofold"));
+                        domStyle.set(this.childNode, "display", "block"); //TODO: anim
+                        attr.set(this.foldNode, "class", "gg_nodefold gg_fold " + (this.canHazChildren ? "gg_unfolded" : "gg_nofold"));
                     }
 
                     this.updateFoldVisibility();
@@ -200,7 +203,7 @@ define([
                 dojo.forEach(this.children, function (re) {
                     if (re && !re.visible) { //collapse if no wrapper node available
                         left += 1;
-                        re.setCollapsed(false, dojo.hitch(self, function () {
+                        re.setCollapsed(false, lang.hitch(self, function () {
                             left -= 1;
                             if (left == 0) {
                                 allChildrenCallback();

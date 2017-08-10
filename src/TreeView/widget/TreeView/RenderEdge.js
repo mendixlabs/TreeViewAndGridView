@@ -3,8 +3,11 @@
  */
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/TreeView/RenderNode"
-], function (declare, RenderNode) {
+], function (declare, lang, attr, domStyle, RenderNode) {
     "use strict";
 
     return declare("TreeView.widget.TreeView.RenderEdge", null, {
@@ -115,23 +118,23 @@ define([
 
                 //collapse
                 if (collapsed) {
-                    dojo.style(this.childNode, "display", "none");
+                    domStyle.set(this.childNode, "display", "none");
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                        dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_folded");
+                        attr.set(this.foldNode, "class", "gg_assocfold gg_fold gg_folded");
                     cb && cb();
                 }
 
                 //expand
                 else {
-                    dojo.style(this.childNode, "display", "block");
+                    domStyle.set(this.childNode, "display", "block");
                     if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                        dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_loading");
+                        attr.set(this.foldNode, "class", "gg_assocfold gg_fold gg_loading");
 
-                    this.parent.graphNode.ensureChildren(this.type, dojo.hitch(this, function () {
+                    this.parent.graphNode.ensureChildren(this.type, lang.hitch(this, function () {
                         if (!this.collapsed) { //user might have clicked collapse again
-                            dojo.style(this.childNode, "display", "block");
+                            domStyle.set(this.childNode, "display", "block");
                             if (this.foldNode) //if wrapper node not visible, there is no foldnode..
-                                dojo.attr(this.foldNode, "class", "gg_assocfold gg_fold gg_unfolded");
+                                attr.set(this.foldNode, "class", "gg_assocfold gg_fold gg_unfolded");
                         }
 
 
@@ -153,9 +156,9 @@ define([
             logger.debug("TreeView.widget.TreeView.RenderEdge.updateFoldVisibility");
             if (this.foldNode) {
                 if (this.children.length == 0) {
-                    dojo.style(this.foldNode, "visibility", "hidden");
+                    domStyle.set(this.foldNode, "visibility", "hidden");
                 } else {
-                    dojo.style(this.foldNode, "visibility", "");
+                    domStyle.set(this.foldNode, "visibility", "");
                 }
             }
             this.parent.updateFoldVisibility();

@@ -1,8 +1,9 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dijit/CheckedMenuItem",
     "TreeView/widget/Commons"
-], function(declare, CheckedMenuItem, Commons) {
+], function(declare, lang, CheckedMenuItem, Commons) {
     "use strict";
 
     return declare("TreeView.widget.Commons.Filter", null, {
@@ -39,7 +40,7 @@ define([
                         var mi = new CheckedMenuItem({
                             label: enumItem.caption,
                             checked: true,
-                            onClick: dojo.hitch(this, this.itemClick)
+                            onClick: lang.hitch(this, this.itemClick)
                         });
 
                         this.enumStateMap[enumItem.key] = mi;
@@ -54,14 +55,14 @@ define([
                     this.trueitem = new CheckedMenuItem({
                         label: this.filtertruecaption,
                         checked: "all" == this.filterbooleandefault || true == this.filterbooleandefault,
-                        onClick: dojo.hitch(this, this.itemClick)
+                        onClick: lang.hitch(this, this.itemClick)
                     });
                 }
                 if (this.filterfalsecaption){
                     this.falseitem = new CheckedMenuItem({
                         label: this.filterfalsecaption,
                         checked: "all" == this.filterbooleandefault || false == this.filterbooleandefault,
-                        onClick: dojo.hitch(this, this.itemClick)
+                        onClick: lang.hitch(this, this.itemClick)
                     });
                 }
             }

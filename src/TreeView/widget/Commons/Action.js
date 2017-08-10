@@ -1,8 +1,10 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+    "dojo/dom-style",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/Dropdown",
-], function(declare, Commons, DropDown) {
+], function(declare, lang, domStyle, Commons, DropDown) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Action", null, {
@@ -32,7 +34,7 @@ define([
             this.tree = tree;
             dojo.mixin(this, args);
 
-            this.tree.connect(this.tree, "onSelect", dojo.hitch(this, this.updateToSelection));
+            this.tree.connect(this.tree, "onSelect", lang.hitch(this, this.updateToSelection));
         },
 
         assignRefToSelection : function(item) {
@@ -45,7 +47,7 @@ define([
 
                 this.dataset.getAssoc(), item, "add", false,
                 //callback
-                dojo.hitch(this, function() {
+                lang.hitch(this, function() {
                     this.invokeOnSelection();
 
                     this.mxbutton.set("value", null);
@@ -67,7 +69,7 @@ define([
                     }
 
                     this.mxbutton = new DropDown({
-                            onChange : dojo.hitch(this, this.assignRefToSelection),
+                            onChange : lang.hitch(this, this.assignRefToSelection),
                             sticky   : false,
                             label    : this.dataset.rellabel,
                             dataset  : this.dataset,
@@ -81,7 +83,7 @@ define([
                     this.mxbutton = new mxui.widget._Button({
                         caption     : this.actbuttoncaption,
                         iconUrl     : this.actbuttonimage,
-                        onClick     : dojo.hitch(this, this.invokeOnSelection),
+                        onClick     : lang.hitch(this, this.invokeOnSelection),
                         type        : "button",
                         cssclass    : this.actclassname,
                         //title       : column.help, //TODO:?
@@ -92,7 +94,7 @@ define([
             }
 
             if (this.actonselect) {
-                this.tree.connect(this.tree, "onSelect", dojo.hitch(this, this.invokeOnSelection));
+                this.tree.connect(this.tree, "onSelect", lang.hitch(this, this.invokeOnSelection));
             }
         },
 
@@ -132,7 +134,7 @@ define([
                 if (!this.mxbutton._destroyed)  {//MWE: wtf?
                     this.mxbutton.set("disabled", !enable);
                     if (this.actautohide){
-                        dojo.style(this.mxbutton.domNode, "display", enable ? "inline-block" : "none");
+                        domStyle.set(this.mxbutton.domNode, "display", enable ? "inline-block" : "none");
                     } else {
                         (enable ? dojo.removeClass : dojo.addClass)(this.mxbutton.domNode, "gv_button_disabled");
                     }
@@ -152,7 +154,7 @@ define([
 
                 //invoke on the root object
                 else if (this.actnoselectionmf) {
-                    Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
+                    Commons.confirm(this.actconfirmtext, lang.hitch(this, function() {
                         Commons.mf(this.actnoselectionmf, this.tree.getContextObject(), null, this.tree, false, this.actprogressmsg);
                     }));
                 }
@@ -164,7 +166,7 @@ define([
 
 
 
-                Commons.confirm(this.actconfirmtext, dojo.hitch(this, function() {
+                Commons.confirm(this.actconfirmtext, lang.hitch(this, function() {
                     //if a new item is added, suggest it as new selection
                     delete this._recordSelectionSuggestion;
                     this.tree._recordSelectionSuggestion = true;

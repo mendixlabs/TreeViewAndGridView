@@ -1,8 +1,9 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dijit/form/ComboBox",
     "TreeView/widget/Commons"
-], function(declare, ComboBox, Commons) {
+], function(declare, lang, ComboBox, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.SearchControl", null, {
@@ -43,11 +44,11 @@ define([
             if (this.dataset == null) {
                 this.hasDataset = false;
                 this.dataset = dojo.mixin({
-                        _fetchItems: dojo.hitch(this, function (query, resultcallback) {
+                        _fetchItems: lang.hitch(this, function (query, resultcallback) {
                             resultcallback([], query);
                         }),
 
-                        getValue: dojo.hitch(this, function (item, _) {
+                        getValue: lang.hitch(this, function (item, _) {
                             return null;
                         })
                     },
@@ -64,7 +65,7 @@ define([
                 hasDownArrow: false,
                 autoComplete: false,
 
-                onKeyUp: dojo.hitch(this, function (e) {
+                onKeyUp: lang.hitch(this, function (e) {
                     if (e.keyCode == dojo.keys.DOWN_ARROW && !this.hasDataset && this.widget.selectFirstItem) { //MWE on arrow down, put focus on grid, but only if no labels are used
                         this.widget.selectFirstItem();
                         this.widget.grabFocus();
@@ -95,7 +96,7 @@ define([
                     }
                 }),
 
-                onChange: dojo.hitch(this, function (e) {
+                onChange: lang.hitch(this, function (e) {
                     if (this.searchInput.item != null) {//only auto search on blur if label selection was made
                         this.setSearchFilter("", this.searchInput.item);
                     }
@@ -131,9 +132,9 @@ define([
 
             dojo.place(this.searchInput.domNode, this.domNode);
 
-            //this.connect(this.searchSubmit, "onclick", dojo.hitch(this, this.performSearch));
-            // this.connect(this.searchReset, "onclick", dojo.hitch(this, this.resetAndFetchAll));
-            this.widget.connect(this.labelContainer, "onclick", dojo.hitch(this, function (evt) {
+            //this.connect(this.searchSubmit, "onclick", lang.hitch(this, this.performSearch));
+            // this.connect(this.searchReset, "onclick", lang.hitch(this, this.resetAndFetchAll));
+            this.widget.connect(this.labelContainer, "onclick", lang.hitch(this, function (evt) {
                 if (dojo.hasClass(evt.target, "gv_label_close")){
                     this.setSearchFilter(this.searchInput.get("value"), null);//remove the label selection
                 }
@@ -160,7 +161,7 @@ define([
                 this.updateSearchLabel(searchlabel);
 
                 this.widget.curpage = 0;
-                this.widget.fetchAll(dojo.hitch(this, function () {
+                this.widget.fetchAll(lang.hitch(this, function () {
                     this._isSearching = false;
 
                     //There were one ore more searches triggered while we were searching..

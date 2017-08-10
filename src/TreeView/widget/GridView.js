@@ -1,6 +1,8 @@
 require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
+    "dojo/_base/lang",
+    "dojo/dom-attr",
     "TreeView/widget/Commons",
     "TreeView/widget/GridView/ColHead",
     "TreeView/widget/GridView/Record",
@@ -12,7 +14,7 @@ require([
     "TreeView/widget/Commons/RelatedDataset",
     "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
-], function (declare, _WidgetBase, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
+], function (declare, _WidgetBase, lang, attr, Commons, ColHead, Record, Action, ColRenderer, Condition, Filter, FilterManager, RelatedDataset, SearchControl) {
     "use strict";
 
     return declare("TreeView.widget.GridView", _WidgetBase, {
@@ -172,7 +174,7 @@ require([
             if (this.refreshonclass) {
                 this.subscribe({
                     "entity": this.entity,
-                    callback: dojo.hitch(this, function () {
+                    callback: lang.hitch(this, function () {
                         this.fetchAll();
                     })
                 });
@@ -207,7 +209,7 @@ require([
             }
             this.setCurrentSortColumn(this.defaultsortcolumn);
 
-            setTimeout(dojo.hitch(this, this.grabStartupFocus), 200); //grab focus, but with a small timeout, because wm content manager will grab focus at end of startup chain
+            setTimeout(lang.hitch(this, this.grabStartupFocus), 200); //grab focus, but with a small timeout, because wm content manager will grab focus at end of startup chain
         },
 
         /**
@@ -223,7 +225,7 @@ require([
             this.listenToContext();
 
             //reload
-            this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+            this.resetAndFetchAll(lang.hitch(this, this.updateSelectionFromContext));
 
             cb && cb();
         },
@@ -238,7 +240,7 @@ require([
 
         resumed: function () {
             this._suspended = false;
-            this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+            this.resetAndFetchAll(lang.hitch(this, this.updateSelectionFromContext));
         },
 
         isSuspended: function () {
@@ -357,7 +359,7 @@ require([
             dojo.place(this.gridNode, this.domNode);
             dojo.place(this.footerNode, this.domNode);
 
-            dojo.attr(this.gridNode, {
+            attr.set(this.gridNode, {
                 tabindex: this.tabindex,
                 focusindex: 0
             });
@@ -500,9 +502,9 @@ require([
                 if (this.contextGUID) {
                     this._contextSubscription = mx.data.subscribe({
                         guid: this.contextGUID,
-                        callback: dojo.hitch(this, function () {
+                        callback: lang.hitch(this, function () {
                             if (!this._iscallingdatasource) {
-                                this.resetAndFetchAll(dojo.hitch(this, this.updateSelectionFromContext));
+                                this.resetAndFetchAll(lang.hitch(this, this.updateSelectionFromContext));
                             }
                         })
                     });
@@ -518,7 +520,7 @@ require([
             if (this.selectionref || this.selectionrefset) {
                 mx.data.commit({
                     mxobj: this.contextObject,
-                    callback: dojo.hitch(this, this.onSelect, item),
+                    callback: lang.hitch(this, this.onSelect, item),
                     error: this.showError
                 }, this);
             } else {
@@ -557,8 +559,17 @@ require([
                 dojo.window.scrollIntoView(item.domNode);
             }
 
-            var idx = dojo.indexOf(this._multiSelection, item);
-            if (idx === -1) {
+            var index = dojo.indexOf(this._multiSelection, item);
+
+            if (index === -1) {
+                for(var i = 0; i < this._multiSelection; i++) {
+                    if (this._multiSelection[i].guid === item.guid) {
+                        index = i;
+                    }
+                }
+            }
+
+            if (index === -1) {
                 this._multiSelection.push(item);
             }
 
@@ -825,7 +836,7 @@ require([
             var args = {
                 xpath: xpath,
                 filter: this.enableschema ? this._schema : {},
-                callback: dojo.hitch(this, this.processData, cb),
+                callback: lang.hitch(this, this.processData, cb),
                 count: true,
                 error: this.showError
             };
@@ -878,6 +889,12 @@ require([
             logger.debug("TreeView.widget.GridView.processData");
 
             this.count = (dojo.isObject(count) ? count.count : count) * 1; //Mx 3 returns primitive, Mx 4 an aggregate object
+
+            // TODO: count is an object in MX7, this.count will be NaN.
+            if (isNaN(this.count)) {
+                this.count = parseInt(count);
+            }
+
             this.updatePaging();
 
             dojo.forEach(this.records, function (record) {

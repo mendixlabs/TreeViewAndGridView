@@ -1,6 +1,8 @@
 define([
     "dojo/_base/declare",
-], function(declare) {
+    "dojo/_base/lang",
+    "dojo/dom-attr",
+], function(declare, lang, attr) {
     "use strict"
 
     return declare("TreeView.widget.Commons.Checkbox", null, {
@@ -18,12 +20,12 @@ define([
                 type: "checkbox"
             });
 
-            dojo.attr(this.checkbox, "checked", this.value);
-            dojo.attr(this.checkbox, "readonly", this.readOnly);
-            dojo.attr(this.checkbox, "disabled", this.readOnly);
+            attr.set(this.checkbox, "checked", this.value);
+            attr.set(this.checkbox, "readonly", this.readOnly);
+            attr.set(this.checkbox, "disabled", this.readOnly);
 
             if (!this.readOnly){
-                this._clickSubscription = dojo.connect(this.checkbox, "onchange", dojo.hitch(this, this.change));
+                this._clickSubscription = dojo.connect(this.checkbox, "onchange", lang.hitch(this, this.change));
             }
 
             dojo.addClass(this.checkbox, "gv_checkbox " + this.className);

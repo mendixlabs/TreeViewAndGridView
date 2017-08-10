@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "TreeView/widget/Commons"
-], function (declare, Commons) {
+], function (declare, lang, Commons) {
     "use strict"
 
     return declare("TreeView.widget.Commons.RelatedDataset", null, {
@@ -34,10 +35,10 @@ define([
 
             this.widget.subscribe({ //fetch the new labels if changed
                 entity: this.relentity,
-                callback: dojo.hitch(this, this.fetchLabels)
+                callback: lang.hitch(this, this.fetchLabels)
             });
 
-            this.widget.connect(this.widget, "update", dojo.hitch(this, function (data, cb) {
+            this.widget.connect(this.widget, "update", lang.hitch(this, function (data, cb) {
                 this.contextGuid = data && data.getGuid ? data.getGuid() : data;
                 this.fetchLabels();
                 cb && cb();
@@ -78,7 +79,7 @@ define([
             xpath = xpath.replace(/\[\%CurrentObject\%\]/gi, this.contextGuid);
             mx.data.get({
                 xpath: xpath,
-                callback: dojo.hitch(this, this.retrieveLabels),
+                callback: lang.hitch(this, this.retrieveLabels),
                 filter: {
                     sort: [[this.relnameattr, "asc"]],
                     attributes: [this.relnameattr]
@@ -107,7 +108,7 @@ define([
                 this.existingOptions.splice(0, 0, {
                     value: "new",
                     label: this.relnewitemcaption,
-                    onClick: dojo.hitch(this, this.createNewItem)
+                    onClick: lang.hitch(this, this.createNewItem)
                 }, null) //Null = separator
             }
             this.hasData = true;
@@ -133,9 +134,9 @@ define([
                 mx.data.create({
                     entity: this.relentity,
                     error: this.widget.showError,
-                    callback: dojo.hitch(this, function (label) {
+                    callback: lang.hitch(this, function (label) {
                         var cb = callback
-                            ? dojo.hitch(this, callback, {
+                            ? lang.hitch(this, callback, {
                                 value: label.getGuid(),
                                 label: labelname
                             })

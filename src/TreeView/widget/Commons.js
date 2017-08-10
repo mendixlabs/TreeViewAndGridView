@@ -1,7 +1,8 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
     "dojo/data/util/simpleFetch",
-], function (declare) {
+], function (declare, lang) {
     "use strict";
 
     var Commons = declare("TreeView.widget.Commons", null, {
@@ -133,11 +134,10 @@ define([
                         return this.getObjectAttr(tmp, parts[2], renderValue);
                     }
 
-                    //console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
+                    console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
                     //This happens if no retrieve schema was used :-(.
                     return "";
                 }
-
             }
 
             //objects can be returned in X different ways, sometime just a guid, sometimes its an object...
@@ -151,6 +151,69 @@ define([
                 }
                 if (/\d+/.test(result)) {
                     return result;
+                }
+            }
+            throw "GridCommons.getObjectAttr: Failed to retrieve attribute '" + attr + "'";
+        },
+
+        getObjectAttrAsync: function (object, attr, renderValue, cb) {
+            logger.debug("TreeView.widget.Commons.getObjectAttrAsync");
+
+            if (!object || !attr) {
+                return cb("");
+            }
+
+            if (attr.indexOf("/") == -1) {
+                if (renderValue) {
+                    return cb(mx.parser && mx.parser.formatAttribute ? mx.parser.formatAttribute(object, attr) : mxui.html.renderValue(object, attr)); //mxui.html.rendervalue moved in 5.~7.
+                }
+                return cb(object.get(attr));
+            }
+            var parts = attr.split("/");
+            if (parts.length == 3) {
+                var child = object.getReference(parts[0]);
+
+                if (!child) {
+                    return cb("");
+                }
+
+                //Fine, we have an object
+                if (dojo.isObject(child)) {
+                    child = object.getChild(parts[0]); //Get child only works if child was not a guid but object
+                    return cb(this.getObjectAttr(child, parts[2], renderValue));
+                }
+
+                //Try to retrieve guid in syc
+                else {
+                    //..but, there is a guid...
+                    mx.data.get({
+                        guid: child,
+                        noCache: false,
+                        callback: lang.hitch(this, function (obj) { //async = false option would be nice!
+                            if (obj != null) {//callback was invoked in sync :)
+                                return this.getObjectAttrAsync(obj, parts[2], renderValue, cb);
+                            }
+
+                            console && console.warn && console.warn("Commons.getObjectAttr failed to retrieve " + attr );
+                            //This happens if no retrieve schema was used :-(.
+                            return cb("");
+                        })
+                    });
+                    return;
+                }
+            }
+
+            //objects can be returned in X different ways, sometime just a guid, sometimes its an object...
+            if (parts.length == 2) {
+                var result = object.getReferences(parts[0]); //incase of of a get object, return the Guids (but sometimes getAttribute gives the object...)
+                if (!result || result.length == 0) {
+                    return cb("");
+                }
+                if (result.guid) {
+                    return cb(result.guid);
+                }
+                if (/\d+/.test(result)) {
+                    return cb(result);
                 }
             }
             throw "GridCommons.getObjectAttr: Failed to retrieve attribute '" + attr + "'";
@@ -353,7 +416,7 @@ define([
                     throw "Multiple selection found, but microflow supports only one argument!";
                 }
 
-                mx.ui.action(mfname, {
+                var mfObject = {
                     params: {
                         applyto: "selection",
                         guids: guids
@@ -372,7 +435,18 @@ define([
                         }
                     },
                     async: !!progressMessage
-                });
+                };
+
+                if (!mx.version || mx.version && parseInt(mx.version.split(".")[0]) < 7) {
+                    // < Mendix 7
+                    mfObject.store = {
+                        caller: this.mxform
+                    };
+                } else {
+                    mfObject.origin = this.mxform;
+                }
+
+                mx.ui.action(mfname, mfObject, this);
             }
         },
 

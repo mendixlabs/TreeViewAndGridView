@@ -1,13 +1,16 @@
 require([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
+    "dojo/_base/lang",
+    "dojo/dom-attr",
+    "dojo/dom-style",
     "TreeView/widget/Commons",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/TreeView/Edge",
     "TreeView/widget/TreeView/GraphNode",
     "TreeView/widget/Commons/Action",
     "dojo/NodeList-traverse"
-], function (declare, _WidgetBase, Commons, ColRenderer, Edge, GraphNode, Action) {
+], function (declare, _WidgetBase, lang, attr, domStyle, Commons, ColRenderer, Edge, GraphNode, Action) {
     "use strict";
 
 
@@ -125,7 +128,7 @@ require([
 
                 if (x.entitychannel) {
                     var onSelectHandler =
-                        this.connect(this, "onSelect", dojo.hitch(this, function (channel, entity, selection) {
+                        this.connect(this, "onSelect", lang.hitch(this, function (channel, entity, selection) {
                             if (selection != null && selection.isA(entity)) {
                                 // KVL: This used to use this.getContent() as the first part, but that no longer exists.
                                 // Not sure what the alternative is, so we might want to look into that...
@@ -237,7 +240,7 @@ require([
 
             dojo.place(this.headerNode, this.domNode);
             dojo.place(this.treeNode, this.domNode);
-            dojo.attr(this.treeNode, {
+            attr.set(this.treeNode, {
                 tabindex: this.tabindex,
                 focusindex: 0
             });
@@ -382,7 +385,7 @@ require([
             logger.debug("TreeView.widget.TreeView.testreferences");
 
             if (this.selectionrefs) {
-                for (i = 0; i < this.selectionrefs.length; i++) {
+                for (var i = 0; i < this.selectionrefs.length; i++) {
                     if (this.selectionrefs[i].indexOf(node.graphNode.type) > -1 && this.selectionrefs[i].indexOf("/") == -1) {
                         Commons.store(this.getContextObject(), this.selectionrefs[i], node && node.graphNode.guid);
                     } else if (this.selectionrefs[i].indexOf("/") > -1) {
@@ -542,7 +545,7 @@ require([
                 var edges = this.root.getChildTypes();
                 if (edges.length > 0) {
                     var edge = edges[0];
-                    this.root.ensureChildren(edge, dojo.hitch(this, function () {
+                    this.root.ensureChildren(edge, lang.hitch(this, function () {
                         var firstRefChildren = this.root.nodes[0].children[edge.index].children;
                         if (firstRefChildren.length > 0) {
                             this.setSelection(firstRefChildren[0]);
@@ -601,7 +604,7 @@ require([
                                 self.setSelection(node);
                             });
                         }
-                    })
+                    });
                 }
             }
             delete this._selectionSuggestions;
@@ -883,18 +886,18 @@ require([
             dojo.place(avatar, dojo.body(), "last");
 
             //update position
-            dojo.style(avatar, {
+            domStyle.set(avatar, {
                 "position": "absolute",
                 "zIndex": 10000
             });
 
-            this.dnd.bodyconnect = dojo.connect(dojo.body(), "onmouseup", dojo.hitch(this, function () {
+            this.dnd.bodyconnect = dojo.connect(dojo.body(), "onmouseup", lang.hitch(this, function () {
                 this.onEndDrag();
             }));
 
-            this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", dojo.hitch(this, function (e) {
+            this.dnd.bodyconnect2 = dojo.connect(dojo.body(), "onmouseover", lang.hitch(this, function (e) {
                 //console.log("mouse out");
-                dojo.style(this.dnd.avatar, {
+                domStyle.set(this.dnd.avatar, {
                     "top": (e.pageY + 32) + "px",
                     "left": (e.pageX + 32) + "px"
                 });
@@ -987,9 +990,9 @@ require([
             }
 
             var acceptTmp = candropBefore && (pos != "last" || this.dragOver(current, target, this.dnd.tmppos, copy)); //is the tmppos allowed?
-            dojo.style(tmpnode, "display", acceptTmp ? "list-item" : "none");
+            domStyle.set(tmpnode, "display", acceptTmp ? "list-item" : "none");
 
-            dojo.style(avatar, {
+            domStyle.set(avatar, {
                 "top": (e.pageY + 32) + "px",
                 "left": (e.pageX + 32) + "px"
             });
@@ -1003,7 +1006,7 @@ require([
                 }
             } else if (pos == "last")
                 if (!this.dnd.expandtimer) {
-                    this.dnd.expandtimer = setTimeout(dojo.hitch(this, function (toexpand) {
+                    this.dnd.expandtimer = setTimeout(lang.hitch(this, function (toexpand) {
                         if (toexpand == this.dnd.target && this.dnd.pos == "last") { //still the same ?
                             toexpand.setCollapsed(false);
                             //if (this.dnd.tmpnode)
@@ -1025,7 +1028,7 @@ require([
             dojo.disconnect(this.dnd.bodyconnect2);
 
             //hide temporary nodes node
-            dojo.style(this.dnd.tmpnode, "display", "none");
+            domStyle.set(this.dnd.tmpnode, "display", "none");
             dojo.destroy(this.dnd.tmpnode);
             delete this.dnd.tmpnode;
 
@@ -1039,7 +1042,7 @@ require([
                         top: this.dnd.beginBox.y
                     },
                     duration: 500,
-                    onEnd: dojo.hitch(this, this.resetNodesAfterDnD)
+                    onEnd: lang.hitch(this, this.resetNodesAfterDnD)
                 }).play();
             }
         },
@@ -1154,7 +1157,7 @@ require([
             if (target.isEdge) {
                 t = target.parent.graphNode._data;
             } else if (pos == "before" || pos == "after") {
-                t = target.parent.graphNode._data
+                t = target.parent.graphNode._data;
             } else {
                 t = target.graphNode._data; //new parent
             }
@@ -1208,6 +1211,7 @@ require([
             //2) update position. Note that this position applies to all assocs! which is a bit weird...
             var x = item.graphNode.xsettings;
             if (x && mx.meta.getEntity(item.graphNode.type).getAttributeType(x.sortattr) == "Decimal") {
+                var nidx;
                 if (pos == "before" || pos == "after") {
                     //find the other related element for drop in between
                     var othernode = pos == "before" ? target.domNode.previousElementSibling : target.domNode.nextElementSibling;
@@ -1216,7 +1220,6 @@ require([
                     }
                     var other = this._getRenderNodeForNode(othernode);
 
-                    var nidx;
                     if (other == null || other.isEdge) { //either first or last
                         nidx = target.graphNode.getSortIndex() + (pos == "before" ? -1024 : 32354);
                     } else { //put between
@@ -1405,7 +1408,7 @@ require([
                 //find a previously matching sibling
                 var findLast = function (cur) {
                     for (var i = cur.children.length - 1; i >= 0; i--) {
-                        if (dojo.style(cur.children[i], "display") == "none") {
+                        if (domStyle.set(cur.children[i], "display") == "none") {
                             continue;
                         }
                         var l = findLast(cur.children[i]);
@@ -1434,7 +1437,7 @@ require([
 
             var findChild = function (cur) {
                 for (var i = 0; i < cur.children.length; i++) {
-                    if (dojo.style(cur.children[i], "display") != "none") {
+                    if (domStyle.set(cur.children[i], "display") != "none") {
                         if (dojo.hasClass(cur.children[i], clazz)) {
                             return cur.children[i];
                         }
@@ -1455,7 +1458,7 @@ require([
             var cur = node;
             while (cur != limitNode && cur != null) {
                 var n = cur.nextElementSibling;
-                if (n != null && dojo.hasClass(n, clazz) && dojo.style(n, "display") != "none") {
+                if (n != null && dojo.hasClass(n, clazz) && domStyle.set(n, "display") != "none") {
                     return n;
                 }
                 cur = cur.parentNode;
