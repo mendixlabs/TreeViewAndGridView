@@ -51,13 +51,13 @@ DwNGrMmTiYmBhQVsti8w8CRBDB2/4zM7S1Tgasp77oB9gjUMgAHL8OvXL5CzNwMxWIyDgz/rwKkv
 					</enumerationValues>
 				</property>
 				<property key="xburstattr" type="attribute" entityProperty="xentity" required="false">
-					<caption>Cache burst attribute</caption>
+					<caption>Cache bust attribute</caption>
 					<category>2) Advanced</category>
 					<description>Depending on the value of this property, the children of an item will be reloaded. If this property is omitted, the widget tries to automatically discover which items need to be refreshed, but new objects with a from child assocation cannot be detected automatically.
 
-					 !Important note!: If a cacheburst attribute is set, this attribute needs to be update to show new children on assiations which are owned by children and use an xpath constraint. This way it can be assured that items do not slip past constraints by changing them.
+					 !Important note!: If a cache bust attribute is set, this attribute needs to be update to show new children on assiations which are owned by children and use an xpath constraint. This way it can be assured that items do not slip past constraints by changing them.
 
-					 Furthermore, the cacheburst is used as hint when to expand items. If the cacheburst of an item changes after invoking a microflow, it is assumed that there are new children to display. The item is expanded and the newest child will be selected.
+					 Furthermore, the cache bust is used as hint when to expand items. If the cache bust of an item changes after invoking a microflow, it is assumed that there are new children to display. The item is expanded and the newest child will be selected.
 					</description>
 					<attributeTypes>
 			            <attributeType name="DateTime"/>
