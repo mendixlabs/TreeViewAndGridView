@@ -35,7 +35,7 @@ As a prelude to your treeview setup, you need to mention all the entity types yo
 
 The treeview always require a context object (thus; the widget can only be used inside a dataview or templategrid). and can only display objects which are somehow related to your context. If you are in the rare case that you have no such context, see the demo project about how to create a dummy context. The context object should always be part of your entity configuration! Otherwise the treeview won't load at all.
 
-For each type, you can define a view properties; sorting, cacheburst (see the refreshing the tree section) and custom styling for this object type. We recommend to use classes and define them in your custom theme, as they provide a lot of flexibility and possibilities, but for a quick prototype inline styling might work as well. If you use drag and drop, the sort attribute should be an ascending float attribute. See the drag and drop section for more information.
+For each type, you can define a view properties; sorting, cache bust (see the refreshing the tree section) and custom styling for this object type. We recommend to use classes and define them in your custom theme, as they provide a lot of flexibility and possibilities, but for a quick prototype inline styling might work as well. If you use drag and drop, the sort attribute should be an ascending float attribute. See the drag and drop section for more information.
 
 When you configured all entities you intend to display in the widget, you can define the relations between them.
 
@@ -74,7 +74,7 @@ The content of an item is always refreshed automatically. The children of new it
 
 #### Case: add a new child when the reference owner is the child
 
-Sadly, this cannot detected by the widget, as it does not trigger a change on the parent, and the child is not in the treeview yet. If you need this behavior, using a child burst attribute (on the parent entity) is the way to go. Whenever the the treeview receives a new value for this attribute, it reloads the children of an item. The flower list example demonstrates this nicely.
+Sadly, this cannot detected by the widget, as it does not trigger a change on the parent, and the child is not in the treeview yet. If you need this behavior, using a cache bust attribute (on the parent entity) is the way to go. Whenever the the treeview receives a new value for this attribute, it reloads the children of an item. The flower list example demonstrates this nicely.
 
 #### Case: an object is deleted from the database entirely
 
@@ -82,7 +82,7 @@ The treeview always picks it up when an object is removed from a reference(set).
 
 If the owner of the reference is not the object being deleted, just remove the referred object from the reference first and then delete that object (that can be done in the same microflow).
 
-If the owner of the reference is the object being deleted, the parent needs to be refreshed manually, again this can be done by using the case burst attribute of the parent.
+If the owner of the reference is the object being deleted, the parent needs to be refreshed manually, again this can be done by using the cache bust attribute of the parent.
 
 #### Case: an object is added to a constrained relation
 
@@ -90,7 +90,7 @@ See the next section
 
 ## Advanced: Constrained relations
 
-When removing an item from a constrained relation, this is handled in the same way as removing an object from an unconstrained relation. However **adding a child to a constrained relation is never picked up automatically**, as the new object might not pass the given constraint. To avoid unnecessary retrieves from the server, you need to indicate in your model that an object needs to refetch its children by the burst attribute as explained above.
+When removing an item from a constrained relation, this is handled in the same way as removing an object from an unconstrained relation. However **adding a child to a constrained relation is never picked up automatically**, as the new object might not pass the given constraint. To avoid unnecessary retrieves from the server, you need to indicate in your model that an object needs to refetch its children by the cache bust attribute as explained above.
 
 ## Advanced: Drag and drop
 Enabling drag and drop on a relation allows items to be both dragged from it and dropped to it. The widget automatically calculates where an item can be dropped, based on the type of the object your are holding, the object or relation you are dragging over and the copy state.
