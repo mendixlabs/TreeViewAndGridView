@@ -374,9 +374,6 @@ require([
                 dojo.forEach(this.actions, function (action) {
                     action.updateToSelection();
                 });
-
-                //fire the on select event
-                this.onSelect(renderNode);
             }
         },
 
