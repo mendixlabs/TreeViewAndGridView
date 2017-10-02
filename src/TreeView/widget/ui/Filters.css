@@ -1,0 +1,9 @@
+
+
+.gv_filter_dropdown_menu .dijitChecked::before {
+    content: √;
+}
+
+.gv_filter_dropdown + .gv_filter_dropdown {
+    margin-left: 10px;
+}

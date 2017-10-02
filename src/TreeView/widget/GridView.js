@@ -9,8 +9,8 @@ require([
     "TreeView/widget/Commons/Action",
     "TreeView/widget/Commons/ColRenderer",
     "TreeView/widget/Commons/Condition",
-    "TreeView/widget/Commons/Filter",
-    "TreeView/widget/Commons/FilterManager",
+    "TreeView/widget/Filters/Filter",
+    "TreeView/widget/Filters/FilterManager",
     "TreeView/widget/Commons/RelatedDataset",
     "TreeView/widget/Commons/SearchControl",
     "dojo/NodeList-traverse"
@@ -93,6 +93,8 @@ require([
         filtertruecaption: "",
         filterfalsecaption: "",
         filterbooleandefault: "",
+        filteranycaption: "",
+        filterexclusive: false,
 
         //advanced settings
         allowmultiselect: false,
@@ -441,17 +443,11 @@ require([
             logger.debug("TreeView.widget.GridView._setupFilters");
 
             var data = [];
-            this.splitPropsTo("filterattr,filtertruecaption,filterfalsecaption,filterbooleandefault", data);
+            this.splitPropsTo("filterattr,filtertruecaption,filterfalsecaption,filterbooleandefault,filteranycaption", data);
 
-            var fm = this.filterManager = new FilterManager(this);
+            var fm = this.filterManager = new FilterManager(this, data);
 
-            this.filters = dojo.map(data, function (d) {
-                return new Filter(d, fm);
-            }, this);
-
-            if (this.filters.length > 0) {
-                dojo.place(fm.domNode, this.actions.length > 0 || !this.searchenabled ? this.headerNode : this.searchbarNode, "last");
-            }
+            dojo.place(fm.domNode, this.actions.length > 0 || !this.searchenabled ? this.headerNode : this.searchbarNode, "last");
         },
 
         _setupRendering: function () {
