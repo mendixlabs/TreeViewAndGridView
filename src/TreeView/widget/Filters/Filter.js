@@ -9,16 +9,16 @@ define([
 
     return declare("TreeView.widget.Filters.Filter", AbstractFilter, {
 
-        constructor: function (args, fm) {
+        constructor: function (args, filterManager) {
 
-            this.isEnum = Commons.getAttributeType(fm.widget.entity, this.filterattr) == "Enum";
+            this.isEnum = Commons.getAttributeType(filterManager.widget.entity, this.filterattr) == "Enum";
 
             //setup enum menu items
             if (this.isEnum) {
                 this.enumStateMap = {};
 
                 this.enumItems = dojo.map(
-                    Commons.getEnumMap(fm.widget.entity, this.filterattr),
+                    Commons.getEnumMap(filterManager.widget.entity, this.filterattr),
                     function (enumItem) {
 
                         var mi = new CheckedMenuItem({

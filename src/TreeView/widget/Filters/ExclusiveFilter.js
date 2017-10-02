@@ -17,18 +17,14 @@ define([
             for (var i = 0; i < this.menuItems.length; i++) {
                 var item = this.menuItems[i];
                 
-                if (item.label == label) {
-                    item.set("checked", true);
-                } else {
-                    item.set("checked", false);
-                }
+                item.set("checked", (item.label == label));
             }
 
-            this.fm.applyFilters();
+            this.filterManager.applyFilters();
         },
 
-        constructor: function (args, fm) {
-            this.fm = fm;
+        constructor: function (args, filterManager) {
+            this.filterManager = filterManager;
             dojo.mixin(this, args);
             
             this.menu = new Menu({
@@ -41,27 +37,18 @@ define([
                 dropDown : this.menu
             });
 
-            if (this.filteranycaption)
+            if (this.filteranycaption) {
                 this.anylabel = this.filteranycaption;
-            else
+            } else {
                 this.anylabel = this.filterattr + ": -";
-
+            }
 
             this.dropdown.set("label", this.anylabel);
             
             dojo.addClass(this.dropdown.dropDown.domNode, "gv_filter_dropdown_menu");
             dojo.addClass(this.dropdown.domNode, "gv_filter_dropdown");
 
-            dojo.place(this.dropdown.domNode, this.fm.domNode);
-        },
-        
-        getSearchConstraints: function () {
-            console.error("ERROR: You must override getSearchConstraints()");
-
-        },
-        
-        free: function () {
-
+            dojo.place(this.dropdown.domNode, this.filterManager.domNode);
         }
     });
 });

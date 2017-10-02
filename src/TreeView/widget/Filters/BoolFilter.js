@@ -49,11 +49,6 @@ define([
                 res.push(this.filterattr + " =  false()");
             }
 
-            //only one value is defined to filter? Then the other is always true
-            // if (this.falseitem ^ this.trueitem){
-            //     res.push(this.filterattr + " = " + (this.falseitem ? "true()" : "false()"));
-            // }
-
             if (res.length == 0) {//filter all out
                 res.push(this.filterattr + " = true() or " + this.filterattr + " = false()");
             }

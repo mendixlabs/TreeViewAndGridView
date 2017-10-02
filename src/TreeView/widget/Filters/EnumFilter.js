@@ -9,7 +9,7 @@ define([
 
     return declare("TreeView.widget.Filters.EnumFilter", ExclusiveFilter, {
 
-        constructor: function (args, fm) {
+        constructor: function (args, filterManager) {
 
             this.enumStateMap = {};
 
@@ -21,7 +21,7 @@ define([
             this.menuItems.push(this.anyitem);
 
             this.menuItems = this.menuItems.concat( dojo.map(
-                Commons.getEnumMap(fm.widget.entity, this.filterattr),
+                Commons.getEnumMap(filterManager.widget.entity, this.filterattr),
                 function (enumItem) {
 
                     var mi = new CheckedMenuItem({

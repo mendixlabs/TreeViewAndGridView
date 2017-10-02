@@ -11,11 +11,11 @@ define([
     return declare("TreeView.widget.Filters.MultiFilter", null, {
         filters : null,
 
-        constructor: function (fm, data) {
-            this.fm = fm;
+        constructor: function (filterManager, data) {
+            this.filterManager = filterManager;
 
             this.filters = dojo.map(data, function (d) {
-                return new Filter(d, fm);
+                return new Filter(d, filterManager);
             }, this);
 
             this.menu = new Menu({
@@ -29,8 +29,8 @@ define([
 
             dojo.addClass(this.dropdown.dropDown.domNode, "gv_filter_dropdown_menu");
 
-            this.fm.domNode = this.dropdown.domNode;
-            dojo.addClass(this.fm.domNode, "gv_filter_dropdown");
+            this.filterManager.domNode = this.dropdown.domNode;
+            dojo.addClass(this.filterManager.domNode, "gv_filter_dropdown");
 
             for (var i = 0; i < this.filters.length; i++) {
                 var filter = this.filters[i];
