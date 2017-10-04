@@ -358,7 +358,7 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
  		<property key="blaat4" type="object" isList="true" required="false">
 			<caption>Search filters</caption>
 			<category>3) Search</category>
-			<description>This properties creates quick-filter dropdown buttons for the grid. A filter can be based on a boolean or enumeration value.</description>
+			<description>These properties creates quick-filter dropdown buttons for the grid. A filter can be based on a boolean or enumeration value.</description>
 			<properties>
 				<property key="filterattr" type="attribute" entityProperty="../entity" required="true"  isPath="optional" pathType="reference">
 						<caption>Filter attribute</caption>
@@ -389,6 +389,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 						<enumerationValue key="true">True only</enumerationValue>
 						<enumerationValue key="false">False only</enumerationValue>
 					</enumerationValues>
+				</property>
+				<property key="filteranycaption" type="translatableString" required="false">
+					<caption>Any/All caption</caption>
+					<category>3) Exclusive filter</category>
+					<description>Examples: "All Users", "Any type"</description>
 				</property>
             </properties>
 		</property>
@@ -499,6 +504,11 @@ Pmmn04F2ux1MpVI79I4q6jJMfXsbe3iMjYKIcDicKxQKt4qiWFRJi6Joe9iUkWER6C8e48eQCJLC
 			<caption>Search label dataset</caption>
 			<category>3) Search</category>
 			<description>If a dataset is provided, the values of this dataset will appear as dropdown list in the search box when searching</description>
+		</property>
+		<property key="filterexclusive" type="boolean" defaultValue="false" required="true">
+			<caption>Use exclusive filters</caption>
+			<category>3) Search</category>
+			<description>If when checked, each filter will have its own dropdown menu.</description>
 		</property>
 		<property key="showtotals" type="boolean" defaultValue="true">
 			<caption>Show item count in the paging section</caption>

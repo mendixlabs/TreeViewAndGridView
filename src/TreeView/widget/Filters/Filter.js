@@ -2,39 +2,23 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
     "dijit/CheckedMenuItem",
-    "TreeView/widget/Commons"
-], function(declare, lang, CheckedMenuItem, Commons) {
+    "TreeView/widget/Commons",
+    "TreeView/widget/Filters/AbstractFilter"
+], function(declare, lang, CheckedMenuItem, Commons, AbstractFilter) {
     "use strict";
 
-    return declare("TreeView.widget.Commons.Filter", null, {
-        fm: null,
-        filterattr: null,
-        filtertruecaption: null,
-        filterfalsecaption: null,
-        filterbooleandefault: null,
+    return declare("TreeView.widget.Filters.Filter", AbstractFilter, {
 
-        isEnum: false,
-        trueitem: null,
-        falseitem: null,
-        enumStateMap: null,
-        enumItems: null,
+        constructor: function (args, filterManager) {
 
-        itemClick: function () {
-            this.fm.applyFilters();
-        },
-
-        constructor: function (args, fm) {
-            this.fm = fm;
-            dojo.mixin(this, args);
-
-            this.isEnum = Commons.getAttributeType(fm.widget.entity, this.filterattr) == "Enum";
+            this.isEnum = Commons.getAttributeType(filterManager.widget.entity, this.filterattr) == "Enum";
 
             //setup enum menu items
             if (this.isEnum) {
                 this.enumStateMap = {};
 
                 this.enumItems = dojo.map(
-                    Commons.getEnumMap(fm.widget.entity, this.filterattr),
+                    Commons.getEnumMap(filterManager.widget.entity, this.filterattr),
                     function (enumItem) {
 
                         var mi = new CheckedMenuItem({
@@ -67,9 +51,8 @@ define([
                 }
             }
 
-            this.fm.addFilter(this);
         },
-
+        
         getMenuItems: function () {
             if (this.isEnum){
                 return this.enumItems;
@@ -113,10 +96,6 @@ define([
                 res.push(this.isEnum ? this.filterattr + " = NULL" : this.filterattr + " = true() and " + this.filterattr + " = false()");
             }
             return res;
-        },
-
-        free: function () {
-
         }
     });
 });
