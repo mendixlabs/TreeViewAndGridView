@@ -366,7 +366,10 @@ require([
                 focusindex: 0
             });
 
-            mxui.wm.focus.addBox(this.gridNode);
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.addBox) {
+                mxui.wm.focus.addBox(this.gridNode);
+            }
+
             this.grabFocus();
         },
 

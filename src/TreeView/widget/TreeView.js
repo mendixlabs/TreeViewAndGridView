@@ -244,7 +244,11 @@ require([
                 tabindex: this.tabindex,
                 focusindex: 0
             });
-            mxui.wm.focus.addBox(this.treeNode);
+
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.addBox) {
+                mxui.wm.focus.addBox(this.treeNode);
+            }
+
             this.grabFocus();
         },
 
