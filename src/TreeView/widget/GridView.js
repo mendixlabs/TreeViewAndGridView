@@ -1047,7 +1047,7 @@ require([
 
         grabStartupFocus: function () {
             logger.debug("TreeView.widget.GridView.grabStartupFocus");
-            if (this.searchenabled) {
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.put && this.searchenabled) {
                 mxui.wm.focus.put(this.searchControl.searchInput.textbox);
             } else {
                 this.grabFocus();
@@ -1057,7 +1057,7 @@ require([
         grabFocus: function () {
             logger.debug("TreeView.widget.GridView.grabFocus");
 
-            if (mxui.wm.focus.get() !== this.gridNode) {
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.get && mxui.wm.focus.get() !== this.gridNode) {
                 mxui.wm.focus.put(this.gridNode);
             }
         },
