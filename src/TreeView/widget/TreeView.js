@@ -244,7 +244,11 @@ require([
                 tabindex: this.tabindex,
                 focusindex: 0
             });
-            mxui.wm.focus.addBox(this.treeNode);
+
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.addBox) {
+                mxui.wm.focus.addBox(this.treeNode);
+            }
+
             this.grabFocus();
         },
 
@@ -615,7 +619,7 @@ require([
         grabFocus: function () {
             logger.debug("TreeView.widget.TreeView.grabFocus");
 
-            if (mxui.wm.focus.get() != this.treeNode) {
+            if (mxui.wm && mxui.wm.focus && mxui.wm.focus.get && mxui.wm.focus.get() != this.treeNode) {
                 mxui.wm.focus.put(this.treeNode);
             }
         },
