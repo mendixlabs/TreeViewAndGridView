@@ -205,6 +205,13 @@ require([
             dojo.forEach(this.actions, function (action) {
                 action.free();
             });
+
+            // Free all graph nodes and their subscription
+            for (var key in this.dict) {
+				if (this.dict.hasOwnProperty(key)) {           
+					this.dict[key].free();
+				}
+			}
         },
 
         /* MWE: not sure if these suspended are supposed here, or where deliberately deleted before merging with main branch..
