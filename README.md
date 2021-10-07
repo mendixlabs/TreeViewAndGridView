@@ -1,4 +1,6 @@
-# TreeViewAndGridView [![Support](https://img.shields.io/badge/Mendix%20Support%3A-Community-orange.svg)](https://docs.mendix.com/community/app-store/app-store-content-support)
+# TreeViewAndGridView (DEPRECATED) [![Support](https://img.shields.io/badge/Mendix%20Support%3A-Community-orange.svg)](https://docs.mendix.com/community/app-store/app-store-content-support) 
+
+> **This widget has been removed from the Marketplace and is deprecated. Do not use this widget.**
 
 The treeview and gridview widgets provide the highly customizable grid widgets as seen in home.mendix.com.
 
